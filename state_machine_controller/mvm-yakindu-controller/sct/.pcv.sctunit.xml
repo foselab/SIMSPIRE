@@ -1,0 +1,39 @@
+<testsuite name="pcv" time="">
+  <testcase name="testFailure" classname="platform:/resource/mvm-yakindu-controller/sct/pcv.sctunit#pcv.testFailure" time="">
+  </testcase>
+  <testcase name="testFailure2" classname="platform:/resource/mvm-yakindu-controller/sct/pcv.sctunit#pcv.testFailure2" time="">
+  </testcase>
+  <testcase name="testNormalOperation" classname="platform:/resource/mvm-yakindu-controller/sct/pcv.sctunit#pcv.testNormalOperation" time="">
+    <failure>Assertion failed: "assert active (main_region.PCV.r1.Inspiration)" (Line 60)
+    	Expected: Inspiration, actual: [EndExpiration, PCV]
+    </failure>
+  </testcase>
+  <testcase name="testStop" classname="platform:/resource/mvm-yakindu-controller/sct/pcv.sctunit#pcv.testStop" time="">
+  </testcase>
+  <testcase name="testStopInInspiration" classname="platform:/resource/mvm-yakindu-controller/sct/pcv.sctunit#pcv.testStopInInspiration" time="">
+  </testcase>
+  <testcase name="testExpiratoryPauseTermination" classname="platform:/resource/mvm-yakindu-controller/sct/pcv.sctunit#pcv.testExpiratoryPauseTermination" time="">
+    <failure>Assertion failed: "assert active (main_region.PCV.r1.ExpiratoryPause)" (Line 141)
+    	Expected: ExpiratoryPause, actual: [EndExpiration, PCV]
+    </failure>
+  </testcase>
+  <testcase name="testExpiratoryPauseTerminationTO" classname="platform:/resource/mvm-yakindu-controller/sct/pcv.sctunit#pcv.testExpiratoryPauseTerminationTO" time="">
+    <failure>Assertion failed: "assert active (main_region.PCV.r1.ExpiratoryPause)" (Line 153)
+    	Expected: ExpiratoryPause, actual: [EndExpiration, PCV]
+    </failure>
+  </testcase>
+  <testcase name="testtriggerwindow" classname="platform:/resource/mvm-yakindu-controller/sct/pcv.sctunit#pcv.testtriggerwindow" time="">
+  </testcase>
+  <testcase name="testCoughing" classname="platform:/resource/mvm-yakindu-controller/sct/pcv.sctunit#pcv.testCoughing" time="">
+    <failure>Assertion failed: "assert active (main_region.PCV.r1.Inspiration)" (Line 198)
+    	Expected: Inspiration, actual: [EndExpiration, PCV]
+    </failure>
+  </testcase>
+  <testcase name="testPoweroff" classname="platform:/resource/mvm-yakindu-controller/sct/pcv.sctunit#pcv.testPoweroff" time="">
+  </testcase>
+  <testcase name="testGotoPSV" classname="platform:/resource/mvm-yakindu-controller/sct/pcv.sctunit#pcv.testGotoPSV" time="">
+    <failure>Assertion failed: "assert active (main_region.PCV.r1.Inspiration)" (Line 235)
+    	Expected: Inspiration, actual: [EndExpiration, PCV]
+    </failure>
+  </testcase>
+</testsuite>
