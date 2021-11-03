@@ -103,7 +103,10 @@ void mvm::StateMachine::SMTraceObserver::stateExited(
   if (state == ASV_InitialExpiration && m_sm->m_state_machine.getNumCycle() == 3) {
 	  refreshASVValues(3);
   }
-  if (state == ASV_Expiration && m_sm->m_state_machine.getNumCycle() > 8) {
+  if (state == ASV_Expiration && m_sm->m_state_machine.getNumCycle() >= 8) {
 	  refreshASVValues(8);
+  }
+  if (state == ASV_Inspiration && m_sm->m_state_machine.getNumCycle() < 8) {
+	  m_sm->m_state_machine.setNumCycle(m_sm->m_state_machine.getNumCycle() + 1);
   }
 }

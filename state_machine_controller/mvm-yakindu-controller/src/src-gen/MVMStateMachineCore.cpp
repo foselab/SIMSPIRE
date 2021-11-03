@@ -660,7 +660,6 @@ void MVMStateMachineCore::enact_main_region_ASV_r1_Inspiration()
 	timerService->setTimer(this, (sc_eventid)(&timeEvents[23]), MVMStateMachineCore::min_insp_time_ms, false);
 	timerService->setTimer(this, (sc_eventid)(&timeEvents[24]), max_insp_time_asv, false);
 	ifaceOperationCallback->openInputValve(ASV);
-	numCycle = (numCycle + 1);
 }
 
 /* Exit action for state 'ExpiratoryPause'. */
