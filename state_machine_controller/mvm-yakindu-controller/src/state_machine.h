@@ -202,6 +202,7 @@ class StateMachine {
 		float targetRRate;
 		int index = 0;
 		float prevF;
+		Pressure Pinsp = param_Pinsp_PSV.default_val;;
 	} m_asv;
 	// APNEA BACKUP
 	struct APData {

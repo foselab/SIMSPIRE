@@ -81,8 +81,11 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	m_sm->m_asv.targetRRate = (sqrt(1 + 2 * a * rc * (m_sm->m_state_machine.getTargetMinuteVentilationASV() - m_sm->m_asv.prevF/vD) / vD) - 1) / (a * rc);
 	m_sm->m_asv.targetVTidal = m_sm->m_state_machine.getTargetMinuteVentilationASV() / m_sm->m_asv.targetRRate;
 
-	// TODO: Adapt based on the target values
-
+	// Adapt based on the target values
+	if (rRateAvg > m_sm->m_asv.targetRRate)
+		m_sm->m_asv.Pinsp = Pressure(m_sm->m_asv.Pinsp.millibar() - Pressure(2).millibar());
+	else if (rRateAvg < m_sm->m_asv.targetRRate)
+		m_sm->m_asv.Pinsp = Pressure(m_sm->m_asv.Pinsp.millibar() + Pressure(2).millibar());
 }
 
 void mvm::StateMachine::SMTraceObserver::stateExited(

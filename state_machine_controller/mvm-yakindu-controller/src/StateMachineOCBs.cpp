@@ -69,6 +69,9 @@ void MVMStateMachineOCBs::openInputValve(MVM_PIO p)
     case MVM_PIO::RM:
       m_sm->set_ptarget(m_sm->m_rm.pressure.millibar());
       break;
+    case MVM_PIO::ASV:
+          m_sm->set_ptarget(m_sm->m_asv.Pinsp.millibar());
+          break;
     default:
       // assert(false)
       break;
