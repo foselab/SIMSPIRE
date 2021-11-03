@@ -144,7 +144,7 @@ class StateMachine {
 			MVMStateMachineCore::MVMStateMachineCoreStates> {
 		StateMachine *m_sm;
 
-		void refreshASVValues();
+		void refreshASVValues(int n);
 
 	public:
 		SMTraceObserver(StateMachine *state_machine) :
@@ -201,6 +201,7 @@ class StateMachine {
 		float rRates[8];
 		float targetRRate;
 		int index = 0;
+		float prevF;
 	} m_asv;
 	// APNEA BACKUP
 	struct APData {

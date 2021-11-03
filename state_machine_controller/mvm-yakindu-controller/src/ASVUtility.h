@@ -8,14 +8,14 @@
 #ifndef ASVUTILITY_H_
 #define ASVUTILITY_H_
 
-float getMean(float v*, int n) {
+float getMean(float* v, int n) {
 	float mean = 0;
 
 	for (int i=0; i<n; i++) {
 		mean += v[i];
 	}
 
-	return mean\n;
+	return mean/n;
 }
 
 

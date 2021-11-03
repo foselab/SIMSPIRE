@@ -7,6 +7,7 @@
 
 #include <src-gen/MVMStateMachineCore.h>
 #include <src-gen/sc_tracing.h>
+#include <cmath>
 #include "state_machine.h"
 #include "ASVUtility.h"
 
@@ -50,9 +51,17 @@ void mvm::StateMachine::SMTraceObserver::stateEntered(
   }
 }
 
-void mvm::StateMachine::SMTraceObserver::refreshASVValues() {
+void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
+	float vTidalAvg = 0;
+	float rRateAvg = 0;
+	float timeAvg = 0;
+	float rc = 0;
+	float a = 2 * M_PI * M_PI / 60;
+	float vD = m_sm->m_state_machine.getIbwASV() * 2.2;
+
 	// TODO: How to measure the time?
 	m_sm->m_asv.expirationTimes[m_sm->m_asv.index] = 0;
+
 	// Get the real values for tidal volume and respiratory rate
 	m_breathing_monitor.GetOutputValue(
 			mvm::BreathingMonitor::Output::TIDAL_VOLUME,
@@ -61,15 +70,19 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues() {
 			&m_sm->m_asv.rRates[m_sm->m_asv.index]);
 	m_sm->m_asv.index = (m_sm->m_asv.index + 1) % 8;
 
-	// Compute the new value?
-	if (m_sm->m_state_machine.getNumCycle() == 3) {
-		// Initial parameters computation
-	} else {
-		if (m_sm->m_state_machine.getNumCycle() > 8) {
-			// Compute the parameters with the last 8 values
+	// Compute the new values
+	vTidalAvg = getMean(m_sm->m_asv.vTidals, n);
+	rRateAvg = getMean(m_sm->m_asv.rRates, n);
+	timeAvg = getMean(m_sm->m_asv.expirationTimes, n);
 
-		}
-	}
+	// TODO: Compute the RC value
+
+	// Compute the target values
+	m_sm->m_asv.targetRRate = (sqrt(1 + 2 * a * rc * (m_sm->m_state_machine.getTargetMinuteVentilationASV() - m_sm->m_asv.prevF/vD) / vD) - 1) / (a * rc);
+	m_sm->m_asv.targetVTidal = m_sm->m_state_machine.getTargetMinuteVentilationASV() / m_sm->m_asv.targetRRate;
+
+	// TODO: Adapt based on the target values
+
 }
 
 void mvm::StateMachine::SMTraceObserver::stateExited(
@@ -84,7 +97,10 @@ void mvm::StateMachine::SMTraceObserver::stateExited(
   }
 
   // When in ASV, if the expiration ends, reads the new values and refresh the params
-  if (state == ASV_InitialExpiration || state == ASV_Expiration) {
-	  refreshASVValues();
+  if (state == ASV_InitialExpiration && m_sm->m_state_machine.getNumCycle() == 3) {
+	  refreshASVValues(3);
+  }
+  if (state == ASV_Expiration && m_sm->m_state_machine.getNumCycle() > 8) {
+	  refreshASVValues(8);
   }
 }

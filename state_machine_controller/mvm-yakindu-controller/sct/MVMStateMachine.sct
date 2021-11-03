@@ -116,7 +116,7 @@
           <vertices xsi:type="sgraph:State" xmi:id="_VZ0oMDiYEeyH0_dn_bE_rA" specification="entry/closeInputValve;openOutputValve&#xD;&#xA;exit/closeOutputValve" name="Expiration" incomingTransitions="_VZ3rmjiYEeyH0_dn_bE_rA _VZ3rljiYEeyH0_dn_bE_rA _VZ3rkDiYEeyH0_dn_bE_rA">
             <outgoingTransitions xmi:id="_VZ0oSTiYEeyH0_dn_bE_rA" specification="after triggerWindowDelay_ms ms &#xD;&#xA;[dropPAW_ITS_ASV]" target="_VZ2dYDiYEeyH0_dn_bE_rA"/>
           </vertices>
-          <vertices xsi:type="sgraph:State" xmi:id="_VZ2dYDiYEeyH0_dn_bE_rA" specification="entry/openInputValve(MVM_PIO.ASV)" name="Inspiration" incomingTransitions="_VZ0oSTiYEeyH0_dn_bE_rA _IhJQIDiZEeyH0_dn_bE_rA _YboW4DiZEeyH0_dn_bE_rA">
+          <vertices xsi:type="sgraph:State" xmi:id="_VZ2dYDiYEeyH0_dn_bE_rA" specification="entry/openInputValve(MVM_PIO.ASV); numCycle=numCycle+1" name="Inspiration" incomingTransitions="_VZ0oSTiYEeyH0_dn_bE_rA _IhJQIDiZEeyH0_dn_bE_rA _YboW4DiZEeyH0_dn_bE_rA">
             <outgoingTransitions xmi:id="_VZ3rkDiYEeyH0_dn_bE_rA" specification="after min_insp_time_ms ms &#xD;&#xA;[flowDropASV]" target="_VZ0oMDiYEeyH0_dn_bE_rA"/>
             <outgoingTransitions xmi:id="_VZ3rljiYEeyH0_dn_bE_rA" specification="after max_insp_time_asv ms" target="_VZ0oMDiYEeyH0_dn_bE_rA"/>
             <outgoingTransitions xmi:id="_VZ3rmjiYEeyH0_dn_bE_rA" specification="[pawGTMaxPinsp]" target="_VZ0oMDiYEeyH0_dn_bE_rA"/>
