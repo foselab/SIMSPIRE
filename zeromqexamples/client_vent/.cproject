@@ -61,6 +61,7 @@
 									<listOptionValue builtIn="false" value="ZMQ_USE_SELECT"/>
 									<listOptionValue builtIn="false" value="ZMQ_IOTHREAD_POLLER_USE_SELECT"/>
 									<listOptionValue builtIn="false" value="ZMQ_POLL_BASED_ON_SELECT"/>
+									<listOptionValue builtIn="false" value="HAVE_STRNLEN"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.optimization.level.1208012593" superClass="gnu.cpp.compiler.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 								<option defaultValue="gnu.cpp.compiler.debugging.level.max" id="gnu.cpp.compiler.option.debugging.level.592553389" superClass="gnu.cpp.compiler.option.debugging.level" valueType="enumerated"/>
@@ -150,12 +151,6 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.mingw.exe.debug.562636360;cdt.managedbuild.config.gnu.mingw.exe.debug.562636360.;cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1273030329;cdt.managedbuild.tool.gnu.c.compiler.input.404248681">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.mingw.exe.debug.562636360;cdt.managedbuild.config.gnu.mingw.exe.debug.562636360.;cdt.managedbuild.tool.gnu.c.compiler.cygwin.base.1144825234;cdt.managedbuild.tool.gnu.c.compiler.input.cygwin.911934941">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.mingw.exe.debug.562636360;cdt.managedbuild.config.gnu.mingw.exe.debug.562636360.;cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.base.1797051700;cdt.managedbuild.tool.gnu.cpp.compiler.input.cygwin.985240">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.mingw.exe.debug.562636360;cdt.managedbuild.config.gnu.mingw.exe.debug.562636360.;cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1169056083;cdt.managedbuild.tool.gnu.cpp.compiler.input.12253263">
