@@ -148,11 +148,11 @@ class StateMachine {
 				m_sm { state_machine } {
 		}
 
-		void refreshASVValues(int n);
+		void refreshASVValues(int n) {};
 
-		void stateEntered(MVMStateMachineCore::MVMStateMachineCoreStates state) override;
+		void stateEntered(MVMStateMachineCore::MVMStateMachineCoreStates state) override {};
 
-		void stateExited(MVMStateMachineCore::MVMStateMachineCoreStates state) override;
+		void stateExited(MVMStateMachineCore::MVMStateMachineCoreStates state) override {};
 
 		~SMTraceObserver() {}
 	};
