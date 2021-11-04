@@ -45,7 +45,7 @@ int main() {
 				self_testpassed.start(TOTAL_TIME_MS, AsyncDelay::MILLIS);
 			}
 			if (run_ventilation.isExpired()) {
-				std::cout << "starting ventilation in ASV" << std::endl;
+				std::cout << "starting ventilation in ASV mode" << std::endl;
 				sm.set_Mode(MVM_mode::A_SUPPORTED_V);
 				sm.startVentilation();
 				run_ventilation.start(TOTAL_TIME_MS, AsyncDelay::MILLIS);

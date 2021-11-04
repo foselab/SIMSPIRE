@@ -10,9 +10,7 @@ template<typename T>
 class TraceObserver
 {
 public:
-	virtual ~TraceObserver(){
-
-	};
+	virtual ~TraceObserver(){}
 
 	virtual void stateEntered(T state) = 0;
 

@@ -140,8 +140,7 @@ static_assert(checkParams(param_Pressure_LC),
 class StateMachine {
 	// using nested class for trace observer
 	/** trace observer to call methods when some states are exited or entered*/
-	class SMTraceObserver: public sc::trace::TraceObserver<
-			MVMStateMachineCore::MVMStateMachineCoreStates> {
+	class SMTraceObserver: public sc::trace::TraceObserver<MVMStateMachineCore::MVMStateMachineCoreStates> {
 		StateMachine *m_sm;
 
 	public:
@@ -151,13 +150,9 @@ class StateMachine {
 
 		void refreshASVValues(int n);
 
-		void
-		stateEntered(MVMStateMachineCore::MVMStateMachineCoreStates state)
-				override;
+		void stateEntered(MVMStateMachineCore::MVMStateMachineCoreStates state) override;
 
-		void
-		stateExited(MVMStateMachineCore::MVMStateMachineCoreStates state)
-				override;
+		void stateExited(MVMStateMachineCore::MVMStateMachineCoreStates state) override;
 
 		~SMTraceObserver() {}
 	};
