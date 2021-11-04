@@ -158,6 +158,8 @@ class StateMachine {
 		void
 		stateExited(MVMStateMachineCore::MVMStateMachineCoreStates state)
 				override;
+
+		~SMTraceObserver() {}
 	};
 	// members
 	MVMStateMachineCore m_state_machine { };

@@ -18,65 +18,49 @@
 
 using namespace std;
 
+#define TOTAL_TIME_MS 11000
+
 int main() {
-	mvm::ValvesController v;
-	mvm::BreathingMonitor b;
-	mvm::Alarms a;
+	mvm::ValvesController valves_controller { };
+	mvm::BreathingMonitor breathing_monitor { };
+	mvm::Alarms alarms { };
+	mvm::StateMachine sm { valves_controller, breathing_monitor, alarms };
 
-	mvm::StateMachine sm (v, b, a);
-
-
-	//sm.begin();
-	//sm.startVentilation();
-	//sm.loop();
-
-
-/*	mvm::MVMTimerInterface timer_sct;
-	bool running = false;
-	auto start = std::chrono::system_clock::now();
-	MVMStateMachineCore sm;
-	//HAL myHAL;
-	//sm.set_hal(&myHAL);
-	MVMStateMachineOCBs operationCallback(&sm);
-	sm.setDefaultSCI_OCB(&operationCallback);
-	std::cout << "init state machine" << std::endl;
-	sm.set_inspiration_duration_ms(1000);
-	sm.set_expiration_duration_ms(2000);
-	sm.init();
-	std::cout << "setting timer" << std::endl;
-	sm.setTimer(&timer_sct);
-	std::cout << "entering" << std::endl;
-	sm.enter();
-	// finished load
-	sm.raise_startupEnded();
-	sm.runCycle();
-	//
-	//cout<< "PCV mode? " << std::boolalpha << sm.isStateActive(MVMStateMachine::main_region_PCV) << endl;
-	//cout<< "ventilation off? " << std::boolalpha << sm.isStateActive(MVMStateMachine::main_region_PCV_r1_VentilationOff) << endl;
+	sm.begin();
+	// some timers
+	AsyncDelay self_testpassed(500, AsyncDelay::MILLIS);
+	AsyncDelay run_ventilation(800, AsyncDelay::MILLIS);
+	AsyncDelay stop_ventilation(10000, AsyncDelay::MILLIS);
+	AsyncDelay finish(TOTAL_TIME_MS, AsyncDelay::MILLIS);
+	AsyncDelay cycle(100, AsyncDelay::MILLIS);
 	for (;;) {
-		auto end = std::chrono::system_clock::now();
-		std::chrono::duration<double> elapsed_seconds = end - start;
-		long sec = elapsed_seconds.count();
-		// after 2 seconds run it
-		if (sec > 2 && sec < 4 && ! running){
-			std::cout << "start running" << std::endl;
-			running = true;
-			sm.raise_startVentilation();
+		if (cycle.isExpired()) {
+			std::cout << ".";
+			// some commands
+			sm.set_self_test_passed(true);
+			if (self_testpassed.isExpired()) {
+				// pass the self tests
+				std::cout << "self test passed" << std::endl;
+				sm.set_self_test_passed(true);
+				self_testpassed.start(TOTAL_TIME_MS, AsyncDelay::MILLIS);
+			}
+			if (run_ventilation.isExpired()) {
+				std::cout << "starting ventilation in ASV" << std::endl;
+				sm.set_Mode(MVM_mode::A_SUPPORTED_V);
+				sm.startVentilation();
+				run_ventilation.start(TOTAL_TIME_MS, AsyncDelay::MILLIS);
+			}
+			if (stop_ventilation.isExpired()) {
+				std::cout << "stopping ventilation" << std::endl;
+				sm.set_Stop_PCV_PSV();
+				stop_ventilation.start(TOTAL_TIME_MS, AsyncDelay::MILLIS);
+			}
+			sm.loop();
+			cycle.restart();
+			if (finish.isExpired())
+				break;
 		}
-		// after 4 seconds stop it
-		if (sec > 4 && running) {
-			std::cout << "stopping" << std::endl;
-			running = false;
-			sm.set_stopVentilation(true);
-		}
-		sm.runCycle();
-		timer_sct.updateActiveTimer(&sm, 1); // 10 milliseconds
-		if (sec > 10)
-			break;
-		//if (sm.getDefaultSCI()->isRaised_finish()){
-		//	std::cout << "finish raised" << std::endl;
-		//	break;
-		//}
-	}*/
+	}
+
 	return 0;
 }
