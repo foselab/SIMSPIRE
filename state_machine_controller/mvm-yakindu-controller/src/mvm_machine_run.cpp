@@ -11,10 +11,26 @@
 #include <iostream>
 #include <chrono>
 #include "MVMTimerInterface.h"
+#include "state_machine.h"
+#include "ValvesController.h"
+#include "BreathingMonitor.h"
+#include "Alarms.h"
 
 using namespace std;
 
 int main() {
+	mvm::ValvesController v;
+	mvm::BreathingMonitor b;
+	mvm::Alarms a;
+
+	mvm::StateMachine sm (v, b, a);
+
+
+	//sm.begin();
+	//sm.startVentilation();
+	//sm.loop();
+
+
 /*	mvm::MVMTimerInterface timer_sct;
 	bool running = false;
 	auto start = std::chrono::system_clock::now();

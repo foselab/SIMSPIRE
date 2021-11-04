@@ -144,12 +144,13 @@ class StateMachine {
 			MVMStateMachineCore::MVMStateMachineCoreStates> {
 		StateMachine *m_sm;
 
-		void refreshASVValues(int n);
-
 	public:
 		SMTraceObserver(StateMachine *state_machine) :
 				m_sm { state_machine } {
 		}
+
+		void refreshASVValues(int n);
+
 		void
 		stateEntered(MVMStateMachineCore::MVMStateMachineCoreStates state)
 				override;
@@ -202,7 +203,7 @@ class StateMachine {
 		float targetRRate;
 		int index = 0;
 		float prevF;
-		Pressure Pinsp = param_Pinsp_PSV.default_val;;
+		Pressure Pinsp = param_Pinsp_PSV.default_val;
 	} m_asv;
 	// APNEA BACKUP
 	struct APData {
@@ -323,6 +324,9 @@ public:
 	Pressure get_ITS_PCV() const {
 		return m_pcv.ITS;
 	}
+	// ASV
+
+
 
 	// PSV
 	// P_insp when in PSV mode
