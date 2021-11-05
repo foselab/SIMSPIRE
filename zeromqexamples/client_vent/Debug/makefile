@@ -44,7 +44,7 @@ all: client_vent.exe
 client_vent.exe: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cygwin C++ Linker'
-	g++ -L"C:\Users\Andrea_PC\YAKINDU_SCTPRO\ws\client_vent2\libzmq\lib" -o "client_vent.exe" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++  -o "client_vent.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

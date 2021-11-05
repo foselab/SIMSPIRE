@@ -6,18 +6,21 @@
 CPP_SRCS += \
 ../src/HAL.cpp \
 ../src/MVMTimerInterface.cpp \
+../src/SMTraceObserver.cpp \
 ../src/StateMachineOCBs.cpp \
 ../src/mvm_machine_run.cpp 
 
 OBJS += \
 ./src/HAL.o \
 ./src/MVMTimerInterface.o \
+./src/SMTraceObserver.o \
 ./src/StateMachineOCBs.o \
 ./src/mvm_machine_run.o 
 
 CPP_DEPS += \
 ./src/HAL.d \
 ./src/MVMTimerInterface.d \
+./src/SMTraceObserver.d \
 ./src/StateMachineOCBs.d \
 ./src/mvm_machine_run.d 
 
