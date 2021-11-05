@@ -23,10 +23,7 @@ public class HelloWorldServer {
 				// Send a response
 				String response;
 				if (msg.split(" ")[0].equals("getFlow")) {
-					if (n < 5)
-						response = "LOW";
-					else
-						response = "HIGH";
+						response = "1";
 				} else {
 					n = Integer.parseInt(msg.split(" ")[1]);
 					response = "ACK";

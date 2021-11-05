@@ -18,7 +18,7 @@
 
 using namespace std;
 
-#define TOTAL_TIME_MS 11000
+#define TOTAL_TIME_MS 110000
 
 int main() {
 	mvm::ValvesController valves_controller { };
@@ -30,7 +30,7 @@ int main() {
 	// some timers
 	AsyncDelay self_testpassed(500, AsyncDelay::MILLIS);
 	AsyncDelay run_ventilation(800, AsyncDelay::MILLIS);
-	AsyncDelay stop_ventilation(10000, AsyncDelay::MILLIS);
+	AsyncDelay stop_ventilation(100000, AsyncDelay::MILLIS);
 	AsyncDelay finish(TOTAL_TIME_MS, AsyncDelay::MILLIS);
 	AsyncDelay cycle(100, AsyncDelay::MILLIS);
 	for (;;) {

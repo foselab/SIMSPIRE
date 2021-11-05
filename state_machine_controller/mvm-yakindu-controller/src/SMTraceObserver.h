@@ -8,6 +8,7 @@
 #include <src-gen/MVMStateMachineCore.h>
 #include <src-gen/sc_tracing.h>
 #include <cmath>
+#include <iostream>
 #include "state_machine.h"
 #include "ASVUtility.h"
 
@@ -91,13 +92,7 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	rc = timeAvg / 5;
 
 	// Compute the target values
-	m_sm->m_asv.targetRRate =
-			(sqrt(
-					1
-							+ 2 * a * rc
-									* (m_sm->m_state_machine.getTargetMinuteVentilationASV()
-											- m_sm->m_asv.prevF / vD) / vD) - 1)
-					/ (a * rc);
+	m_sm->m_asv.targetRRate = (sqrt(1 + 2 * a * rc * (m_sm->m_state_machine.getTargetMinuteVentilationASV() - m_sm->m_asv.prevF / vD) / vD) - 1) / (a * rc);
 	m_sm->m_asv.targetVTidal =
 			m_sm->m_state_machine.getTargetMinuteVentilationASV()
 					/ m_sm->m_asv.targetRRate;

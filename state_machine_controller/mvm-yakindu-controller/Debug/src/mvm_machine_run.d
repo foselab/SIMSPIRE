@@ -13,6 +13,8 @@ src/mvm_machine_run.o: ../src/mvm_machine_run.cpp \
  F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src\mocks/Alarms.h \
  F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src\mocks/BreathingMonitor.h \
  F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src\mocks/Serial.h \
+ F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\libzmq\include/zmq.hpp \
+ F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\libzmq\include/zmq.h \
  ../src/StateMachineOCBs.h \
  F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src\mocks/ValvesController.h \
  F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src\mocks/pressure.h \
@@ -32,6 +34,8 @@ F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src
 F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src\mocks/Alarms.h:
 F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src\mocks/BreathingMonitor.h:
 F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src\mocks/Serial.h:
+F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\libzmq\include/zmq.hpp:
+F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\libzmq\include/zmq.h:
 ../src/StateMachineOCBs.h:
 F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src\mocks/ValvesController.h:
 F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src\mocks/pressure.h:

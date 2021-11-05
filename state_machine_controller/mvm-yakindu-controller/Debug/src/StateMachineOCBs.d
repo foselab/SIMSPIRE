@@ -4,6 +4,8 @@ src/StateMachineOCBs.o: ../src/StateMachineOCBs.cpp \
  ../src/state_machine.h \
  F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src\mocks/BreathingMonitor.h \
  F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src\mocks/Serial.h \
+ F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\libzmq\include/zmq.hpp \
+ F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\libzmq\include/zmq.h \
  ../src/MVMTimerInterface.h \
  F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src/src-gen/MVMStateMachineCore.h \
  F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src/VentilationModes.h \
@@ -24,6 +26,8 @@ F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src
 ../src/state_machine.h:
 F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src\mocks/BreathingMonitor.h:
 F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src\mocks/Serial.h:
+F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\libzmq\include/zmq.hpp:
+F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\libzmq\include/zmq.h:
 ../src/MVMTimerInterface.h:
 F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src/src-gen/MVMStateMachineCore.h:
 F:\Repository\ MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\src/VentilationModes.h:

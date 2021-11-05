@@ -46,7 +46,7 @@ all: mvm-yakindu-controller.exe
 mvm-yakindu-controller.exe: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cygwin C++ Linker'
-	g++  -o "mvm-yakindu-controller.exe" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L"F:\Repository MVM\mvm-adapt\state_machine_controller\mvm-yakindu-controller\libzmq\lib" -o "mvm-yakindu-controller.exe" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
