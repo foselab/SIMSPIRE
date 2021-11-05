@@ -27,6 +27,7 @@ int main() {
 	mvm::StateMachine sm { valves_controller, breathing_monitor, alarms };
 
 	sm.begin();
+
 	// some timers
 	AsyncDelay self_testpassed(500, AsyncDelay::MILLIS);
 	AsyncDelay run_ventilation(800, AsyncDelay::MILLIS);

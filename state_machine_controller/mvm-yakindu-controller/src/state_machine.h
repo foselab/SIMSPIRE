@@ -20,6 +20,7 @@
 #include <src-gen/MVMStateMachineCore.h>
 #include <src-gen/sc_tracing.h>
 #include <limits>
+#include <iostream>
 
 namespace mvm {
 
@@ -153,8 +154,6 @@ class StateMachine {
 		void stateEntered(MVMStateMachineCore::MVMStateMachineCoreStates state) override {};
 
 		void stateExited(MVMStateMachineCore::MVMStateMachineCoreStates state) override {};
-
-		~SMTraceObserver() {}
 	};
 	// members
 	MVMStateMachineCore m_state_machine { };
