@@ -31,6 +31,7 @@ constexpr auto ASV_Inspiration =
 
 void mvm::StateMachine::SMTraceObserver::stateEntered(
 		MVMStateMachineCore::MVMStateMachineCoreStates state) {
+
 	// On start of a new breathing cycle
 	// VERY IMPORTANT: When PSV this event must be called after triggering
 	if (state == PCV_Inspiration || state == PSV_Inspiration) {
@@ -76,10 +77,10 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 			- m_sm->m_asv.expirationTimes[m_sm->m_asv.index];
 
 	// Get the real values for tidal volume and respiratory rate
-	m_breathing_monitor.GetOutputValue(
+	m_sm->m_breathing_monitor.GetOutputValue(
 			mvm::BreathingMonitor::Output::TIDAL_VOLUME,
 			&m_sm->m_asv.vTidals[m_sm->m_asv.index]);
-	m_breathing_monitor.GetOutputValue(mvm::BreathingMonitor::Output::RESP_RATE,
+	m_sm->m_breathing_monitor.GetOutputValue(mvm::BreathingMonitor::Output::RESP_RATE,
 			&m_sm->m_asv.rRates[m_sm->m_asv.index]);
 	m_sm->m_asv.index = (m_sm->m_asv.index + 1) % 8;
 
@@ -101,14 +102,15 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	// Adapt based on the target values
 	if (rRateAvg > m_sm->m_asv.targetRRate)
 		m_sm->m_asv.Pinsp = Pressure(
-				m_sm->m_asv.Pinsp.millibar() - Pressure(2).millibar());
+				m_sm->m_asv.Pinsp.millibar() - mvm::Pressure(2).millibar());
 	else if (rRateAvg < m_sm->m_asv.targetRRate)
 		m_sm->m_asv.Pinsp = Pressure(
-				m_sm->m_asv.Pinsp.millibar() + Pressure(2).millibar());
+				m_sm->m_asv.Pinsp.millibar() + mvm::Pressure(2).millibar());
 }
 
 void mvm::StateMachine::SMTraceObserver::stateExited(
 		MVMStateMachineCore::MVMStateMachineCoreStates state) {
+	std::cout << "STATE EXITED" << std::endl;
 
 	// When respiratory cycle finish
 	if (state == PCV_Expiration || state == PSV_Expiration) {

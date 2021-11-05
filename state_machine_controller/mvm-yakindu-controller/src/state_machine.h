@@ -21,6 +21,7 @@
 #include <src-gen/sc_tracing.h>
 #include <limits>
 #include <iostream>
+#include <cmath>
 
 namespace mvm {
 
@@ -149,11 +150,12 @@ class StateMachine {
 				m_sm { state_machine } {
 		}
 
-		void refreshASVValues(int n) {};
+		void refreshASVValues(int n);
 
-		void stateEntered(MVMStateMachineCore::MVMStateMachineCoreStates state) override {};
+		void stateEntered(MVMStateMachineCore::MVMStateMachineCoreStates state) override;
 
-		void stateExited(MVMStateMachineCore::MVMStateMachineCoreStates state) override {};
+		void stateExited(MVMStateMachineCore::MVMStateMachineCoreStates state) override;
+
 	};
 	// members
 	MVMStateMachineCore m_state_machine { };

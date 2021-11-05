@@ -10,12 +10,13 @@ class Pressure
 
   float m_cmH2O;
 
+public:
+
   explicit constexpr Pressure(float cm)
       : m_cmH2O(cm)
   {
   }
 
- public:
   constexpr float millibar() const
   {
     return static_cast<float>(m_cmH2O * cmH2O_to_millibar);
