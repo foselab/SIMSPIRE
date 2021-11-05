@@ -199,7 +199,7 @@ class StateMachine {
 		float rRates[8];
 		float targetRRate;
 		int index = 0;
-		float prevF;
+		float prevF = 12;
 		Pressure Pinsp = param_Pinsp_PSV.default_val;
 	} m_asv;
 	// APNEA BACKUP

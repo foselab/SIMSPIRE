@@ -96,6 +96,7 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	m_sm->m_asv.targetVTidal =
 			m_sm->m_state_machine.getTargetMinuteVentilationASV()
 					/ m_sm->m_asv.targetRRate;
+	m_sm->m_asv.prevF = m_sm->m_asv.targetRRate;
 
 	// Adapt based on the target values
 	if (rRateAvg > m_sm->m_asv.targetRRate)
