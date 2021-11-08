@@ -69,6 +69,8 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	float a = 2 * M_PI * M_PI / 60;
 	float vD = m_sm->m_state_machine.getIbwASV() * 2.2;
 
+	std::cout << "COMPUTING ASV VALUES" << std::endl;
+
 	// Time corresponding to the exiration duration
 	auto current_time = std::chrono::system_clock::now();
 	auto duration_in_seconds = std::chrono::duration<double>(
@@ -110,8 +112,6 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 
 void mvm::StateMachine::SMTraceObserver::stateExited(
 		MVMStateMachineCore::MVMStateMachineCoreStates state) {
-	std::cout << "STATE EXITED" << std::endl;
-
 	// When respiratory cycle finish
 	if (state == PCV_Expiration || state == PSV_Expiration) {
 		m_sm->m_breathing_monitor.TransitionEndCycle_Event_cb();

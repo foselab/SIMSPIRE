@@ -649,6 +649,7 @@ void MVMStateMachineCore::enact_main_region_ASV_r1_Expiration()
 {
 	/* Entry action for state 'Expiration'. */
 	timerService->setTimer(this, (sc_eventid)(&timeEvents[22]), MVMStateMachineCore::triggerWindowDelay_ms, false);
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[23]), expiration_duration_ms, false);
 	ifaceOperationCallback->closeInputValve();
 	ifaceOperationCallback->openOutputValve();
 }
@@ -657,8 +658,8 @@ void MVMStateMachineCore::enact_main_region_ASV_r1_Expiration()
 void MVMStateMachineCore::enact_main_region_ASV_r1_Inspiration()
 {
 	/* Entry action for state 'Inspiration'. */
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[23]), MVMStateMachineCore::min_insp_time_ms, false);
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[24]), max_insp_time_asv, false);
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[24]), MVMStateMachineCore::min_insp_time_ms, false);
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[25]), max_insp_time_asv, false);
 	ifaceOperationCallback->openInputValve(ASV);
 }
 
@@ -771,6 +772,7 @@ void MVMStateMachineCore::exact_main_region_ASV_r1_Expiration()
 {
 	/* Exit action for state 'Expiration'. */
 	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[22]));
+	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[23]));
 	ifaceOperationCallback->closeOutputValve();
 }
 
@@ -778,8 +780,8 @@ void MVMStateMachineCore::exact_main_region_ASV_r1_Expiration()
 void MVMStateMachineCore::exact_main_region_ASV_r1_Inspiration()
 {
 	/* Exit action for state 'Inspiration'. */
-	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[23]));
 	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[24]));
+	timerService->unsetTimer(this, (sc_eventid)(&timeEvents[25]));
 }
 
 /* 'default' enter sequence for state StartUp */
@@ -2229,7 +2231,16 @@ sc_integer MVMStateMachineCore::main_region_ASV_r1_Expiration_react(const sc_int
 			enseq_main_region_ASV_r1_Inspiration_default();
 			main_region_ASV_react(0);
 			transitioned_after = 0;
-		} 
+		}  else
+		{
+			if (current.timeEvents.MVMStateMachineCore_main_region_ASV_r1_Expiration_time_event_1_raised)
+			{ 
+				exseq_main_region_ASV_r1_Expiration();
+				enseq_main_region_ASV_r1_Inspiration_default();
+				main_region_ASV_react(0);
+				transitioned_after = 0;
+			} 
+		}
 	} 
 	/* If no transition was taken then execute local reactions */
 	if ((transitioned_after) == (transitioned_before))
@@ -2335,10 +2346,12 @@ void MVMStateMachineCore::swapInEvents() {
 	timeEvents[21] = false;
 	current.timeEvents.MVMStateMachineCore_main_region_ASV_r1_Expiration_time_event_0_raised = timeEvents[22];
 	timeEvents[22] = false;
-	current.timeEvents.MVMStateMachineCore_main_region_ASV_r1_Inspiration_time_event_0_raised = timeEvents[23];
+	current.timeEvents.MVMStateMachineCore_main_region_ASV_r1_Expiration_time_event_1_raised = timeEvents[23];
 	timeEvents[23] = false;
-	current.timeEvents.MVMStateMachineCore_main_region_ASV_r1_Inspiration_time_event_1_raised = timeEvents[24];
+	current.timeEvents.MVMStateMachineCore_main_region_ASV_r1_Inspiration_time_event_0_raised = timeEvents[24];
 	timeEvents[24] = false;
+	current.timeEvents.MVMStateMachineCore_main_region_ASV_r1_Inspiration_time_event_1_raised = timeEvents[25];
+	timeEvents[25] = false;
 }
 
 void MVMStateMachineCore::clearInEvents() {
@@ -2372,6 +2385,7 @@ void MVMStateMachineCore::clearInEvents() {
 	timeEvents[22] = false;
 	timeEvents[23] = false;
 	timeEvents[24] = false;
+	timeEvents[25] = false;
 }
 
 void MVMStateMachineCore::microStep() {

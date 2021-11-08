@@ -55,24 +55,24 @@ public:
 	void GetOutputValue(Output probe, float *value) {
 		if (probe == Output::FLUX) {
 			// Initialize the Zmq context with a single IO thread
-			//zmq::context_t context { 1 };
+//			zmq::context_t context { 1 };
 
 			// Construct a REQ (request) socket and connect to interface
-			//zmq::socket_t socket { context, zmq::socket_type::req };
-			//socket.connect("tcp://localhost:5555");
+//			zmq::socket_t socket { context, zmq::socket_type::req };
+//			socket.connect("tcp://localhost:5555");
 
 			// set up some static data to send
-			std::string data { "getFlow " };
+//			std::string data { "getFlow " };
 
 			// send the request message
-			//socket.send(zmq::buffer(data), zmq::send_flags::none);
+//			socket.send(zmq::buffer(data), zmq::send_flags::none);
 
 			// wait for reply from server
-			//zmq::message_t reply { };
-			//socket.recv(reply, zmq::recv_flags::none);
+//			zmq::message_t reply { };
+//			socket.recv(reply, zmq::recv_flags::none);
 
-			//(*value) = std::stof(reply.to_string());
-			//std::cout << "Flux received: " << (*value) << std::endl;
+//			(*value) = std::stof(reply.to_string());
+//			std::cout << "Flux received: " << (*value) << std::endl;
 		}
 	}
 	bool SetConfigurationValue(Config probe, float value) {

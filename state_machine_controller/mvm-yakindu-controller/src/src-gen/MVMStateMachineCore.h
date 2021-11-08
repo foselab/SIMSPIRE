@@ -311,7 +311,7 @@ class MVMStateMachineCore : public sc::timer::TimedInterface, public sc::CycleBa
 		sc_boolean isStateActive(MVMStateMachineCoreStates state) const;
 		
 		//! number of time events used by the state machine.
-		static const sc_integer timeEventsCount = 25;
+		static const sc_integer timeEventsCount = 26;
 		
 		//! number of time events that can be active at once.
 		static const sc_integer parallelTimeEventsCount = 4;
@@ -398,6 +398,7 @@ class MVMStateMachineCore : public sc::timer::TimedInterface, public sc::CycleBa
 			sc_boolean MVMStateMachineCore_main_region_ASV_r1_InitialInspiration_time_event_1_raised;
 			sc_boolean MVMStateMachineCore_main_region_ASV_r1_InitialInspiration_time_event_2_raised;
 			sc_boolean MVMStateMachineCore_main_region_ASV_r1_Expiration_time_event_0_raised;
+			sc_boolean MVMStateMachineCore_main_region_ASV_r1_Expiration_time_event_1_raised;
 			sc_boolean MVMStateMachineCore_main_region_ASV_r1_Inspiration_time_event_0_raised;
 			sc_boolean MVMStateMachineCore_main_region_ASV_r1_Inspiration_time_event_1_raised;
 		}MVMStateMachineCoreTimeEventsEvBuf;
