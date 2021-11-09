@@ -64,14 +64,14 @@ void mvm::StateMachine::SMTraceObserver::stateEntered(
 void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	float vTidalAvg = 0;
 	float rRateAvg = 0;
-	float timeAvg = 0;
+	double timeAvg = 0;
 	float rc = 0;
-	float a = 2 * M_PI * M_PI / 60;
+	float a = (2 * M_PI * M_PI) / 60;
 	float vD = m_sm->m_state_machine.getIbwASV() * 2.2;
 
 	std::cout << "COMPUTING ASV VALUES" << std::endl;
 
-	// Time corresponding to the exiration duration
+	// Time corresponding to the expiration duration
 	auto current_time = std::chrono::system_clock::now();
 	auto duration_in_seconds = std::chrono::duration<double>(
 			current_time.time_since_epoch());
@@ -91,25 +91,35 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	rRateAvg = getMean(m_sm->m_asv.rRates, n);
 	timeAvg = getMean(m_sm->m_asv.expirationTimes, n);
 
+	std::cout << "CURRENT V_TIDAL AVG: " << vTidalAvg << std::endl;
+	std::cout << "CURRENT RR AVG: " << rRateAvg << std::endl;
+	std::cout << "CURRENT EXP_TIMES AVG: " << timeAvg << std::endl;
+
 	// Compute the RC value: an RC Circuit has a discharge time of 5 * R * C
 	// We multiply it for 60 since R is normally expressed as (cmH20 * min) / L, but we insert it as (cmH20 * sec) / L
-	rc = (timeAvg / 5) * 60;
+	rc = (timeAvg / 5);
 	std::cout << "RC: " << rc << std::endl;
 
 	// Compute the target values
-	m_sm->m_asv.targetRRate = (sqrt(1 + 2 * a * rc * (m_sm->m_state_machine.getTargetMinuteVentilationASV() - m_sm->m_asv.prevF / vD) / vD) - 1) / (a * rc);
+	m_sm->m_asv.targetRRate = (sqrt(1 + (2 * a * rc * ((m_sm->m_state_machine.getTargetMinuteVentilationASV() * m_sm->m_state_machine.getNormalMinuteVentilationASV() / 100) - (m_sm->m_asv.prevF / vD)) / vD)) - 1) / (a * rc);
+
+	std::cout << "TARGET RR: " << m_sm->m_asv.targetRRate << std::endl;
+
 	m_sm->m_asv.targetVTidal =
 			m_sm->m_state_machine.getTargetMinuteVentilationASV()
 					/ m_sm->m_asv.targetRRate;
-	m_sm->m_asv.prevF = m_sm->m_asv.targetRRate;
+
+	std::cout << "TARGET VTidal: " << m_sm->m_asv.targetVTidal << std::endl;
+
+	m_sm->m_asv.prevF = rRateAvg;
 
 	// Adapt based on the target values
-	if (rRateAvg > m_sm->m_asv.targetRRate)
+	if (rRateAvg > m_sm->m_asv.targetRRate + 0.5)
 		m_sm->m_asv.Pinsp = Pressure(
-				m_sm->m_asv.Pinsp.millibar() - mvm::Pressure(2).millibar());
-	else if (rRateAvg < m_sm->m_asv.targetRRate)
+				m_sm->m_asv.Pinsp.millibar() - mvm::Pressure(1).millibar());
+	else if (rRateAvg < m_sm->m_asv.targetRRate - 0.5)
 		m_sm->m_asv.Pinsp = Pressure(
-				m_sm->m_asv.Pinsp.millibar() + mvm::Pressure(2).millibar());
+				m_sm->m_asv.Pinsp.millibar() + mvm::Pressure(1).millibar());
 }
 
 void mvm::StateMachine::SMTraceObserver::stateExited(

@@ -18,6 +18,16 @@ float getMean(float* v, int n) {
 	return mean/n;
 }
 
+double getMean(double* v, int n) {
+	double mean = 0;
+
+	for (int i=0; i<n; i++) {
+		mean += v[i];
+	}
+
+	return mean/n;
+}
+
 
 
 #endif /* ASVUTILITY_H_ */

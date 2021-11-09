@@ -194,7 +194,7 @@ class StateMachine {
 	} m_psv;
 	// ASV Data
 	struct ASVData {
-		float expirationTimes[8];
+		double expirationTimes[8];
 		float vTidals[8];
 		float targetVTidal;
 		float rRates[8];

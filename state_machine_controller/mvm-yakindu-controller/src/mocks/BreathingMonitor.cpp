@@ -132,7 +132,7 @@ void mvm::BreathingMonitor::GetOutputValue(Output probe, float *value) {
 		// TODO:
 		break;
 	case Output::RESP_RATE:
-		// TODO:
+		(*value) = r_rate;
 		break;
 	default:
 		break;
