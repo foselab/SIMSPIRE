@@ -22,11 +22,11 @@ namespace mvm {
  */
 class BreathingMonitor {
 	bool first;
-	float oldTime;
+	double oldTime;
 	float pressure_p;
 	double volume;
-	float oldFlux;
-	float flux;
+	double oldFlux;
+	double flux;
 	float flux_peak;
 	float r_rate;
 

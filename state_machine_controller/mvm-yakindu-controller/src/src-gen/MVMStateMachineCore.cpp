@@ -34,6 +34,7 @@ rcASV(0.0),
 numCycle(0),
 inspiration_duration_ms(1666),
 expiration_duration_ms(3334),
+expiration_duration_asv_ms(3334),
 max_insp_time_psv(7000),
 max_insp_time_asv(7000),
 apnealag(30000),
@@ -356,6 +357,16 @@ void MVMStateMachineCore::setExpiration_duration_ms(int32_t value)
 	this->expiration_duration_ms = value;
 }
 
+int32_t MVMStateMachineCore::getExpiration_duration_asv_ms() const
+{
+	return expiration_duration_asv_ms;
+}
+
+void MVMStateMachineCore::setExpiration_duration_asv_ms(int32_t value)
+{
+	this->expiration_duration_asv_ms = value;
+}
+
 int32_t MVMStateMachineCore::getTriggerWindowDelay_ms() const
 {
 	return triggerWindowDelay_ms;
@@ -649,7 +660,7 @@ void MVMStateMachineCore::enact_main_region_ASV_r1_Expiration()
 {
 	/* Entry action for state 'Expiration'. */
 	timerService->setTimer(this, (sc_eventid)(&timeEvents[22]), MVMStateMachineCore::triggerWindowDelay_ms, false);
-	timerService->setTimer(this, (sc_eventid)(&timeEvents[23]), expiration_duration_ms, false);
+	timerService->setTimer(this, (sc_eventid)(&timeEvents[23]), expiration_duration_asv_ms, false);
 	ifaceOperationCallback->closeInputValve();
 	ifaceOperationCallback->openOutputValve();
 }

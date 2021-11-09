@@ -145,6 +145,10 @@ class StateMachine {
 	class SMTraceObserver: public sc::trace::TraceObserver<MVMStateMachineCore::MVMStateMachineCoreStates> {
 		StateMachine *m_sm;
 
+		void adaptVolume(float vTidalAvg);
+
+		void adaptRate(float rRateAvg, float rc);
+
 	public:
 		SMTraceObserver(StateMachine *state_machine) :
 				m_sm { state_machine } {
@@ -200,8 +204,9 @@ class StateMachine {
 		float rRates[8];
 		float targetRRate;
 		int index = 0;
-		float prevF = 12;
+		float prevF = 10;
 		Pressure Pinsp = param_Pinsp_PSV.default_val;
+		float rRate = 0;
 	} m_asv;
 	// APNEA BACKUP
 	struct APData {

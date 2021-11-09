@@ -22,7 +22,9 @@ void mvm::BreathingMonitor::getFlux() {
 	socket.recv(reply, zmq::recv_flags::none);
 	double value = std::stof(reply.to_string());
 	flux = value;
-	double time = std::chrono::system_clock::now().time_since_epoch().count();
+
+	double time = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+
 	//------------------
 	// If it is not the first iteration, then compute the volume with the integral
 	//------------------

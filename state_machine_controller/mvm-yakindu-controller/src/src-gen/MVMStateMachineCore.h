@@ -191,6 +191,12 @@ class MVMStateMachineCore : public sc::timer::TimedInterface, public sc::CycleBa
 		/*! Sets the value of the variable 'expiration_duration_ms' that is defined in the default interface scope. */
 		void setExpiration_duration_ms(int32_t value);
 		
+		/*! Gets the value of the variable 'expiration_duration_asv_ms' that is defined in the default interface scope. */
+		int32_t getExpiration_duration_asv_ms() const;
+		
+		/*! Sets the value of the variable 'expiration_duration_asv_ms' that is defined in the default interface scope. */
+		void setExpiration_duration_asv_ms(int32_t value);
+		
 		/*! Gets the value of the variable 'triggerWindowDelay_ms' that is defined in the default interface scope. */
 		int32_t getTriggerWindowDelay_ms() const;
 		
@@ -346,6 +352,7 @@ class MVMStateMachineCore : public sc::timer::TimedInterface, public sc::CycleBa
 		int32_t numCycle;
 		int32_t inspiration_duration_ms;
 		int32_t expiration_duration_ms;
+		int32_t expiration_duration_asv_ms;
 		static const int32_t triggerWindowDelay_ms;
 		static const int32_t min_insp_time_ms;
 		int32_t max_insp_time_psv;
