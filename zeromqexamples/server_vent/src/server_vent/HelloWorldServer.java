@@ -21,12 +21,14 @@ public class HelloWorldServer {
 				System.out.println("Received: [" + msg + "]");
 
 				// Send a response
-				String response;
+				String response = "";
 				if (msg.split(" ")[0].equals("getFlow")) {
 						response = "1";
 				} else {
-					n = Integer.parseInt(msg.split(" ")[1]);
-					response = "ACK";
+					if (msg.split(" ")[0].equals("setPressure")) {
+						n = Integer.parseInt(msg.split(" ")[1]);
+						response = "ACK";
+					}
 				}
 				
 				socket.send(response.getBytes(ZMQ.CHARSET), 0);

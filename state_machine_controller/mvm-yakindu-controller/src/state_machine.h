@@ -553,6 +553,7 @@ public:
 		m_stop_watch.restart();
 		m_timers.updateTimers(&m_state_machine, elapsed);
 		m_state_machine.runCycle();
+		m_breathing_monitor.loop();
 	}
 	// OCBsmust have access to the internals of the state machine
 	friend class MVMStateMachineOCBs;

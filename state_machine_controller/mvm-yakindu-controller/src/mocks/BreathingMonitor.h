@@ -19,6 +19,7 @@ namespace mvm {
  * FAKE class of the real BreathingMonitor
  */
 class BreathingMonitor {
+
 public:
 	enum class Config {
 		VENTILATOR_RUN,
@@ -53,26 +54,25 @@ public:
 	void TransitionEndCycle_Event_cb() {
 	}
 	void GetOutputValue(Output probe, float *value) {
-		if (probe == Output::FLUX) {
+		if (probe == Output::TIDAL_VOLUME) {
 			// Initialize the Zmq context with a single IO thread
-//			zmq::context_t context { 1 };
+			zmq::context_t context { 1 };
 
 			// Construct a REQ (request) socket and connect to interface
-//			zmq::socket_t socket { context, zmq::socket_type::req };
-//			socket.connect("tcp://localhost:5555");
+			zmq::socket_t socket { context, zmq::socket_type::req };
+			socket.connect("tcp://localhost:5555");
 
-			// set up some static data to send
-//			std::string data { "getFlow " };
+			// Set up the message to be sent for requesting the flow
+			std::string data { "getVolume " };
 
 			// send the request message
-//			socket.send(zmq::buffer(data), zmq::send_flags::none);
+			socket.send(zmq::buffer(data), zmq::send_flags::none);
 
 			// wait for reply from server
-//			zmq::message_t reply { };
-//			socket.recv(reply, zmq::recv_flags::none);
+			zmq::message_t reply { };
+			socket.recv(reply, zmq::recv_flags::none);
 
-//			(*value) = std::stof(reply.to_string());
-//			std::cout << "Flux received: " << (*value) << std::endl;
+			(*value) = std::stof(reply.to_string());
 		}
 	}
 	bool SetConfigurationValue(Config probe, float value) {
@@ -81,6 +81,9 @@ public:
 	void GetConfigurationValue(Config probe, float *value) const {
 	}
 	void GetOutputValue(Output probe, float *value) const {
+	}
+	void loop() {
+
 	}
 
 };
