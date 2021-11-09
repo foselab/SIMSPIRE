@@ -4,14 +4,17 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/mocks/BreathingMonitor.cpp \
 ../src/mocks/Serial.cpp \
 ../src/mocks/ValvesController.cpp 
 
 OBJS += \
+./src/mocks/BreathingMonitor.o \
 ./src/mocks/Serial.o \
 ./src/mocks/ValvesController.o 
 
 CPP_DEPS += \
+./src/mocks/BreathingMonitor.d \
 ./src/mocks/Serial.d \
 ./src/mocks/ValvesController.d 
 

@@ -12,6 +12,8 @@
 #include <string>
 #include <iostream>
 #include <zmq.hpp>
+#include <chrono>
+#include <ctime>
 
 namespace mvm {
 
@@ -19,8 +21,25 @@ namespace mvm {
  * FAKE class of the real BreathingMonitor
  */
 class BreathingMonitor {
+	bool first;
+	float oldTime;
+	float pressure_p;
+	float volume;
+	float oldFlux;
+	float flux;
+	float flux_peak;
+	float r_rate;
+
+	void getFlux();
+	void getPressure();
+	void getFluxPeak();
+	void getRespiratoryRate();
 
 public:
+	BreathingMonitor();
+	float getVolume();
+	void setVolume(float volume);
+
 	enum class Config {
 		VENTILATOR_RUN,
 		PRESSURE_SETPOINT,
@@ -30,6 +49,7 @@ public:
 		VENTURI_COEFF_3,
 		VENTURI_COEFF_4
 	};
+
 	enum class Output {
 		FLUX,         // REALTIME: Flux
 		PRESSURE_L,   // REALTIME: Pressure Loop
@@ -47,44 +67,18 @@ public:
 		PEEP,         // CYCLE-TO-CYCLE: Measured peep
 		TINSP         // TODO
 	};
+
 	void TransitionNewCycle_Event_cb() {
 	}
 	void TransitionInhaleExhale_Event_cb() {
 	}
 	void TransitionEndCycle_Event_cb() {
 	}
-	void GetOutputValue(Output probe, float *value) {
-		if (probe == Output::TIDAL_VOLUME) {
-			// Initialize the Zmq context with a single IO thread
-			zmq::context_t context { 1 };
-
-			// Construct a REQ (request) socket and connect to interface
-			zmq::socket_t socket { context, zmq::socket_type::req };
-			socket.connect("tcp://localhost:5555");
-
-			// Set up the message to be sent for requesting the flow
-			std::string data { "getVolume " };
-
-			// send the request message
-			socket.send(zmq::buffer(data), zmq::send_flags::none);
-
-			// wait for reply from server
-			zmq::message_t reply { };
-			socket.recv(reply, zmq::recv_flags::none);
-
-			(*value) = std::stof(reply.to_string());
-		}
-	}
-	bool SetConfigurationValue(Config probe, float value) {
-		return true;
-	}
-	void GetConfigurationValue(Config probe, float *value) const {
-	}
-	void GetOutputValue(Output probe, float *value) const {
-	}
-	void loop() {
-
-	}
+	void GetOutputValue(Output probe, float *value);
+	bool SetConfigurationValue(Config probe, float value);
+	void GetConfigurationValue(Config probe, float *value) const;
+	void GetOutputValue(Output probe, float *value) const;
+	void loop();
 
 };
 } // namespace mvm

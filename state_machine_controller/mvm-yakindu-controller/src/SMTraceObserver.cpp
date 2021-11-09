@@ -92,7 +92,8 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	timeAvg = getMean(m_sm->m_asv.expirationTimes, n);
 
 	// Compute the RC value: an RC Circuit has a discharge time of 5 * R * C
-	rc = timeAvg / 5;
+	// We multiply it for 60 since R is normally expressed as (cmH20 * min) / L, but we insert it as (cmH20 * sec) / L
+	rc = (timeAvg / 5) * 60;
 	std::cout << "RC: " << rc << std::endl;
 
 	// Compute the target values
