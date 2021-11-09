@@ -105,7 +105,7 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	std::cout << "TARGET RR: " << m_sm->m_asv.targetRRate << std::endl;
 
 	m_sm->m_asv.targetVTidal =
-			m_sm->m_state_machine.getTargetMinuteVentilationASV()
+			(m_sm->m_state_machine.getTargetMinuteVentilationASV() * m_sm->m_state_machine.getNormalMinuteVentilationASV() / 100)
 					/ m_sm->m_asv.targetRRate;
 
 	std::cout << "TARGET VTidal: " << m_sm->m_asv.targetVTidal << std::endl;
