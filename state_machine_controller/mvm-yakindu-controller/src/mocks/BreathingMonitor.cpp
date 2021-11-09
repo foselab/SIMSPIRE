@@ -99,6 +99,7 @@ mvm::BreathingMonitor::BreathingMonitor() {
 	pressure_p = 0;
 	flux = 0;
 	flux_peak = 0;
+	r_rate = 0;
 }
 float mvm::BreathingMonitor::getVolume() {
 	return volume;
