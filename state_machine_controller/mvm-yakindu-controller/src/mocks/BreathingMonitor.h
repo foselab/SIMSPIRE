@@ -24,7 +24,7 @@ class BreathingMonitor {
 	bool first;
 	float oldTime;
 	float pressure_p;
-	float volume;
+	double volume;
 	float oldFlux;
 	float flux;
 	float flux_peak;
