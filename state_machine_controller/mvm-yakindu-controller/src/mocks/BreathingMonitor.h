@@ -30,12 +30,14 @@ class BreathingMonitor {
 	float flux_peak;
 	float r_rate;
 	float p_peak;
+	float peep;
 
 	void getFlux();
 	void getPressure();
 	void getFluxPeak();
 	void getRespiratoryRate();
 	void getPeakPressure();
+	void getPeep();
 
 public:
 	BreathingMonitor();

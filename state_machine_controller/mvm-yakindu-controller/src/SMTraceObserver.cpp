@@ -65,20 +65,20 @@ void mvm::StateMachine::SMTraceObserver::adaptVolume(float vTidalAvg) {
 	// Adapt based on the target values for volume
 	if (vTidalAvg > m_sm->m_asv.targetVTidal + 5) {
 		Pressure p = Pressure(
-				m_sm->m_asv.Pinsp.cmH2O() - mvm::Pressure(2).cmH2O());
+				m_sm->m_asv.Pinsp.cmH2O() - mvm::Pressure(1).cmH2O());
 		// Lower limit
 		if (p.cmH2O() >= 4.4 * m_sm->m_state_machine.getIbwASV()) {
 			m_sm->m_asv.Pinsp = Pressure(
-					m_sm->m_asv.Pinsp.cmH2O() - mvm::Pressure(2).cmH2O());
+					m_sm->m_asv.Pinsp.cmH2O() - mvm::Pressure(1).cmH2O());
 		}
 	} else if (vTidalAvg < m_sm->m_asv.targetVTidal - 5) {
 		Pressure p = Pressure(
-				m_sm->m_asv.Pinsp.cmH2O() + mvm::Pressure(2).cmH2O());
+				m_sm->m_asv.Pinsp.cmH2O() + mvm::Pressure(1).cmH2O());
 		// Upper limit
 		if (p.cmH2O() < 45
 				&& p.cmH2O() <= 22 * m_sm->m_state_machine.getIbwASV()) {
 			m_sm->m_asv.Pinsp = Pressure(
-					m_sm->m_asv.Pinsp.cmH2O() + mvm::Pressure(2).cmH2O());
+					m_sm->m_asv.Pinsp.cmH2O() + mvm::Pressure(1).cmH2O());
 		}
 	}
 }
@@ -106,6 +106,7 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	float meanRC = 0;
 	double timeAvg = 0;
 	float peep = 0;
+	float realPeep = 0;
 	float p_peak;
 	float rc = 0;
 	float a = (2 * M_PI * M_PI) / 60;
@@ -127,12 +128,14 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 			&m_sm->m_asv.rRates[m_sm->m_asv.index]);
 	// Store the current value of RC
 	m_sm->m_breathing_monitor.GetOutputValue(
+				mvm::BreathingMonitor::Output::PEEP, &realPeep);
+	m_sm->m_breathing_monitor.GetOutputValue(
 			mvm::BreathingMonitor::Output::PRESSURE_P, &peep);
 	m_sm->m_breathing_monitor.GetOutputValue(
 			mvm::BreathingMonitor::Output::FLAT_TOP_P, &p_peak);
 	m_sm->m_asv.rcS[m_sm->m_asv.index] =
 			-m_sm->m_asv.expirationTimes[m_sm->m_asv.index]
-					/ log(peep / p_peak);
+					/ log((peep - realPeep) / (p_peak - realPeep));
 	// Next element
 	m_sm->m_asv.index = (m_sm->m_asv.index + 1) % 8;
 
