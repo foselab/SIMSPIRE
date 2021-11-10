@@ -62,7 +62,7 @@ void mvm::StateMachine::SMTraceObserver::stateEntered(
 }
 
 void mvm::StateMachine::SMTraceObserver::adaptVolume(float vTidalAvg) {
-	int QT_CHANGE = 1;
+	int QT_CHANGE = 2;
 	// Adapt based on the target values for volume
 	if (vTidalAvg > m_sm->m_asv.targetVTidal + 5) {
 		// Lower limit
