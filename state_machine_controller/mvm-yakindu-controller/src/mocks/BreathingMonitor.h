@@ -40,6 +40,8 @@ class BreathingMonitor {
 	void getPeep();
 
 public:
+	float CORRECTION_FACTOR = 0.9;
+
 	BreathingMonitor();
 	float getVolume();
 	void setVolume(float volume);

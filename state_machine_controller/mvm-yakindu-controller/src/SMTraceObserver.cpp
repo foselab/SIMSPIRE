@@ -84,19 +84,22 @@ void mvm::StateMachine::SMTraceObserver::adaptVolume(float vTidalAvg) {
 }
 
 void mvm::StateMachine::SMTraceObserver::adaptRate(float rRateAvg, float rc) {
+	int QT_CHANGE = 500;
 	// Adapt based on the target values for rate
 	if (rRateAvg > m_sm->m_asv.targetRRate + 0.5) {
 		// Lower bound
 		if (m_sm->m_asv.rRate - 1 >= 5)
 			m_sm->m_state_machine.setExpiration_duration_asv_ms(
 					m_sm->m_state_machine.getExpiration_duration_asv_ms()
-							+ 1000);
+							+ QT_CHANGE);
 	} else if (rRateAvg < m_sm->m_asv.targetRRate - 0.5) {
 		// Upper bound
-		if (m_sm->m_asv.rRate + 1 <= 60 && m_sm->m_asv.rRate + 1 <= (20 / rc))
+		if (m_sm->m_asv.rRate + 1 <= 60 && m_sm->m_asv.rRate + 1 <= (20 / rc)
+				&& m_sm->m_state_machine.getExpiration_duration_asv_ms()
+						- QT_CHANGE >= 2 * rc * 1000 * m_sm->m_breathing_monitor.CORRECTION_FACTOR)
 			m_sm->m_state_machine.setExpiration_duration_asv_ms(
 					m_sm->m_state_machine.getExpiration_duration_asv_ms()
-							- 1000);
+							- QT_CHANGE);
 	}
 }
 
@@ -108,7 +111,7 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	float peep = 0;
 	float realPeep = 0;
 	float p_peak;
-	float rc = 0;
+	double rc = 0;
 	float a = (2 * M_PI * M_PI) / 60;
 	float vD = m_sm->m_state_machine.getIbwASV() * 2.2;
 
@@ -128,7 +131,7 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 			&m_sm->m_asv.rRates[m_sm->m_asv.index]);
 	// Store the current value of RC
 	m_sm->m_breathing_monitor.GetOutputValue(
-				mvm::BreathingMonitor::Output::PEEP, &realPeep);
+			mvm::BreathingMonitor::Output::PEEP, &realPeep);
 	m_sm->m_breathing_monitor.GetOutputValue(
 			mvm::BreathingMonitor::Output::PRESSURE_P, &peep);
 	m_sm->m_breathing_monitor.GetOutputValue(
@@ -153,7 +156,7 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 		// Compute the RC value: an RC Circuit has a discharge time of 5 * R * C
 		//rc = (timeAvg / 5);
 		meanRC = getMean(m_sm->m_asv.rcS, n);
-		rc = meanRC;
+		rc = meanRC * m_sm->m_breathing_monitor.CORRECTION_FACTOR;
 		std::cout << "RC: " << rc << std::endl;
 
 		// Compute the target values
@@ -178,11 +181,11 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 
 		m_sm->m_asv.prevF = rRateAvg;
 
-		// Adapt based on the target values for volume
-		adaptVolume(vTidalAvg);
-
 		// Adapt based on the target values for rate
 		adaptRate(rRateAvg, rc);
+
+		// Adapt based on the target values for volume
+		adaptVolume(vTidalAvg);
 	}
 }
 
