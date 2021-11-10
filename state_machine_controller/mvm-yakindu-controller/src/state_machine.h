@@ -202,6 +202,7 @@ class StateMachine {
 		float vTidals[8];
 		float targetVTidal;
 		float rRates[8];
+		float rcS[8];
 		float targetRRate;
 		int index = 0;
 		float prevF = 10;

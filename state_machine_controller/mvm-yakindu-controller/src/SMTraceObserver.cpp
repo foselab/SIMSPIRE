@@ -90,25 +90,26 @@ void mvm::StateMachine::SMTraceObserver::adaptRate(float rRateAvg, float rc) {
 		if (m_sm->m_asv.rRate - 1 >= 5)
 			m_sm->m_state_machine.setExpiration_duration_asv_ms(
 					m_sm->m_state_machine.getExpiration_duration_asv_ms()
-							+ 100);
+							+ 1000);
 	} else if (rRateAvg < m_sm->m_asv.targetRRate - 0.5) {
 		// Upper bound
 		if (m_sm->m_asv.rRate + 1 <= 60 && m_sm->m_asv.rRate + 1 <= (20 / rc))
 			m_sm->m_state_machine.setExpiration_duration_asv_ms(
 					m_sm->m_state_machine.getExpiration_duration_asv_ms()
-							- 100);
+							- 1000);
 	}
 }
 
 void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	float vTidalAvg = 0;
 	float rRateAvg = 0;
+	float meanRC = 0;
 	double timeAvg = 0;
+	float peep = 0;
+	float p_peak;
 	float rc = 0;
 	float a = (2 * M_PI * M_PI) / 60;
 	float vD = m_sm->m_state_machine.getIbwASV() * 2.2;
-
-	std::cout << "COMPUTING ASV VALUES" << std::endl;
 
 	// Time corresponding to the expiration duration
 	auto current_time = std::chrono::system_clock::now();
@@ -124,53 +125,62 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	m_sm->m_breathing_monitor.GetOutputValue(
 			mvm::BreathingMonitor::Output::RESP_RATE,
 			&m_sm->m_asv.rRates[m_sm->m_asv.index]);
-
+	// Store the current value of RC
+	m_sm->m_breathing_monitor.GetOutputValue(
+			mvm::BreathingMonitor::Output::PRESSURE_P, &peep);
+	m_sm->m_breathing_monitor.GetOutputValue(
+			mvm::BreathingMonitor::Output::FLAT_TOP_P, &p_peak);
+	m_sm->m_asv.rcS[m_sm->m_asv.index] =
+			-m_sm->m_asv.expirationTimes[m_sm->m_asv.index]
+					/ log(peep / p_peak);
+	// Next element
 	m_sm->m_asv.index = (m_sm->m_asv.index + 1) % 8;
 
-	// Compute the new values
-	vTidalAvg = getMean(m_sm->m_asv.vTidals, n);
-	rRateAvg = getMean(m_sm->m_asv.rRates, n);
-	timeAvg = getMean(m_sm->m_asv.expirationTimes, n);
+	if (n == 3 || n >= 8) {
+		std::cout << "COMPUTING ASV VALUES" << std::endl;
+		// Compute the new values
+		vTidalAvg = getMean(m_sm->m_asv.vTidals, n);
+		rRateAvg = getMean(m_sm->m_asv.rRates, n);
+		timeAvg = getMean(m_sm->m_asv.expirationTimes, n);
 
-	std::cout << "CURRENT V_TIDAL AVG: " << vTidalAvg << std::endl;
-	std::cout << "CURRENT RR AVG: " << rRateAvg << std::endl;
-	std::cout << "CURRENT EXP_TIMES AVG: " << timeAvg << std::endl;
+		std::cout << "CURRENT V_TIDAL AVG: " << vTidalAvg << std::endl;
+		std::cout << "CURRENT RR AVG: " << rRateAvg << std::endl;
+		std::cout << "CURRENT EXP_TIMES AVG: " << timeAvg << std::endl;
 
-	// Compute the RC value: an RC Circuit has a discharge time of 5 * R * C
-	//rc = (timeAvg / 5);
-	float peep;
-	m_sm->m_breathing_monitor.GetOutputValue(
-				mvm::BreathingMonitor::Output::PRESSURE_P,
-				&peep);
-	rc = - timeAvg / log(peep / m_sm->m_asv.Pinsp.cmH2O());
-	std::cout << "RC: " << rc << std::endl;
+		// Compute the RC value: an RC Circuit has a discharge time of 5 * R * C
+		//rc = (timeAvg / 5);
+		meanRC = getMean(m_sm->m_asv.rcS, n);
+		rc = meanRC;
+		std::cout << "RC: " << rc << std::endl;
 
-	// Compute the target values
-	m_sm->m_asv.targetRRate =
-			(sqrt(
-					1
-							+ (2 * a * rc
-									* ((m_sm->m_state_machine.getTargetMinuteVentilationASV()
-											* m_sm->m_state_machine.getNormalMinuteVentilationASV()
-											/ 100) - (m_sm->m_asv.prevF / vD))
-									/ vD)) - 1) / (a * rc);
+		// Compute the target values
+		m_sm->m_asv.targetRRate =
+				(sqrt(
+						1
+								+ (2 * a * rc
+										* ((m_sm->m_state_machine.getTargetMinuteVentilationASV()
+												* m_sm->m_state_machine.getNormalMinuteVentilationASV()
+												/ 100)
+												- (m_sm->m_asv.prevF / vD)) / vD))
+						- 1) / (a * rc);
 
-	std::cout << "TARGET RR: " << m_sm->m_asv.targetRRate << std::endl;
+		std::cout << "TARGET RR: " << m_sm->m_asv.targetRRate << std::endl;
 
-	m_sm->m_asv.targetVTidal =
-			(m_sm->m_state_machine.getTargetMinuteVentilationASV()
-					* m_sm->m_state_machine.getNormalMinuteVentilationASV()
-					/ 100) / m_sm->m_asv.targetRRate;
+		m_sm->m_asv.targetVTidal =
+				(m_sm->m_state_machine.getTargetMinuteVentilationASV()
+						* m_sm->m_state_machine.getNormalMinuteVentilationASV()
+						/ 100) / m_sm->m_asv.targetRRate;
 
-	std::cout << "TARGET VTidal: " << m_sm->m_asv.targetVTidal << std::endl;
+		std::cout << "TARGET VTidal: " << m_sm->m_asv.targetVTidal << std::endl;
 
-	m_sm->m_asv.prevF = rRateAvg;
+		m_sm->m_asv.prevF = rRateAvg;
 
-	// Adapt based on the target values for volume
-	adaptVolume(vTidalAvg);
+		// Adapt based on the target values for volume
+		adaptVolume(vTidalAvg);
 
-	// Adapt based on the target values for rate
-	adaptRate(rRateAvg, rc);
+		// Adapt based on the target values for rate
+		adaptRate(rRateAvg, rc);
+	}
 }
 
 void mvm::StateMachine::SMTraceObserver::stateExited(
@@ -183,12 +193,8 @@ void mvm::StateMachine::SMTraceObserver::stateExited(
 	}
 
 	// When in ASV, if the expiration ends, reads the new values and refresh the params
-	if (state == ASV_InitialExpiration
-			&& m_sm->m_state_machine.getNumCycle() == 3) {
-		refreshASVValues(3);
-	}
-	if (state == ASV_Expiration && m_sm->m_state_machine.getNumCycle() >= 8) {
-		refreshASVValues(8);
+	if (state == ASV_InitialExpiration || state == ASV_Expiration) {
+		refreshASVValues(m_sm->m_state_machine.getNumCycle());
 	}
 
 	// Refresh the number of cycles if needed

@@ -93,6 +93,22 @@ void mvm::BreathingMonitor::getRespiratoryRate() {
 	r_rate = std::stof(reply.to_string());
 }
 
+void mvm::BreathingMonitor::getPeakPressure() {
+	// Initialize the Zmq context with a single IO thread
+	zmq::context_t context { 1 };
+	// Construct a REQ (request) socket and connect to interface
+	zmq::socket_t socket { context, zmq::socket_type::req };
+	socket.connect("tcp://localhost:5555");
+	// Set up the message to be sent for requesting the flow
+	std::string data { "getFlatTopPressure " };
+	// send the request message
+	socket.send(zmq::buffer(data), zmq::send_flags::none);
+	// wait for reply from server
+	zmq::message_t reply { };
+	socket.recv(reply, zmq::recv_flags::none);
+	p_peak = std::stof(reply.to_string());
+}
+
 mvm::BreathingMonitor::BreathingMonitor() {
 	first = true;
 	volume = 0;
@@ -102,6 +118,7 @@ mvm::BreathingMonitor::BreathingMonitor() {
 	flux = 0;
 	flux_peak = 0;
 	r_rate = 0;
+	p_peak = 0;
 }
 float mvm::BreathingMonitor::getVolume() {
 	return volume;
@@ -136,6 +153,9 @@ void mvm::BreathingMonitor::GetOutputValue(Output probe, float *value) {
 	case Output::RESP_RATE:
 		(*value) = r_rate;
 		break;
+	case Output::FLAT_TOP_P:
+		(*value) = p_peak;
+		break;
 	default:
 		break;
 	}
@@ -157,5 +177,7 @@ void mvm::BreathingMonitor::loop() {
 	getFluxPeak();
 	// Read the respiratory rate
 	getRespiratoryRate();
+	// Read the peak of pressure
+	getPeakPressure();
 }
 
