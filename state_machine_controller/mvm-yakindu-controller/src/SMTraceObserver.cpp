@@ -62,23 +62,22 @@ void mvm::StateMachine::SMTraceObserver::stateEntered(
 }
 
 void mvm::StateMachine::SMTraceObserver::adaptVolume(float vTidalAvg) {
+	int QT_CHANGE = 1;
 	// Adapt based on the target values for volume
 	if (vTidalAvg > m_sm->m_asv.targetVTidal + 5) {
-		Pressure p = Pressure(
-				m_sm->m_asv.Pinsp.cmH2O() - mvm::Pressure(1).cmH2O());
 		// Lower limit
-		if (p.cmH2O() >= 4.4 * m_sm->m_state_machine.getIbwASV()) {
+		if (m_sm->m_asv.targetVTidal >= 4.4 * m_sm->m_state_machine.getIbwASV()) {
 			m_sm->m_asv.Pinsp = Pressure(
-					m_sm->m_asv.Pinsp.cmH2O() - mvm::Pressure(1).cmH2O());
+					m_sm->m_asv.Pinsp.cmH2O() - mvm::Pressure(QT_CHANGE).cmH2O());
 		}
 	} else if (vTidalAvg < m_sm->m_asv.targetVTidal - 5) {
 		Pressure p = Pressure(
-				m_sm->m_asv.Pinsp.cmH2O() + mvm::Pressure(1).cmH2O());
+				m_sm->m_asv.Pinsp.cmH2O() + mvm::Pressure(QT_CHANGE).cmH2O());
 		// Upper limit
 		if (p.cmH2O() < 45
-				&& p.cmH2O() <= 22 * m_sm->m_state_machine.getIbwASV()) {
+				&& m_sm->m_asv.targetVTidal <= 22 * m_sm->m_state_machine.getIbwASV()) {
 			m_sm->m_asv.Pinsp = Pressure(
-					m_sm->m_asv.Pinsp.cmH2O() + mvm::Pressure(1).cmH2O());
+					m_sm->m_asv.Pinsp.cmH2O() + mvm::Pressure(QT_CHANGE).cmH2O());
 		}
 	}
 }
