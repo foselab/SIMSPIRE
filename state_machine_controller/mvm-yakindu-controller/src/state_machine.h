@@ -149,8 +149,12 @@ class StateMachine {
 		int QT_CHANGE_R = 500;
 
 		bool adaptVolume(float vTidalAvg);
-
 		bool adaptRate(float rRateAvg, float rc);
+
+		bool increaseRate();
+		bool decreaseRate();
+		bool increasePressure();
+		bool decreasePressure();
 
 	public:
 		SMTraceObserver(StateMachine *state_machine) :
