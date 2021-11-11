@@ -145,7 +145,7 @@ class StateMachine {
 	class SMTraceObserver: public sc::trace::TraceObserver<MVMStateMachineCore::MVMStateMachineCoreStates> {
 		StateMachine *m_sm;
 
-		int QT_CHANGE_P = 2;
+		int QT_CHANGE_P = 1;
 		int QT_CHANGE_R = 500;
 
 		bool adaptVolume(float vTidalAvg);

@@ -106,7 +106,7 @@ bool mvm::StateMachine::SMTraceObserver::adaptVolume(float vTidalAvg) {
 
 bool mvm::StateMachine::SMTraceObserver::adaptRate(float rRateAvg, float rc) {
 	// Adapt based on the target values for rate
-	if (rRateAvg > m_sm->m_asv.targetRRate + 0.5) {
+	/*if (rRateAvg > m_sm->m_asv.targetRRate + 0.5) {
 		return decreaseRate();
 	}
 	else if (rRateAvg < m_sm->m_asv.targetRRate - 0.5) {
@@ -117,7 +117,10 @@ bool mvm::StateMachine::SMTraceObserver::adaptRate(float rRateAvg, float rc) {
 			return true;
 		}
 	}
-	return false;
+	return false;*/
+	if (rRateAvg > m_sm->m_asv.targetRRate + 0.5 || rRateAvg < m_sm->m_asv.targetRRate - 0.5) {
+		m_sm->m_state_machine.setExpiration_duration_asv_ms(3000*rc);
+	}
 }
 
 void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
@@ -156,8 +159,6 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	m_sm->m_asv.rcS[m_sm->m_asv.index] =
 			-m_sm->m_asv.expirationTimes[m_sm->m_asv.index]
 					/ log((peep - realPeep) / (p_peak - realPeep));
-	// Next element
-	m_sm->m_asv.index = (m_sm->m_asv.index + 1) % 8;
 
 	if (n == 3 || n >= 8) {
 		std::cout << "COMPUTING ASV VALUES" << std::endl;
@@ -166,15 +167,20 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 		rRateAvg = getMean(m_sm->m_asv.rRates, n);
 		timeAvg = getMean(m_sm->m_asv.expirationTimes, n);
 
-		std::cout << "CURRENT V_TIDAL AVG: " << vTidalAvg << std::endl;
-		std::cout << "CURRENT RR AVG: " << rRateAvg << std::endl;
-		std::cout << "CURRENT EXP_TIMES AVG: " << timeAvg << std::endl;
+		std::cout << "AVG V_TIDAL: " << vTidalAvg << std::endl;
+		std::cout << "AVG RR: " << rRateAvg << std::endl;
+		std::cout << "AVG EXP_TIMES: " << timeAvg << std::endl;
 
 		// Compute the RC value: an RC Circuit has a discharge time of 5 * R * C
 		//rc = (timeAvg / 5);
 		meanRC = getMean(m_sm->m_asv.rcS, n);
 		rc = meanRC * m_sm->m_breathing_monitor.CORRECTION_FACTOR;
 		std::cout << "RC: " << rc << std::endl;
+
+		std::cout << "CURRENT V_TIDAL: " << m_sm->m_asv.vTidals[m_sm->m_asv.index] << std::endl;
+		std::cout << "CURRENT RR: " << m_sm->m_asv.rRates[m_sm->m_asv.index] << std::endl;
+		std::cout << "CURRENT EXP_TIME: " << m_sm->m_asv.expirationTimes[m_sm->m_asv.index] << std::endl;
+		std::cout << "CURRENT RC: " << m_sm->m_asv.rcS[m_sm->m_asv.index] << std::endl;
 
 		// Compute the target values
 		m_sm->m_asv.targetRRate =
@@ -204,6 +210,9 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 		// Adapt based on the target values for volume
 		adaptVolume(vTidalAvg);
 	}
+
+	// Next element
+	m_sm->m_asv.index = (m_sm->m_asv.index + 1) % 8;
 }
 
 void mvm::StateMachine::SMTraceObserver::stateExited(
