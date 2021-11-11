@@ -110,14 +110,14 @@ bool mvm::StateMachine::SMTraceObserver::adaptRate(float rRateAvg, float rc) {
 		return decreaseRate();
 	}
 	else if (rRateAvg < m_sm->m_asv.targetRRate - 0.5) {
-	// Upper bound
-	if (m_sm->m_asv.rRate + 1 <= 60 && m_sm->m_asv.rRate + 1 <= (20 / rc)
-			&& m_sm->m_state_machine.getExpiration_duration_asv_ms() - QT_CHANGE_R >= 2 * rc * 1000 * m_sm->m_breathing_monitor.CORRECTION_FACTOR) {
-		increaseRate();
-		return true;
+		// Upper bound
+		if (m_sm->m_asv.rRate + 1 <= 60 && m_sm->m_asv.rRate + 1 <= (20 / rc)
+				&& m_sm->m_state_machine.getExpiration_duration_asv_ms() - QT_CHANGE_R >= 2 * rc * 1000 * m_sm->m_breathing_monitor.CORRECTION_FACTOR) {
+			increaseRate();
+			return true;
+		}
 	}
-}
-return false;
+	return false;
 }
 
 void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
