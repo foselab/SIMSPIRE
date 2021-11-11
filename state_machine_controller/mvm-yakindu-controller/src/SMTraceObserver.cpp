@@ -61,45 +61,57 @@ void mvm::StateMachine::SMTraceObserver::stateEntered(
 	}
 }
 
-void mvm::StateMachine::SMTraceObserver::adaptVolume(float vTidalAvg) {
-	int QT_CHANGE = 2;
+bool mvm::StateMachine::SMTraceObserver::adaptVolume(float vTidalAvg) {
 	// Adapt based on the target values for volume
 	if (vTidalAvg > m_sm->m_asv.targetVTidal + 5) {
 		// Lower limit
-		if (m_sm->m_asv.targetVTidal >= 4.4 * m_sm->m_state_machine.getIbwASV()) {
+		if (m_sm->m_asv.targetVTidal
+				>= 4.4 * m_sm->m_state_machine.getIbwASV()) {
 			m_sm->m_asv.Pinsp = Pressure(
-					m_sm->m_asv.Pinsp.cmH2O() - mvm::Pressure(QT_CHANGE).cmH2O());
+					m_sm->m_asv.Pinsp.cmH2O()
+							- mvm::Pressure(QT_CHANGE_P).cmH2O());
+			return true;
 		}
 	} else if (vTidalAvg < m_sm->m_asv.targetVTidal - 5) {
 		Pressure p = Pressure(
-				m_sm->m_asv.Pinsp.cmH2O() + mvm::Pressure(QT_CHANGE).cmH2O());
+				m_sm->m_asv.Pinsp.cmH2O() + mvm::Pressure(QT_CHANGE_P).cmH2O());
 		// Upper limit
 		if (p.cmH2O() < 45
-				&& m_sm->m_asv.targetVTidal <= 22 * m_sm->m_state_machine.getIbwASV()) {
+				&& m_sm->m_asv.targetVTidal
+						<= 22 * m_sm->m_state_machine.getIbwASV()) {
 			m_sm->m_asv.Pinsp = Pressure(
-					m_sm->m_asv.Pinsp.cmH2O() + mvm::Pressure(QT_CHANGE).cmH2O());
+					m_sm->m_asv.Pinsp.cmH2O()
+							+ mvm::Pressure(QT_CHANGE_P).cmH2O());
+			return true;
 		}
 	}
+	return false;
 }
 
-void mvm::StateMachine::SMTraceObserver::adaptRate(float rRateAvg, float rc) {
-	int QT_CHANGE = 500;
+bool mvm::StateMachine::SMTraceObserver::adaptRate(float rRateAvg, float rc) {
 	// Adapt based on the target values for rate
 	if (rRateAvg > m_sm->m_asv.targetRRate + 0.5) {
 		// Lower bound
-		if (m_sm->m_asv.rRate - 1 >= 5)
+		if (m_sm->m_asv.rRate - 1 >= 5) {
 			m_sm->m_state_machine.setExpiration_duration_asv_ms(
 					m_sm->m_state_machine.getExpiration_duration_asv_ms()
-							+ QT_CHANGE);
+							+ QT_CHANGE_R);
+			return true;
+		}
 	} else if (rRateAvg < m_sm->m_asv.targetRRate - 0.5) {
 		// Upper bound
 		if (m_sm->m_asv.rRate + 1 <= 60 && m_sm->m_asv.rRate + 1 <= (20 / rc)
 				&& m_sm->m_state_machine.getExpiration_duration_asv_ms()
-						- QT_CHANGE >= 2 * rc * 1000 * m_sm->m_breathing_monitor.CORRECTION_FACTOR)
+						- QT_CHANGE_R
+						>= 2 * rc * 1000
+								* m_sm->m_breathing_monitor.CORRECTION_FACTOR) {
 			m_sm->m_state_machine.setExpiration_duration_asv_ms(
 					m_sm->m_state_machine.getExpiration_duration_asv_ms()
-							- QT_CHANGE);
+							- QT_CHANGE_R);
+			return true;
+		}
 	}
+	return false;
 }
 
 void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
