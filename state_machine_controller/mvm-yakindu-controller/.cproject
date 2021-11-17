@@ -56,6 +56,16 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.738562650.1410838650" name="/" resourcePath="Debug">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cygwin.base.764016484" name="Cygwin GCC" superClass="cdt.managedbuild.toolchain.gnu.cygwin.base" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.assembler.cygwin.base.347410360" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.cygwin.base.670886700"/>
+							<tool id="cdt.managedbuild.tool.gnu.archiver.cygwin.base.1836730023" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.cygwin.base.1799381293"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.base.1242742701" name="Cygwin C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.base.676460972"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.cygwin.base.138104195" name="Cygwin C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.cygwin.base.315138836"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.cygwin.base.1680557555" name="Cygwin C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.cygwin.base.723781293"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.cygwin.base.1971870807" name="Cygwin C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.cygwin.base.793734396"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="libzmq"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
