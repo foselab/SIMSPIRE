@@ -192,6 +192,7 @@ void mvm::StateMachine::SMTraceObserver::updateRC(float& realPeep, float& peep,
 void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	float vTidalAvg = 0;
 	float rRateAvg = 0;
+	float cAvg = 0;
 	float meanRC = 0;
 	double timeAvg = 0;
 	float peep = 0;
@@ -200,6 +201,7 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	double rc = 0;
 	float a = (2 * M_PI * M_PI) / 60;
 	float vD = m_sm->m_state_machine.getIbwASV() * 2.2;
+	bool useWeightedMean = true;
 
 	// Time corresponding to the expiration duration
 	updateExpirationTime();
@@ -210,35 +212,30 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	// Store the current value of RC
 	updateRC(realPeep, peep, p_peak);
 
-	// If the firts three cycles (or after 8) has passed, then compute the new values
+	// If the first three cycles (or after 8) has passed, then compute the new values
 	if (n == 3 || n >= 8) {
 		std::cout << "COMPUTING ASV VALUES" << std::endl;
 		// Compute the new values
-//		vTidalAvg = getMean(m_sm->m_asv.vTidals, n);
-//		rRateAvg = getMean(m_sm->m_asv.rRates, n);
-//		timeAvg = getMean(m_sm->m_asv.expirationTimes, n);
+		if (!useWeightedMean) {
+			vTidalAvg = getMean(m_sm->m_asv.vTidals, n);
+			rRateAvg = getMean(m_sm->m_asv.rRates, n);
+			timeAvg = getMean(m_sm->m_asv.expirationTimes, n);
+			meanRC = getMean(m_sm->m_asv.rcS, n);
+		} else {
+			vTidalAvg = getWeightedMean(m_sm->m_asv.vTidalsQueue);
+			rRateAvg = getWeightedMean(m_sm->m_asv.rRatesQueue);
+			timeAvg = getWeightedMean(m_sm->m_asv.expirationTimesQueue);
+			cAvg = getWeightedMean(m_sm->m_asv.csQueue);
+			meanRC = getWeightedMean(m_sm->m_asv.rcSQueue);
+		}
 
-		vTidalAvg = getWeightedMean(m_sm->m_asv.vTidalsQueue);
-		rRateAvg = getWeightedMean(m_sm->m_asv.rRatesQueue);
-		timeAvg = getWeightedMean(m_sm->m_asv.expirationTimesQueue);
-
+		// Output messages for DEBUG
 		std::cout << "AVG V_TIDAL: " << vTidalAvg << std::endl;
 		std::cout << "AVG RR: " << rRateAvg << std::endl;
 		std::cout << "AVG EXP_TIMES: " << timeAvg << std::endl;
-		std::cout << "AVG C: " << getWeightedMean(m_sm->m_asv.csQueue) << std::endl;
-
-		// Compute the RC value: an RC Circuit has a discharge time of 5 * R * C
-		//rc = (timeAvg / 5);
-		//meanRC = getMean(m_sm->m_asv.rcS, n);
-		meanRC = getWeightedMean(m_sm->m_asv.rcSQueue);
-
+		std::cout << "AVG C: " << cAvg << std::endl;
 		rc = meanRC * m_sm->m_breathing_monitor.CORRECTION_FACTOR;
 		std::cout << "RC: " << rc << std::endl;
-
-		/*std::cout << "CURRENT V_TIDAL: " << m_sm->m_asv.vTidals[m_sm->m_asv.index] << std::endl;
-		std::cout << "CURRENT RR: " << m_sm->m_asv.rRates[m_sm->m_asv.index] << std::endl;
-		std::cout << "CURRENT EXP_TIME: " << m_sm->m_asv.expirationTimes[m_sm->m_asv.index] << std::endl;
-		std::cout << "CURRENT RC: " << m_sm->m_asv.rcS[m_sm->m_asv.index] << std::endl;*/
 
 		// Compute the target values
 		m_sm->m_asv.targetRRate =
