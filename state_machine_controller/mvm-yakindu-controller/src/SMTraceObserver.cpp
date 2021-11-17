@@ -229,13 +229,7 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 			meanRC = getWeightedMean(m_sm->m_asv.rcSQueue);
 		}
 
-		// Output messages for DEBUG
-		std::cout << "AVG V_TIDAL: " << vTidalAvg << std::endl;
-		std::cout << "AVG RR: " << rRateAvg << std::endl;
-		std::cout << "AVG EXP_TIMES: " << timeAvg << std::endl;
-		std::cout << "AVG C: " << cAvg << std::endl;
 		rc = meanRC * m_sm->m_breathing_monitor.CORRECTION_FACTOR;
-		std::cout << "RC: " << rc << std::endl;
 
 		// Compute the target values
 		m_sm->m_asv.targetRRate =
@@ -248,16 +242,24 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 												- (m_sm->m_asv.prevF / vD)) / vD))
 						- 1) / (a * rc);
 
-		std::cout << "TARGET RR: " << m_sm->m_asv.targetRRate << std::endl;
+
 
 		m_sm->m_asv.targetVTidal =
 				(m_sm->m_state_machine.getTargetMinuteVentilationASV()
 						* m_sm->m_state_machine.getNormalMinuteVentilationASV()
 						/ 100) / m_sm->m_asv.targetRRate;
 
-		std::cout << "TARGET VTidal: " << m_sm->m_asv.targetVTidal << std::endl;
 
-		m_sm->m_asv.prevF = rRateAvg;
+		m_sm->m_asv.prevF = m_sm->m_asv.targetRRate;
+
+		// Output messages for DEBUG
+		std::cout << "AVG V_TIDAL: " << vTidalAvg << std::endl;
+		std::cout << "AVG RR: " << rRateAvg << std::endl;
+		std::cout << "AVG EXP_TIMES: " << timeAvg << std::endl;
+		std::cout << "AVG C: " << cAvg << std::endl;
+		std::cout << "RC: " << rc << std::endl;
+		std::cout << "TARGET RR: " << m_sm->m_asv.targetRRate << std::endl;
+		std::cout << "TARGET VTidal: " << m_sm->m_asv.targetVTidal << std::endl;
 
 		// Adapt based on the target values for rate
 		adaptRate(rRateAvg, rc);
