@@ -76,16 +76,24 @@ bool mvm::StateMachine::SMTraceObserver::increaseRate() {
 }
 
 bool mvm::StateMachine::SMTraceObserver::decreasePressure() {
+	return decreasePressure(QT_CHANGE_P);
+}
+
+bool mvm::StateMachine::SMTraceObserver::increasePressure() {
+	return increasePressure(QT_CHANGE_P);
+}
+
+bool mvm::StateMachine::SMTraceObserver::decreasePressure(float qt) {
 	if (m_sm->m_asv.targetVTidal >= 4.4 * m_sm->m_state_machine.getIbwASV()) {
 		m_sm->m_asv.Pinsp = Pressure(
-				m_sm->m_asv.Pinsp.cmH2O() - mvm::Pressure(QT_CHANGE_P).cmH2O());
+				m_sm->m_asv.Pinsp.cmH2O() - mvm::Pressure(qt).cmH2O());
 		return true;
 	}
 	return false;
 }
 
-bool mvm::StateMachine::SMTraceObserver::increasePressure() {
-	Pressure p = Pressure(m_sm->m_asv.Pinsp.cmH2O() + mvm::Pressure(QT_CHANGE_P).cmH2O());
+bool mvm::StateMachine::SMTraceObserver::increasePressure(float qt) {
+	Pressure p = Pressure(m_sm->m_asv.Pinsp.cmH2O() + mvm::Pressure(qt).cmH2O());
 	if (p.cmH2O() < 45 && m_sm->m_asv.targetVTidal <= 22 * m_sm->m_state_machine.getIbwASV()) {
 		m_sm->m_asv.Pinsp = p;
 		return true;
@@ -95,10 +103,10 @@ bool mvm::StateMachine::SMTraceObserver::increasePressure() {
 
 bool mvm::StateMachine::SMTraceObserver::adaptVolume(float vTidalAvg) {
 	// Adapt based on the target values for volume
-	if (vTidalAvg > m_sm->m_asv.targetVTidal + 5) {
-		return decreasePressure();
-	} else if (vTidalAvg < m_sm->m_asv.targetVTidal - 5) {
-		return increasePressure();
+	if (vTidalAvg > m_sm->m_asv.targetVTidal + 50) {
+		return decreasePressure(1 * (vTidalAvg - m_sm->m_asv.targetVTidal)/m_sm->m_asv.targetVTidal);
+	} else if (vTidalAvg < m_sm->m_asv.targetVTidal - 50) {
+		return increasePressure(1 * (m_sm->m_asv.targetVTidal - vTidalAvg)/m_sm->m_asv.targetVTidal);
 	}
 	return false;
 }
@@ -118,9 +126,67 @@ bool mvm::StateMachine::SMTraceObserver::adaptRate(float rRateAvg, float rc) {
 		}
 	}
 	return false;*/
-	if (rRateAvg > m_sm->m_asv.targetRRate + 0.5 || rRateAvg < m_sm->m_asv.targetRRate - 0.5) {
+	if (rRateAvg > m_sm->m_asv.targetRRate + 0.5) {
+		m_sm->m_state_machine.setExpiration_duration_asv_ms(4000*rc);
+	}
+	else if (rRateAvg < m_sm->m_asv.targetRRate - 0.5) {
 		m_sm->m_state_machine.setExpiration_duration_asv_ms(3000*rc);
 	}
+}
+
+void mvm::StateMachine::SMTraceObserver::updateExpirationTime() {
+	// Time corresponding to the expiration duration
+	auto current_time = std::chrono::system_clock::now();
+	auto duration_in_seconds = std::chrono::duration<double>(
+			current_time.time_since_epoch());
+	m_sm->m_asv.expirationTimes[m_sm->m_asv.index] = duration_in_seconds.count()
+			- m_sm->m_asv.expirationTimes[m_sm->m_asv.index];
+	m_sm->m_asv.expirationTimesQueue.push_back(
+			m_sm->m_asv.expirationTimes[m_sm->m_asv.index]);
+	if (m_sm->m_asv.expirationTimesQueue.size() > 8)
+		m_sm->m_asv.expirationTimesQueue.pop_front();
+}
+
+void mvm::StateMachine::SMTraceObserver::updateTidalVolume() {
+	// Get the real values for tidal volume and respiratory rate
+	m_sm->m_breathing_monitor.GetOutputValue(
+			mvm::BreathingMonitor::Output::TIDAL_VOLUME,
+			&m_sm->m_asv.vTidals[m_sm->m_asv.index]);
+	m_sm->m_asv.vTidalsQueue.push_back(m_sm->m_asv.vTidals[m_sm->m_asv.index]);
+	if (m_sm->m_asv.vTidalsQueue.size() > 8)
+		m_sm->m_asv.vTidalsQueue.pop_front();
+}
+
+void mvm::StateMachine::SMTraceObserver::updateRespiratoryRate() {
+	m_sm->m_breathing_monitor.GetOutputValue(
+			mvm::BreathingMonitor::Output::RESP_RATE,
+			&m_sm->m_asv.rRates[m_sm->m_asv.index]);
+	m_sm->m_asv.rRatesQueue.push_back(m_sm->m_asv.rRates[m_sm->m_asv.index]);
+	if (m_sm->m_asv.rRatesQueue.size() > 8)
+		m_sm->m_asv.rRatesQueue.pop_front();
+}
+
+void mvm::StateMachine::SMTraceObserver::updateRC(float& realPeep, float& peep,
+		float& p_peak) {
+	// Store the current value of RC
+	m_sm->m_breathing_monitor.GetOutputValue(
+			mvm::BreathingMonitor::Output::PEEP, &realPeep);
+	m_sm->m_breathing_monitor.GetOutputValue(
+			mvm::BreathingMonitor::Output::PRESSURE_P, &peep);
+	m_sm->m_breathing_monitor.GetOutputValue(
+			mvm::BreathingMonitor::Output::FLAT_TOP_P, &p_peak);
+	m_sm->m_asv.rcS[m_sm->m_asv.index] =
+			-m_sm->m_asv.expirationTimes[m_sm->m_asv.index]
+					/ log((peep - realPeep) / (p_peak - realPeep));
+	m_sm->m_asv.rcSQueue.push_back(m_sm->m_asv.rcS[m_sm->m_asv.index]);
+	if (m_sm->m_asv.rcSQueue.size() > 8)
+		m_sm->m_asv.rcSQueue.pop_front();
+
+	m_sm->m_asv.csQueue.push_back(
+			m_sm->m_asv.vTidals[m_sm->m_asv.index]
+					/ (1000 * (p_peak - realPeep)));
+	if (m_sm->m_asv.csQueue.size() > 8)
+		m_sm->m_asv.csQueue.pop_front();
 }
 
 void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
@@ -136,51 +202,43 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 	float vD = m_sm->m_state_machine.getIbwASV() * 2.2;
 
 	// Time corresponding to the expiration duration
-	auto current_time = std::chrono::system_clock::now();
-	auto duration_in_seconds = std::chrono::duration<double>(
-			current_time.time_since_epoch());
-	m_sm->m_asv.expirationTimes[m_sm->m_asv.index] = duration_in_seconds.count()
-			- m_sm->m_asv.expirationTimes[m_sm->m_asv.index];
+	updateExpirationTime();
 
 	// Get the real values for tidal volume and respiratory rate
-	m_sm->m_breathing_monitor.GetOutputValue(
-			mvm::BreathingMonitor::Output::TIDAL_VOLUME,
-			&m_sm->m_asv.vTidals[m_sm->m_asv.index]);
-	m_sm->m_breathing_monitor.GetOutputValue(
-			mvm::BreathingMonitor::Output::RESP_RATE,
-			&m_sm->m_asv.rRates[m_sm->m_asv.index]);
+	updateTidalVolume();
+	updateRespiratoryRate();
 	// Store the current value of RC
-	m_sm->m_breathing_monitor.GetOutputValue(
-			mvm::BreathingMonitor::Output::PEEP, &realPeep);
-	m_sm->m_breathing_monitor.GetOutputValue(
-			mvm::BreathingMonitor::Output::PRESSURE_P, &peep);
-	m_sm->m_breathing_monitor.GetOutputValue(
-			mvm::BreathingMonitor::Output::FLAT_TOP_P, &p_peak);
-	m_sm->m_asv.rcS[m_sm->m_asv.index] =
-			-m_sm->m_asv.expirationTimes[m_sm->m_asv.index]
-					/ log((peep - realPeep) / (p_peak - realPeep));
+	updateRC(realPeep, peep, p_peak);
 
+	// If the firts three cycles (or after 8) has passed, then compute the new values
 	if (n == 3 || n >= 8) {
 		std::cout << "COMPUTING ASV VALUES" << std::endl;
 		// Compute the new values
-		vTidalAvg = getMean(m_sm->m_asv.vTidals, n);
-		rRateAvg = getMean(m_sm->m_asv.rRates, n);
-		timeAvg = getMean(m_sm->m_asv.expirationTimes, n);
+//		vTidalAvg = getMean(m_sm->m_asv.vTidals, n);
+//		rRateAvg = getMean(m_sm->m_asv.rRates, n);
+//		timeAvg = getMean(m_sm->m_asv.expirationTimes, n);
+
+		vTidalAvg = getWeightedMean(m_sm->m_asv.vTidalsQueue);
+		rRateAvg = getWeightedMean(m_sm->m_asv.rRatesQueue);
+		timeAvg = getWeightedMean(m_sm->m_asv.expirationTimesQueue);
 
 		std::cout << "AVG V_TIDAL: " << vTidalAvg << std::endl;
 		std::cout << "AVG RR: " << rRateAvg << std::endl;
 		std::cout << "AVG EXP_TIMES: " << timeAvg << std::endl;
+		std::cout << "AVG C: " << getWeightedMean(m_sm->m_asv.csQueue) << std::endl;
 
 		// Compute the RC value: an RC Circuit has a discharge time of 5 * R * C
 		//rc = (timeAvg / 5);
-		meanRC = getMean(m_sm->m_asv.rcS, n);
+		//meanRC = getMean(m_sm->m_asv.rcS, n);
+		meanRC = getWeightedMean(m_sm->m_asv.rcSQueue);
+
 		rc = meanRC * m_sm->m_breathing_monitor.CORRECTION_FACTOR;
 		std::cout << "RC: " << rc << std::endl;
 
-		std::cout << "CURRENT V_TIDAL: " << m_sm->m_asv.vTidals[m_sm->m_asv.index] << std::endl;
+		/*std::cout << "CURRENT V_TIDAL: " << m_sm->m_asv.vTidals[m_sm->m_asv.index] << std::endl;
 		std::cout << "CURRENT RR: " << m_sm->m_asv.rRates[m_sm->m_asv.index] << std::endl;
 		std::cout << "CURRENT EXP_TIME: " << m_sm->m_asv.expirationTimes[m_sm->m_asv.index] << std::endl;
-		std::cout << "CURRENT RC: " << m_sm->m_asv.rcS[m_sm->m_asv.index] << std::endl;
+		std::cout << "CURRENT RC: " << m_sm->m_asv.rcS[m_sm->m_asv.index] << std::endl;*/
 
 		// Compute the target values
 		m_sm->m_asv.targetRRate =

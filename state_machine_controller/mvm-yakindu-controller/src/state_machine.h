@@ -22,6 +22,7 @@
 #include <limits>
 #include <iostream>
 #include <cmath>
+#include <deque>
 
 namespace mvm {
 
@@ -145,7 +146,7 @@ class StateMachine {
 	class SMTraceObserver: public sc::trace::TraceObserver<MVMStateMachineCore::MVMStateMachineCoreStates> {
 		StateMachine *m_sm;
 
-		int QT_CHANGE_P = 1;
+		float QT_CHANGE_P = 0.5;
 		int QT_CHANGE_R = 500;
 
 		bool adaptVolume(float vTidalAvg);
@@ -155,6 +156,12 @@ class StateMachine {
 		bool decreaseRate();
 		bool increasePressure();
 		bool decreasePressure();
+		bool increasePressure(float qt);
+		bool decreasePressure(float qt);
+		void updateExpirationTime();
+		void updateTidalVolume();
+		void updateRespiratoryRate();
+		void updateRC(float& realPeep, float& peep, float& p_peak);
 
 	public:
 		SMTraceObserver(StateMachine *state_machine) :
@@ -206,10 +213,15 @@ class StateMachine {
 	// ASV Data
 	struct ASVData {
 		double expirationTimes[8];
+		std::deque<double> expirationTimesQueue;
 		float vTidals[8];
+		std::deque<float> vTidalsQueue;
 		float targetVTidal;
 		float rRates[8];
+		std::deque<float> rRatesQueue;
 		double rcS[8];
+		std::deque<float> rcSQueue;
+		std::deque<float> csQueue;
 		float targetRRate;
 		int index = 0;
 		float prevF = 10;

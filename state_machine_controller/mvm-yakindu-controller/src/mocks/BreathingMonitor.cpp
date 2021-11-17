@@ -28,7 +28,7 @@ void mvm::BreathingMonitor::getFlux() {
 	//------------------
 	// If it is not the first iteration, then compute the volume with the integral
 	//------------------
-	if (value < 0) {
+	if (value <= 0) {
 		value = std::abs(value);
 		if (!first) {
 			// The volume is multiplied by 1000 since it is computed in mL, while the flux is expressed in L
@@ -41,6 +41,7 @@ void mvm::BreathingMonitor::getFlux() {
 		oldTime = time;
 	} else {
 		first = true;
+		oldTime = time;
 	}
 }
 
@@ -174,8 +175,8 @@ void mvm::BreathingMonitor::GetOutputValue(Output probe, float *value) {
 		(*value) = p_peak;
 		break;
 	case Output::PEEP:
-			(*value) = peep;
-			break;
+		(*value) = peep;
+		break;
 	default:
 		break;
 	}
