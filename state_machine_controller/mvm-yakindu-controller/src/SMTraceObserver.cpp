@@ -104,13 +104,23 @@ bool mvm::StateMachine::SMTraceObserver::increasePressure(float qt) {
 bool mvm::StateMachine::SMTraceObserver::adaptVolume(float vTidalAvg) {
 	// Adapt based on the target values for volume
 	if (vTidalAvg > m_sm->m_asv.targetVTidal + 50) {
-		return decreasePressure(1 * (vTidalAvg - m_sm->m_asv.targetVTidal)/m_sm->m_asv.targetVTidal);
+		return decreasePressure((1 * (vTidalAvg - m_sm->m_asv.targetVTidal)/m_sm->m_asv.targetVTidal));
 	} else if (vTidalAvg < m_sm->m_asv.targetVTidal - 50) {
-		return increasePressure(1 * (m_sm->m_asv.targetVTidal - vTidalAvg)/m_sm->m_asv.targetVTidal);
+		return increasePressure((1 * (m_sm->m_asv.targetVTidal - vTidalAvg)/m_sm->m_asv.targetVTidal));
 	}
+
 	return false;
 }
 
+bool mvm::StateMachine::SMTraceObserver::adaptVolume(float vTidalAvg, float m) {
+	// Adapt based on the target values for volume and on the angular coefficient of the last two points
+	if (vTidalAvg > m_sm->m_asv.targetVTidal + 50) {
+		return decreasePressure((1 * (vTidalAvg - m_sm->m_asv.targetVTidal)/m_sm->m_asv.targetVTidal));
+	} else if (vTidalAvg < m_sm->m_asv.targetVTidal - 50) {
+		return increasePressure((1 * (m_sm->m_asv.targetVTidal - vTidalAvg)/m_sm->m_asv.targetVTidal));
+	}
+	return false;
+}
 
 bool mvm::StateMachine::SMTraceObserver::adaptRate(float rRateAvg, float rc) {
 	// Adapt based on the target values for rate
@@ -232,23 +242,10 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 		rc = meanRC * m_sm->m_breathing_monitor.CORRECTION_FACTOR;
 
 		// Compute the target values
-		m_sm->m_asv.targetRRate =
-				(sqrt(
-						1
-								+ (2 * a * rc
-										* ((m_sm->m_state_machine.getTargetMinuteVentilationASV()
-												* m_sm->m_state_machine.getNormalMinuteVentilationASV()
-												/ 100)
-												- (m_sm->m_asv.prevF / vD)) / vD))
-						- 1) / (a * rc);
+		m_sm->m_asv.targetRRate = (sqrt(1 + (2 * a * rc * ((m_sm->m_state_machine.getTargetMinuteVentilationASV()
+			* m_sm->m_state_machine.getNormalMinuteVentilationASV() / 100) - (m_sm->m_asv.prevF / vD)) / vD)) - 1) / (a * rc);
 
-
-
-		m_sm->m_asv.targetVTidal =
-				(m_sm->m_state_machine.getTargetMinuteVentilationASV()
-						* m_sm->m_state_machine.getNormalMinuteVentilationASV()
-						/ 100) / m_sm->m_asv.targetRRate;
-
+		m_sm->m_asv.targetVTidal = (m_sm->m_state_machine.getTargetMinuteVentilationASV() * m_sm->m_state_machine.getNormalMinuteVentilationASV() / 100) / m_sm->m_asv.targetRRate;
 
 		m_sm->m_asv.prevF = m_sm->m_asv.targetRRate;
 
@@ -264,8 +261,17 @@ void mvm::StateMachine::SMTraceObserver::refreshASVValues(int n) {
 		// Adapt based on the target values for rate
 		adaptRate(rRateAvg, rc);
 
+		// Compute the angular coefficient
+		float m = (((m_sm->m_asv.vTidalsQueue[n-1] - m_sm->m_asv.vTidalsQueue[n-2]) / 100) + ((m_sm->m_asv.vTidalsQueue[n-2] - m_sm->m_asv.vTidalsQueue[n-3]) / 100)) / 2;
+//		std::cout << "m: " << m << std::endl;
+//
+		if ((m <= 0 && m_sm->m_asv.targetVTidal > vTidalAvg) || (m >=0 && m_sm->m_asv.targetVTidal < vTidalAvg))
+			adaptVolume(vTidalAvg);
+
 		// Adapt based on the target values for volume
-		adaptVolume(vTidalAvg);
+//		m_sm->m_asv.Pinsp = Pressure(vTidalAvg * (rc/cAvg) / (((1/rRateAvg) * 60) - timeAvg));
+//		adaptVolume(vTidalAvg);
+		// m_sm->m_asv.Pinsp = Pressure(mvm::Pressure((m_sm->m_asv.targetVTidal / (cAvg * 1000)) + peep).cmH2O());
 	}
 
 	// Next element

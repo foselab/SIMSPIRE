@@ -150,6 +150,7 @@ class StateMachine {
 		int QT_CHANGE_R = 500;
 
 		bool adaptVolume(float vTidalAvg);
+		bool adaptVolume(float vTidalAvg, float m);
 		bool adaptRate(float rRateAvg, float rc);
 
 		bool increaseRate();

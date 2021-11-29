@@ -44,10 +44,13 @@ int main() {
 				std::cout << "self test passed" << std::endl;
 				sm.set_self_test_passed(true);
 				self_testpassed.start(TOTAL_TIME_MS, AsyncDelay::MILLIS);
+				sm.set_RR_PCV(10);
+				sm.set_Pinsp_PCV(mvm::Pressure(18));
 			}
 			if (run_ventilation.isExpired()) {
 				std::cout << "starting ventilation in ASV mode" << std::endl;
 				sm.set_Mode(MVM_mode::A_SUPPORTED_V);
+//				sm.set_Mode(MVM_mode::P_CONTROLLED_V);
 				sm.startVentilation();
 				run_ventilation.start(TOTAL_TIME_MS, AsyncDelay::MILLIS);
 			}
