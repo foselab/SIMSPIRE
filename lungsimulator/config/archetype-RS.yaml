@@ -1,0 +1,12 @@
+---
+schema: 3
+parameters:
+   resistance1: 1.0
+   resistance2: 0.33
+   resistance3: 0.3
+   resistance4: 0.06
+   capacitor1: 0.013
+   capacitor2: 0.04
+   capacitor3: 0.13
+   capacitor4: 2
+ 

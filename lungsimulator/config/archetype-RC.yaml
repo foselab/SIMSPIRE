@@ -1,0 +1,5 @@
+---
+schema: 1
+parameters:
+   resistance1: 25.0
+   capacitor1: 0.05

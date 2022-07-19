@@ -1,0 +1,44 @@
+{
+	"patientParams": {
+		"resistance": 15.0,
+		"resistanceChangeEnabled": false,
+		"probabilityChangeResistance": 0.0002,
+		"maxVariabilityResistance": 5.0,
+		"compliance": 0.06,
+		"complianceChangeEnabled": false,
+		"probabilityChangeCompliance": 0.0001,
+		"maxVariabilityCompliance": 0.02,
+		"dropResistance": 50.0,
+		"dropResistanceChangeEnabled": false,
+		"dropResistanceChangeProbability": 0.001,
+		"maxDropResistanceChange": 10.0,
+		"pressureDropEnabled": false,
+		"pressureDropEnabledWithProbability": false,
+		"pressureDropMissProbability": 0.01,
+		"pressureDropAfterSec": 2.60,	
+		"coughEnabled": false,
+		"coughProbability": 0.001
+	},
+	"simulationParams": {
+		"step": 0.01,
+		"useCOM": false,
+		"useZMQ": true,
+		"comName": "COM3",
+		"sleepTime": 10
+	},
+	"chartParams": {
+		"numberOfDataShown": 1000,
+		"width": 1500,
+		"height": 400,
+		"showVentilatorPlot": true
+	},
+	"ventilatorParams": {
+		"pMax": 20.0,
+		"peep": 5.0,
+		"rVentilator": 1E-6,
+		"t1": 0.05,
+		"t2": 1.45,
+		"t3": 0.05,
+		"t4": 2.75
+	}
+}
