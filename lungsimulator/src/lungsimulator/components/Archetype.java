@@ -28,7 +28,4 @@ public class Archetype {
 	public void setParameters(HashMap<String, String> parameters) {
 		this.parameters = parameters;
 	}
-	
-	
-
 }

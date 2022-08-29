@@ -1,5 +1,6 @@
 package lungsimulator;
 
+import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +17,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -63,8 +66,8 @@ import java.awt.GridLayout;
 
 public class LungSimulator {
 
-	private static final String PRESSURE_TITLE = "Pressure";
-	private static final String FLOW_TITLE = "Flow";
+	/*private static final String PRESSURE_TITLE = "Pressure";
+	private static final String FLOW_TITLE = "Flow";*/
 	public static double maxFlow = 0.0;
 	public static double volume = 0.0;
 	public static double lastCycleTime = 0;
@@ -76,21 +79,21 @@ public class LungSimulator {
 	public static double targetMinuteVolume = 0;
 	public static Logger lungSimulatorLogger;
 
-	private JFrame frame;
-	boolean showVentilator;
+	/*private JFrame frame;
+	boolean showVentilator;*/
 	// Define the new plotter
 	RealTimePlot rtp = new RealTimePlot();
 	COMPortAdapter com; // port for communication, can be null
 
-	double[][] initdataPressure;
+	/*double[][] initdataPressure;
 	double[][] initdataVentilatorPressure;
 	double[][] initdataFlow;
 	private XYChart pressureChart;
 	private XYChart flowChart;
 	private XChartPanel<XYChart> sw;
 	private XChartPanel<XYChart> sw2;
-	private JPanel patientPanel;
-	private JLabel txtRespiratoryRate = new JLabel("----");
+	private JPanel patientPanel;*/
+	/*private JLabel txtRespiratoryRate = new JLabel("----");
 	private JLabel txtPmax = new JLabel("----");
 	private JLabel txtVTidal = new JLabel("----");
 	private JLabel txtPPatient = new JLabel("----");
@@ -100,29 +103,15 @@ public class LungSimulator {
 	private JLabel txtEffort = new JLabel("----");
 	private JLabel txtTargetMinuteVolume = new JLabel("----");
 	private JSpinner volMin = new JSpinner();
-	private JSpinner IBW = new JSpinner();
-	private JSpinner resistance = new JSpinner();
+	private JSpinner IBW = new JSpinner();*/
+	/*private JSpinner resistance = new JSpinner();
 	private JSpinner compliance = new JSpinner();
-	private JSpinner voltage = new JSpinner();
-
-	Patient patient;
-	Archetype archetype;
-
-	/*
-	 * public LungSimulator() throws FileNotFoundException, IOException,
-	 * ParseException, Exception{ initialize();
-	 * 
-	 * // Set the logger programmatically ConfigurationBuilder<BuiltConfiguration>
-	 * builder = ConfigurationBuilderFactory.newConfigurationBuilder();
-	 * AppenderComponentBuilder console = builder.newAppender("stdout", "Console");
-	 * builder.add(console); RootLoggerComponentBuilder rootLogger =
-	 * builder.newRootLogger(Level.INFO);
-	 * rootLogger.add(builder.newAppenderRef("stdout")); builder.add(rootLogger);
-	 * Configurator.initialize(builder.build()); lungSimulatorLogger =
-	 * LogManager.getRootLogger();
-	 * lungSimulatorLogger.info("[NEW Cycle]: t;RR;Vt;R;C;Effort;"); }
-	 */
-
+	private JSpinner voltage = new JSpinner();*/
+	
+	public Patient patient;
+	public Archetype archetype;
+	public GraphicInterface gi = new GraphicInterface();
+	
 	/**
 	 * Init the lung simulator by reading and validating the patient model and
 	 * archetype and set the frame configuration
@@ -142,8 +131,24 @@ public class LungSimulator {
 		yr.validator(patient, archetype);
 
 		// Frame configuration
-		frameConfig();
+		gi.frameConfig(patient, archetype);
 	}
+
+
+	/*
+	 * public LungSimulator() throws FileNotFoundException, IOException,
+	 * ParseException, Exception{ initialize();
+	 * 
+	 * // Set the logger programmatically ConfigurationBuilder<BuiltConfiguration>
+	 * builder = ConfigurationBuilderFactory.newConfigurationBuilder();
+	 * AppenderComponentBuilder console = builder.newAppender("stdout", "Console");
+	 * builder.add(console); RootLoggerComponentBuilder rootLogger =
+	 * builder.newRootLogger(Level.INFO);
+	 * rootLogger.add(builder.newAppenderRef("stdout")); builder.add(rootLogger);
+	 * Configurator.initialize(builder.build()); lungSimulatorLogger =
+	 * LogManager.getRootLogger();
+	 * lungSimulatorLogger.info("[NEW Cycle]: t;RR;Vt;R;C;Effort;"); }
+	 */
 
 	/**
 	 * Initialize the contents of the frame.
@@ -152,7 +157,7 @@ public class LungSimulator {
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	private void initialize() throws FileNotFoundException, IOException, ParseException, Exception {
+	/*private void initialize() throws FileNotFoundException, IOException, ParseException, Exception {
 
 		frame = new JFrame();
 		frame.setBounds(100, 100, 493, 371);
@@ -428,199 +433,9 @@ public class LungSimulator {
 		commandsFrame.getContentPane().add(btnEnableDisableDrop);
 
 		commandsFrame.show();
-	}
+	}*/
 
-	public void frameConfig() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 493, 371);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		int w, h;
-		showVentilator = true;
-
-		// Set the necessary config values
-		// TODO NB presi dal file json ma potrebbero variare
-		rtp.max_data = 1000;
-		w = 1500;
-		h = 400;
-		showVentilator = true;
-
-		// init the arrays for the data
-		initdataPressure = new double[rtp.max_data][rtp.max_data];
-		initdataVentilatorPressure = new double[rtp.max_data][rtp.max_data];
-		initdataFlow = new double[rtp.max_data][rtp.max_data];
-
-		// Fill initData with zeros
-		Utils.initVectors(rtp, initdataPressure, initdataVentilatorPressure, initdataFlow);
-
-		// Create the pressure Chart
-		pressureChart = new XYChartBuilder().width(w).height(h).title(PRESSURE_TITLE).xAxisTitle("Time [s]")
-				.yAxisTitle("Pressure").build();
-		pressureChart.addSeries("Patient Pressure", initdataPressure[0], initdataPressure[1]);
-
-		if (showVentilator)
-			pressureChart.addSeries("Ventilator Pressure", initdataVentilatorPressure[0],
-					initdataVentilatorPressure[1]);
-
-		pressureChart.getStyler().setYAxisMax(25.5).setYAxisMin(0.0)
-				.setSeriesMarkers(new Marker[] { SeriesMarkers.NONE, SeriesMarkers.NONE })
-				.setLegendPosition(LegendPosition.InsideS);
-
-		// Create the flow chart
-		flowChart = new XYChartBuilder().width(w).height(h).title(FLOW_TITLE).xAxisTitle("Time [s]").yAxisTitle("Flow")
-				.build();
-		flowChart.addSeries("Flow", initdataFlow[0], initdataFlow[1]);
-		flowChart.getStyler().setYAxisMax(1.0).setYAxisMin(-1.0).setSeriesMarkers(new Marker[] { SeriesMarkers.NONE })
-				.setLegendPosition(LegendPosition.InsideS);
-		frame.getContentPane().setLayout(new GridLayout(1, 2, 0, 0));
-
-		JPanel flowPanel = new JPanel();
-		frame.getContentPane().add(flowPanel);
-		flowPanel.setLayout(new BoxLayout(flowPanel, BoxLayout.Y_AXIS));
-		sw2 = new XChartPanel<XYChart>(flowChart);
-		flowPanel.add(sw2);
-
-		sw = new XChartPanel<XYChart>(pressureChart);
-		flowPanel.add(sw);
-
-		patientPanel = new JPanel();
-		frame.getContentPane().add(patientPanel);
-		patientPanel.setLayout(null);
-
-		int y = 27;
-		int y1 = 200 + y*patient.getElementsList().size();
-		for (Element e : patient.getElementsList()) {
-			String elmValue;
-			// resistance
-			if (e.getType().equals("ResistorElm")) {
-				elmValue = archetype.getParameters().get(e.getAssociatedFormula().getVariables().get(0));
-				graphicDesignForResistorElm(e.getAssociatedFormula().getId(), y, y1, Double.parseDouble(elmValue));
-			}
-
-			// capacitor
-			if (e.getType().equals("CapacitorElm")) {
-				elmValue = archetype.getParameters().get(e.getAssociatedFormula().getVariables().get(0));
-				graphicDesignForCapacitorElm(e.getAssociatedFormula().getId(), y, y1, Double.parseDouble(elmValue));
-			}
-			
-			if(e.getType().equals("ExternalVoltageElm")) {
-				voltage = new JSpinner();
-
-				JLabel lblVoltageUnit = new JLabel("cmH2O");
-				lblVoltageUnit.setBounds(200, y, 100, 20);
-				patientPanel.add(lblVoltageUnit);
-
-				JLabel lblVoltage = new JLabel(e.getAssociatedFormula().getId());
-				lblVoltage.setBounds(33, y, 100, 20);
-				patientPanel.add(lblVoltage);
-				
-				voltage.setBounds(140, y, 50, 20);
-				patientPanel.add(voltage);
-			}
-
-			y += 28;
-			y1 += 84;
-		}
-	}
-
-	/**
-	 * Create the graphic design for resistances
-	 */
-	private void graphicDesignForResistorElm(String id, int y, int y1, double resistanceValue) {
-		resistance = new JSpinner();
-
-		JLabel lblResistanceUnit = new JLabel("cmH2O/L/s");
-		lblResistanceUnit.setBounds(200, y, 100, 20);
-		patientPanel.add(lblResistanceUnit);
-
-		JLabel lblResistance = new JLabel(id);
-		lblResistance.setBounds(33, y, 100, 20);
-		patientPanel.add(lblResistance);
-
-		SpinnerNumberModel resistanceModel = new SpinnerNumberModel(0.0, 0.000, 100.0, 0.001);
-		resistance.setModel(resistanceModel);
-		resistance.setBounds(140, y, 50, 20);
-		resistance.setValue(resistanceValue);
-		patientPanel.add(resistance);
-
-		JLabel lblVoltZUnit = new JLabel("cmH2O");
-		lblVoltZUnit.setBounds(200, y1, 100, 20);
-		patientPanel.add(lblVoltZUnit);
-
-		JLabel lblZVolt = new JLabel("V0 " + id);
-		lblZVolt.setBounds(33, y1, 100, 20);
-		patientPanel.add(lblZVolt);
-		
-		y1 += 28;
-		
-		JLabel lblVoltUnit = new JLabel("cmH2O");
-		lblVoltUnit.setBounds(200, y1, 100, 20);
-		patientPanel.add(lblVoltUnit);
-
-		JLabel lblVolt = new JLabel("V1 " + id);
-		lblVolt.setBounds(33, y1, 100, 20);
-		patientPanel.add(lblVolt);
-		
-		y1 += 28;
-
-		JLabel lblCurrentUnit = new JLabel("?");
-		lblCurrentUnit.setBounds(200, y1, 100, 20);
-		patientPanel.add(lblCurrentUnit);
-
-		JLabel lblCurrent = new JLabel("Current " + id);
-		lblCurrent.setBounds(33, y1, 100, 20);
-		patientPanel.add(lblCurrent);
-
-	}
-
-	/**
-	 * Create the graphic design for capacitors
-	 */
-	private void graphicDesignForCapacitorElm(String id, int y, int y1, double capacitorValue) {
-		compliance = new JSpinner();
-
-		JLabel lblComplianceUnit = new JLabel("L/cmH2O");
-		lblComplianceUnit.setBounds(200, y, 100, 20);
-		patientPanel.add(lblComplianceUnit);
-
-		JLabel lblCompliance = new JLabel(id);
-		lblCompliance.setBounds(33, y, 100, 20);
-		patientPanel.add(lblCompliance);
-
-		SpinnerNumberModel complianceModel = new SpinnerNumberModel(0.0, 0.000, 100.0, 0.001);
-		compliance.setBounds(140, y, 50, 20);
-		compliance.setModel(complianceModel);
-		compliance.setValue(capacitorValue);
-		patientPanel.add(compliance);
-		
-		JLabel lblVoltZUnit = new JLabel("cmH2O");
-		lblVoltZUnit.setBounds(200, y1, 100, 20);
-		patientPanel.add(lblVoltZUnit);
-
-		JLabel lblZVolt = new JLabel("V0 " + id);
-		lblZVolt.setBounds(33, y1, 100, 20);
-		patientPanel.add(lblZVolt);
-		
-		y1 += 28;
-		
-		JLabel lblVoltUnit = new JLabel("cmH2O");
-		lblVoltUnit.setBounds(200, y1, 100, 20);
-		patientPanel.add(lblVoltUnit);
-
-		JLabel lblVolt = new JLabel("V1 " + id);
-		lblVolt.setBounds(33, y1, 100, 20);
-		patientPanel.add(lblVolt);
-		
-		y1 += 28;
-
-		JLabel lblCurrentUnit = new JLabel("?");
-		lblCurrentUnit.setBounds(200, y1, 100, 20);
-		patientPanel.add(lblCurrentUnit);
-
-		JLabel lblCurrent = new JLabel("Current " + id);
-		lblCurrent.setBounds(33, y1, 100, 20);
-		patientPanel.add(lblCurrent);
-	}
+	
 
 	/*
 	 * private void simulateCircuit(boolean showVentilator, int step, RealTimePlot
@@ -823,148 +638,7 @@ public class LungSimulator {
 	 * // Update the charts sw.revalidate(); sw.repaint(); sw2.revalidate();
 	 * sw2.repaint(); } }
 	 */
-
-	public void simulateCircuit() throws InterruptedException {
-		// Create the circuit equivalent to the lung
-		CirSim myCircSim = rtp.buildCircuitSimulator(patient, archetype);
-		myCircSim.setTimeStep(0.01);
-
-		double time = 0;
-
-		while (true) {
-			time = rtp.getElapsedSeconds();
-
-			// Analyze the circuit and simulate a step
-			myCircSim.analyzeCircuit();
-			myCircSim.loopAndContinue(true);
-
-			// After having analyzed the circuit, then check if a new cycle has started
-			lastCycleTime = rtp.getElapsedSeconds() - startCycleTime;
-			startCycleTime = rtp.getElapsedSeconds();
-
-			//Thread.sleep(10);
-
-			// Shift data in vectors
-			Utils.shiftData(rtp, initdataPressure, initdataVentilatorPressure, initdataFlow);
-
-			// Insert new data
-			initdataPressure[0][rtp.max_data - 1] = time;
-			initdataPressure[1][rtp.max_data - 1] = myCircSim.getElm(1).getVoltOne();
-			// initdataPressure[1][rtp.max_data - 1] = myCircSim.getElm(1).getVoltOne();
-			// initdataPressure[1][rtp.max_data - 1] = myCircSim.getElm(1).getVoltageDiff();
-			
-			for(CircuitElm cir : myCircSim.getElmList()) {
-				if(cir.getClass().getSimpleName().equals("ExternalVoltageElm")) {
-					initdataVentilatorPressure[0][rtp.max_data - 1] = time;
-					initdataVentilatorPressure[1][rtp.max_data - 1] = cir.getVoltageDiff();
-				}
-			}
-			
-			initdataFlow[0][rtp.max_data - 1] = time;
-			initdataFlow[1][rtp.max_data - 1] = myCircSim.getElm(0).getCurrent();
-			// initdataFlow[1][rtp.max_data - 1] = myCircSim.getElm(3).getCurrent();
-
-			int y = 200 + 27 * myCircSim.getElmList().size();
-			for (CircuitElm cir : myCircSim.getElmList()) {
-				if (cir.getClass().getSimpleName().equals("ResistorElm")) {
-					resistance = new JSpinner();
-					SpinnerNumberModel resistanceVoltZModel = new SpinnerNumberModel(0.0, 0.000, 100.0, 0.001);
-					resistance.setModel(resistanceVoltZModel);
-					resistance.setBounds(140, y, 50, 20);
-					resistance.setValue(cir.getVoltZero());
-					patientPanel.add(resistance);
-
-					y += 28;
-
-					resistance = new JSpinner();
-					SpinnerNumberModel resistanceVoltModel = new SpinnerNumberModel(0.0, 0.000, 100.0, 0.001);
-					resistance.setModel(resistanceVoltModel);
-					resistance.setBounds(140, y, 50, 20);
-					resistance.setValue(cir.getVoltOne());
-					patientPanel.add(resistance);
-
-					y += 28;
-
-					resistance = new JSpinner();
-					SpinnerNumberModel resistanceCurrentModel = new SpinnerNumberModel(0.0, 0.000, 100.0, 0.001);
-					resistance.setModel(resistanceCurrentModel);
-					resistance.setBounds(140, y, 50, 20);
-					resistance.setValue(cir.getCurrent());
-					patientPanel.add(resistance);
-					
-					y += 28;
-				}
-				
-				if (cir.getClass().getSimpleName().equals("CapacitorElm")) {
-					compliance = new JSpinner();
-					SpinnerNumberModel resistanceVoltZModel = new SpinnerNumberModel(0.0, 0.000, 100.0, 0.001);
-					compliance.setModel(resistanceVoltZModel);
-					compliance.setBounds(140, y, 50, 20);
-					compliance.setValue(cir.getVoltZero());
-					patientPanel.add(compliance);
-
-					y += 28;
-
-					compliance = new JSpinner();
-					SpinnerNumberModel resistanceVoltModel = new SpinnerNumberModel(0.0, 0.000, 100.0, 0.001);
-					compliance.setModel(resistanceVoltModel);
-					compliance.setBounds(140, y, 50, 20);
-					compliance.setValue(cir.getVoltOne());
-					patientPanel.add(compliance);
-
-					y += 28;
-
-					compliance = new JSpinner();
-					SpinnerNumberModel resistanceCurrentModel = new SpinnerNumberModel(0.0, 0.000, 100.0, 0.001);
-					compliance.setModel(resistanceCurrentModel);
-					compliance.setBounds(140, y, 50, 20);
-					compliance.setValue(cir.getCurrent());
-					patientPanel.add(compliance);
-					
-					y += 28;
-				}
-				
-				if(cir.getClass().getSimpleName().equals("ExternalVoltageElm")) {
-					voltage = new JSpinner();
-					SpinnerNumberModel resistanceModel = new SpinnerNumberModel(0.0, 0.000, 100.0, 0.001);
-					voltage.setModel(resistanceModel);
-					voltage.setBounds(140, 28*myCircSim.getElmList().size()-1, 50, 20);
-					voltage.setValue(cir.getVoltageDiff());
-					patientPanel.add(voltage);
-				}
-			}
-
-			pressureChart.updateXYSeries("Patient Pressure", initdataPressure[0], initdataPressure[1], null);
-			if (showVentilator) {
-				pressureChart.updateXYSeries("Ventilator Pressure", initdataVentilatorPressure[0],
-						initdataVentilatorPressure[1], null);
-			}
-
-			pressureChart.getStyler().setYAxisMax(getMax(initdataVentilatorPressure[1]));
-
-			flowChart.updateXYSeries("Flow", initdataFlow[0], initdataFlow[1], null);
-
-			// Update the charts
-			sw.revalidate();
-			sw.repaint();
-			sw2.revalidate();
-			sw2.repaint();
-		}
-
-	}
-
-	private static Double getMax(double[] ds) {
-		double max = ds[0];
-
-		for (Double d : ds) {
-			if (d > max) {
-				max = d;
-			}
-		}
-
-		return max;
-	}
-
+/*
 	private static boolean manageMissedDrop(RealTimePlot rtp, boolean expirationStarted, boolean missedBreath) {
 		if (expirationStarted) {
 			double num = Randomizer.generate(0, 1000) / 1000.0;
@@ -1075,6 +749,32 @@ public class LungSimulator {
 			rDropChanged = false;
 		}
 		return rDropChanged;
+	}*/
+	
+	public void simulateCircuit() throws InterruptedException {
+		// Create the circuit equivalent to the lung
+		CirSim myCircSim = rtp.buildCircuitSimulator(patient, archetype);
+		myCircSim.setTimeStep(0.01);
+
+		double time = 0;
+
+		while (true) {
+			time = rtp.getElapsedSeconds();
+			
+			// Analyze the circuit and simulate a step
+			myCircSim.analyzeCircuit();
+			myCircSim.loopAndContinue(true);
+
+			/* After having analyzed the circuit, then check if a new cycle has started
+			lastCycleTime = rtp.getElapsedSeconds() - startCycleTime;
+			startCycleTime = rtp.getElapsedSeconds();*/
+
+			//Thread.sleep(10);
+			
+			gi.updateShownDataValues(time, myCircSim);
+
+		}
+
 	}
 
 	/**
@@ -1089,14 +789,6 @@ public class LungSimulator {
 			throws FileNotFoundException, IOException, ParseException, InterruptedException, Exception {
 
 		LungSimulator mySimulator = new LungSimulator();
-		mySimulator.frame.setVisible(true);
 		mySimulator.simulateCircuit();
-
-		/*
-		 * LungSimulator lungSimulator = new LungSimulator();
-		 * lungSimulator.frame.setVisible(true); // Simulate the circuit
-		 * lungSimulator.simulateCircuit();
-		 */
-
 	}
 }

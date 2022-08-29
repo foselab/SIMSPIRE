@@ -2,6 +2,6 @@
 schema: 2
 parameters:
    resistance1: 8.0
-   resistance2: 2.0
-   capacitor1: 0.010
+   resistance2: 20.0
+   capacitor1: 0.100
    capacitor2: 0.15

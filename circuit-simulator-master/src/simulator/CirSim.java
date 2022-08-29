@@ -1304,9 +1304,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener, 
 		boolean gotRail = false;
 		CircuitElm volt = null;
 
-		System.out.println("analyzeCircuit - 1st step: look for voltage or ground element");
-		// System.out.println("ac1");
-		// look for voltage or ground element
+		//System.out.println("analyzeCircuit - 1st step: look for voltage or ground element");
 		for (i = 0; i != getElmList().size(); i++) {
 			CircuitElm ce = getElm(i);
 			if (ce instanceof GroundElm) {
@@ -1336,9 +1334,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener, 
 			getNodeList().addElement(cn);
 		}
 
-		// System.out.println("ac2");
-		System.out.println("analyzeCircuit - 2nd step: allocate nodes and voltage sources");
-		// allocate nodes and voltage sources
+		//System.out.println("analyzeCircuit - 2nd step: allocate nodes and voltage sources");
 		for (i = 0; i != getElmList().size(); i++) {
 			CircuitElm ce = getElm(i);
 			int inodes = ce.getInternalNodeCount();
@@ -1397,15 +1393,13 @@ public class CirSim extends Frame implements ComponentListener, ActionListener, 
 		System.out.println("analyzeCircuit - 2nd step: #nodes for CirSim: " + getNodeList().size());
 		for (int k = 0; k < getNodeList().size(); k++) {
 			CircuitNode cn = getCircuitNode(k);
-			System.out.println("analyzeCircuit - 2nd step: Node{" + cn.getX() + ";" + cn.getY() + "}");
+			//System.out.println("analyzeCircuit - 2nd step: Node{" + cn.getX() + ";" + cn.getY() + "}");
 		}
 
 		voltageSources = new CircuitElm[vscount];
 		vscount = 0;
 		circuitNonLinear = false;
-		// System.out.println("ac3");
-		System.out.println("analyzeCircuit - 3rd step: determine if circuit is nonlinear");
-		// determine if circuit is nonlinear
+		//System.out.println("analyzeCircuit - 3rd step: determine if circuit is nonlinear");
 		for (i = 0; i != getElmList().size(); i++) {
 			CircuitElm ce = getElm(i);
 			if (ce.nonLinear())

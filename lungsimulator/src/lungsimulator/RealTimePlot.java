@@ -186,7 +186,7 @@ public class RealTimePlot {
 				externalVoltage.setX(e.getX());
 				externalVoltage.setY(e.getY());
 				externalVoltage.setX2Y2(e.getX1(), e.getY1());
-				externalVoltage.setMaxVoltage(10.0); //TODO capire come passarlo
+				//externalVoltage.setMaxVoltage(10.0); 
 				elements.add(externalVoltage);
 			}
 		}
