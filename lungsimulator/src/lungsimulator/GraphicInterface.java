@@ -32,8 +32,8 @@ public class GraphicInterface {
 	private static final String FLOW_TITLE = "Flow";
 	boolean showVentilator;
 	int max_data;
-	
-	String[] columnNames = { "Element", "V0", "V1", "Current" };
+
+	String[] columnNames = { "Element", "V0", "V1", "Current"};
 	String[][] data;
 	double[][] initdataPressure;
 	double[][] initdataVentilatorPressure;
@@ -85,10 +85,10 @@ public class GraphicInterface {
 				.setLegendPosition(LegendPosition.InsideS);
 
 		// Create the flow chart
-		flowChart = new XYChartBuilder().width(w).height(h).title(FLOW_TITLE).xAxisTitle("Time [s]").yAxisTitle("Flow")
-				.build();
+		flowChart = new XYChartBuilder().width(w).height(h).title(FLOW_TITLE).xAxisTitle("Time [s]")
+				.yAxisTitle("Flow").build();
 		flowChart.addSeries("Flow", initdataFlow[0], initdataFlow[1]);
-		flowChart.getStyler().setYAxisMax(1.0).setYAxisMin(-1.0).setSeriesMarkers(new Marker[] { SeriesMarkers.NONE })
+		flowChart.getStyler().setYAxisMax(5.0).setYAxisMin(-5.0).setSeriesMarkers(new Marker[] { SeriesMarkers.NONE })
 				.setLegendPosition(LegendPosition.InsideS);
 
 		frame.getContentPane().setLayout(new GridLayout(1, 2, 0, 0));
@@ -105,10 +105,10 @@ public class GraphicInterface {
 		patientPanel = new JPanel();
 		frame.getContentPane().add(patientPanel);
 		patientPanel.setLayout(null);
-		
+
 		int size = patient.getElementsList().size();
 		data = new String[size][size];
-		int c=0;
+		int c = 0;
 
 		int y = 27;
 		for (Element e : patient.getElementsList()) {
@@ -155,7 +155,7 @@ public class GraphicInterface {
 
 		// Insert new data
 		initdataPressure[0][max_data - 1] = time;
-		initdataPressure[1][max_data - 1] = myCircSim.getElm(1).getVoltOne();
+		initdataPressure[1][max_data - 1] = myCircSim.getElm(0).getVoltOne();
 
 		for (CircuitElm cir : myCircSim.getElmList()) {
 			if (cir.getClass().getSimpleName().equals("ExternalVoltageElm")) {
@@ -171,13 +171,13 @@ public class GraphicInterface {
 
 		for (CircuitElm cir : myCircSim.getElmList()) {
 			if (cir.getClass().getSimpleName().equals("ResistorElm")) {
-				String[] d = {data[c][0], String.valueOf(cir.getVoltZero()), String.valueOf(cir.getVoltOne()),
+				String[] d = { data[c][0], String.valueOf(cir.getVoltZero()), String.valueOf(cir.getVoltOne()),
 						String.valueOf(cir.getCurrent()) };
 				data[c++] = d;
 			}
 
 			if (cir.getClass().getSimpleName().equals("CapacitorElm")) {
-				String[] d = {data[c][0], String.valueOf(cir.getVoltZero()), String.valueOf(cir.getVoltOne()),
+				String[] d = { data[c][0], String.valueOf(cir.getVoltZero()), String.valueOf(cir.getVoltOne()),
 						String.valueOf(cir.getCurrent()) };
 				data[c++] = d;
 			}
@@ -193,12 +193,12 @@ public class GraphicInterface {
 		}
 
 		dataTable = new JTable(data, columnNames);
-		dataTable.setBounds(33, 250, 400, 100);
-		for(int i = 0; i < columnNames.length; i++) {
+		dataTable.setBounds(33, 400, 400, 200);
+		for (int i = 0; i < columnNames.length; i++) {
 			dataTable.getColumnModel().getColumn(i).setMinWidth(70);
 		}
 		dataTable.setVisible(true);
-		dataTable.getTableHeader().setBounds(33, 230, 400, 20);
+		dataTable.getTableHeader().setBounds(33, 380, 400, 20);
 		patientPanel.add(dataTable);
 		patientPanel.add(dataTable.getTableHeader());
 

@@ -1,0 +1,49 @@
+---
+schema: 5
+elementsList:
+- associatedFormula:
+    id: Ru
+    isTimeDependent: false
+    isExternal: false
+    formula: resistanceU 
+    variables:
+    - resistanceU
+  type: ResistorElm
+  x: 0
+  y: 0
+  x1: 1 
+  y1: 0
+- associatedFormula:
+    id: Rl
+    isTimeDependent: false
+    isExternal: false
+    formula: resistanceL 
+    variables:
+    - resistanceL
+  type: ResistorElm
+  x: 1
+  y: 0
+  x1: 2 
+  y1: 0
+- associatedFormula:
+    id: C
+    isTimeDependent: true
+    isExternal: false
+    formula: capacitor + 0.0625*SIN(TIME)
+    variables:
+    - capacitor
+    - TIME
+  type: CapacitorElm
+  x: 2
+  y: 0
+  x1: 3
+  y1: 0
+- associatedFormula:
+    id: Ventilator
+    isTimeDependent: false
+    isExternal: true
+  type: ExternalVoltageElm
+  x: 3
+  y: 0
+  x1: 0 
+  y1: 0

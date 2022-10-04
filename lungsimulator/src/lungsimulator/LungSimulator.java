@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
@@ -755,11 +756,17 @@ public class LungSimulator {
 		// Create the circuit equivalent to the lung
 		CirSim myCircSim = rtp.buildCircuitSimulator(patient, archetype);
 		myCircSim.setTimeStep(0.01);
+		List<Double> resValues = new ArrayList<>();
 
 		double time = 0;
 
 		while (true) {
 			time = rtp.getElapsedSeconds();
+			
+			if(time%2==0) {
+			archetype.getParameters().put("TIME", String.valueOf(time));
+			myCircSim = rtp.updateCircuitSimulator(patient, archetype);
+			}
 			
 			// Analyze the circuit and simulate a step
 			myCircSim.analyzeCircuit();

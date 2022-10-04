@@ -15,21 +15,25 @@ import lungsimulator.components.Archetype;
 import lungsimulator.components.Patient;
 
 public class YamlReader {
-	// RC circuit
-	static String LUNG_MODEL_RC = "config/lung-model-RC.yaml";
-	static String ARCHETYPE_PARAMETERS_RC = "config/archetype-RC.yaml";
-	
 	// The electrical analogue of lung
 	static String LUNG_MODEL_CB = "config/lung-model-CB.yaml";
 	static String ARCHETYPE_PARAMETERS_CB = "config/archetype-CB.yaml";
 	
-	// Rideout
-	static String LUNG_MODEL_RS = "config/lung-model-RS.yaml";
-	static String ARCHETYPE_PARAMETERS_RS = "config/archetype-RS.yaml";
+	// Albanese
+	static String LUNG_MODEL_ALBANESE = "config/lung-model-Albanese.yaml";
+	static String ARCHETYPE_PARAMETERS_ALBANESE = "config/archetype-Albanese.yaml";
 	
-	// A model based approach
-	static String LUNG_MODEL_MB = "config/lung-model-MB.yaml";
-	static String ARCHETYPE_PARAMETERS_MB = "config/archetype-MB.yaml";
+	// Baker
+	static String LUNG_MODEL_BAKER = "config/lung-model-Baker.yaml";
+	static String ARCHETYPE_PARAMETERS_BAKER = "config/archetype-Baker.yaml";
+	
+	// Jain
+	static String LUNG_MODEL_JAIN = "config/lung-model-Jain.yaml";
+	static String ARCHETYPE_PARAMETERS_JAIN = "config/archetype-Jain.yaml";
+	
+	// Al-Naggar
+	static String LUNG_MODEL_ALNAGGAR = "config/lung-model-AlNaggar.yaml";
+	static String ARCHETYPE_PARAMETERS_ALNAGGAR = "config/archetype-AlNaggar.yaml";
 
 	private static final Logger logger = Logger.getLogger(YamlReader.class.getName());
 	
@@ -43,7 +47,7 @@ public class YamlReader {
 	public Patient readPatientModel() throws FileNotFoundException, IOException, ParseException {
 
 		// Loading the YAML file
-		File file = new File(LUNG_MODEL_CB);
+		File file = new File(LUNG_MODEL_JAIN);
 		assert file.exists();
 
 		logger.log(Level.INFO, "Loading patient model...");
@@ -69,7 +73,7 @@ public class YamlReader {
 	public Archetype readArchetypeParameters() throws FileNotFoundException, IOException, ParseException {
 
 		// Loading the YAML file
-		File file = new File(ARCHETYPE_PARAMETERS_CB);
+		File file = new File(ARCHETYPE_PARAMETERS_JAIN);
 		assert file.exists();
 
 		logger.log(Level.INFO, "Loading archetype parameters...");

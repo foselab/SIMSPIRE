@@ -1,0 +1,120 @@
+---
+schema: 3
+elementsList:
+- associatedFormula:
+    id: Rml
+    isTimeDependent: false
+    isExternal: false
+    formula: resistanceMl
+    variables:
+    - resistanceMl
+  type: ResistorElm
+  x: 0
+  y: 2
+  x1: 1 
+  y1: 2
+- associatedFormula:
+    id: Rlt
+    isTimeDependent: false
+    isExternal: false
+    formula: resistanceLt
+    variables:
+    - resistanceLt
+  type: ResistorElm
+  x: 1
+  y: 2
+  x1: 2 
+  y1: 2
+- associatedFormula:
+    id: Rtb
+    isTimeDependent: false
+    isExternal: false
+    formula: resistanceTb
+    variables:
+    - resistanceTb
+  type: ResistorElm
+  x: 2
+  y: 2
+  x1: 3 
+  y1: 2
+- associatedFormula:
+    id: Rba
+    isTimeDependent: false
+    isExternal: false
+    formula: resistanceBa
+    variables:
+    - resistanceBa
+  type: ResistorElm
+  x: 3
+  y: 2
+  x1: 4 
+  y1: 2
+- associatedFormula:
+    id: Cl
+    isTimeDependent: false
+    isExternal: false
+    formula: capacitorL
+    variables:
+    - capacitorL
+  type: CapacitorElm
+  x: 1
+  y: 2
+  x1: 1 
+  y1: 0
+- associatedFormula:
+    id: Ctr
+    isTimeDependent: false
+    isExternal: false
+    formula: capacitorTr
+    variables:
+    - capacitorTr
+  type: CapacitorElm
+  x: 2
+  y: 2
+  x1: 3 
+  y1: 1
+- associatedFormula:
+    id: Cb
+    isTimeDependent: false
+    isExternal: false
+    formula: capacitorB
+    variables:
+    - capacitorB
+  type: CapacitorElm
+  x: 3
+  y: 2
+  x1: 3 
+  y1: 1
+- associatedFormula:
+    id: Ca
+    isTimeDependent: false
+    isExternal: false
+    formula: capacitorA
+    variables:
+    - capacitorA
+  type: CapacitorElm
+  x: 4
+  y: 2
+  x1: 3 
+  y1: 1
+- associatedFormula:
+    id: Ccw
+    isTimeDependent: false
+    isExternal: false
+    formula: capacitorCw
+    variables:
+    - capacitorCw
+  type: CapacitorElm
+  x: 3
+  y: 1
+  x1: 1 
+  y1: 0  
+- associatedFormula:
+    id: Ventilator
+    isTimeDependent: false
+    isExternal: true
+  type: ExternalVoltageElm
+  x: 1
+  y: 0
+  x1: 0 
+  y1: 2
