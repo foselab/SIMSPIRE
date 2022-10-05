@@ -1,8 +1,5 @@
 package lungsimulator.utils;
 
-import lungsimulator.LungSimulator;
-import lungsimulator.RealTimePlot;
-
 public class Utils {
 
 	/**

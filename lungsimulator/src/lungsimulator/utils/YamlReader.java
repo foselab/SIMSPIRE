@@ -17,26 +17,26 @@ import lungsimulator.components.Patient;
 
 public class YamlReader {
 	// The electrical analogue of lung
-	static String LUNG_MODEL_CB = "config/lung-model-CB.yaml";
-	static String ARCHETYPE_PARAMETERS_CB = "config/archetype-CB.yaml";
+	static String lungModelCB = "config/lung-model-CB.yaml";
+	static String archetypeParametersCB = "config/archetype-CB.yaml";
 	
 	// Albanese
-	static String LUNG_MODEL_ALBANESE = "config/lung-model-Albanese.yaml";
-	static String ARCHETYPE_PARAMETERS_ALBANESE = "config/archetype-Albanese.yaml";
+	static String lungModelAlbanese = "config/lung-model-Albanese.yaml";
+	static String archetypeParametersAlbanese = "config/archetype-Albanese.yaml";
 	
 	// Baker
-	static String LUNG_MODEL_BAKER = "config/lung-model-Baker.yaml";
-	static String ARCHETYPE_PARAMETERS_BAKER = "config/archetype-Baker.yaml";
+	static String lungModelBaker = "config/lung-model-Baker.yaml";
+	static String archetypeParametersBaker = "config/archetype-Baker.yaml";
 	
 	// Jain
-	static String LUNG_MODEL_JAIN = "config/lung-model-Jain.yaml";
-	static String ARCHETYPE_PARAMETERS_JAIN = "config/archetype-Jain.yaml";
+	static String lungModelJain = "config/lung-model-Jain.yaml";
+	static String archetypeParametersJain = "config/archetype-Jain.yaml";
 	
 	// Al-Naggar
-	static String LUNG_MODEL_ALNAGGAR = "config/lung-model-AlNaggar.yaml";
-	static String ARCHETYPE_PARAMETERS_ALNAGGAR = "config/archetype-AlNaggar.yaml";
+	static String lungModelAlNaggar = "config/lung-model-AlNaggar.yaml";
+	static String archetypeParametersAlNaggar = "config/archetype-AlNaggar.yaml";
 
-	private static final Logger logger = Logger.getLogger(YamlReader.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(YamlReader.class.getName());
 	
 	/**
 	 * Given a YAML file of the patient's model, this method builds a new Patient object
@@ -48,10 +48,10 @@ public class YamlReader {
 	public Patient readPatientModel() throws FileNotFoundException, IOException, ParseException {
 
 		// Loading the YAML file
-		File file = new File(LUNG_MODEL_JAIN);
+		File file = new File(lungModelJain);
 		assert file.exists();
 
-		logger.log(Level.INFO, "Loading patient model...");
+		LOGGER.log(Level.INFO, "Loading patient model...");
 
 		// Instantiating a new ObjectMapper as a YAMLFactory
 		ObjectMapper om = new ObjectMapper(new YAMLFactory());
@@ -59,7 +59,7 @@ public class YamlReader {
 		// Mapping the lung model from the YAML file to the Patient class
 		Patient patient = om.readValue(file, Patient.class);
 
-		logger.log(Level.INFO, "Patient model successfully loaded");
+		LOGGER.log(Level.INFO, "Patient model successfully loaded");
 
 		return patient;
 	}
@@ -74,10 +74,10 @@ public class YamlReader {
 	public Archetype readArchetypeParameters() throws FileNotFoundException, IOException, ParseException {
 
 		// Loading the YAML file
-		File file = new File(ARCHETYPE_PARAMETERS_JAIN);
+		File file = new File(archetypeParametersJain);
 		assert file.exists();
 
-		logger.log(Level.INFO, "Loading archetype parameters...");
+		LOGGER.log(Level.INFO, "Loading archetype parameters...");
 
 		// Instantiating a new ObjectMapper as a YAMLFactory
 		ObjectMapper om = new ObjectMapper(new YAMLFactory());
@@ -85,7 +85,7 @@ public class YamlReader {
 		// Mapping the lung model from the YAML file to the Patient class
 		Archetype archetype = om.readValue(file, Archetype.class);
 
-		logger.log(Level.INFO, "Archetype parameters successfully loaded");
+		LOGGER.log(Level.INFO, "Archetype parameters successfully loaded");
 
 		return archetype;
 	}
@@ -97,54 +97,53 @@ public class YamlReader {
 	 * @throws Exception
 	 */
 	public void validator(Patient patient, Archetype archetype) throws Exception {
-		//TODO check correttezza intervalli dei parametri
 
-		logger.log(Level.INFO, "Init validation process");
+		LOGGER.log(Level.INFO, "Init validation process");
 		
 		if(patient == null || archetype == null) {
-			throw new Exception("At least one model is not properly built");
+			throw new InspireException("At least one model is not properly built");
 		}
 		
 		if(patient.getSchema() != archetype.getSchema()) {
-			throw new Exception("Patient schema and Archetype schema are inconsistent");
+			throw new InspireException("Patient schema and Archetype schema are inconsistent");
 		}
 		
 		if(patient.getElementsList() == null || patient.getElementsList().isEmpty()
 				|| (patient.getElementsList() != null && patient.getElementsList().size() < 2)) {
-			throw new Exception("Expected at least 2 components");
+			throw new InspireException("Expected at least 2 components");
 		}
 		
 		if(archetype.getParameters() == null || archetype.getParameters().isEmpty()) {
-			throw new Exception("Expected some parameters but found 0");
+			throw new InspireException("Expected some parameters but found 0");
 		}
 		
 		if(patient.getElementsList() != null) {
 			for(Element e: patient.getElementsList()) {
 				if(e.getType() == null || e.getType().isEmpty()) {
-					throw new Exception("Missing element type");
+					throw new InspireException("Missing element type");
 				}
 				
 				if(e.getX() < 0 || e.getY() < 0 || e.getX1() < 0 || e.getX1() < 0) {
-					throw new Exception("Invalid coordinates");
+					throw new InspireException("Invalid coordinates");
 				}
 				
 				if(e.getAssociatedFormula() == null) {
-					throw new Exception("Missing formula associated to " + e.getType() + " element");
+					throw new InspireException("Missing formula associated to " + e.getType() + " element");
 				}else if(e.getAssociatedFormula() != null && !e.getAssociatedFormula().getIsExternal()){
 					if(e.getAssociatedFormula().getFormula() == null || e.getAssociatedFormula().getFormula().isEmpty()) {
-						throw new Exception("Missing formula for element: " + e.getType());
+						throw new InspireException("Missing formula for element: " + e.getType());
 					}
 					
 					if(e.getAssociatedFormula().getVariables() == null || e.getAssociatedFormula().getVariables().isEmpty()) {
-						throw new Exception("Missing variables for formula: " + e.getAssociatedFormula().getId() + "of element " + e.getType());
+						throw new InspireException("Missing variables for formula: " + e.getAssociatedFormula().getId() + "of element " + e.getType());
 					}else {
 						for(String var : e.getAssociatedFormula().getVariables()) {
 							if (archetype.getParameters().getOrDefault(var, "notFound").equals("notFound")
 									&& (!e.getAssociatedFormula().getIsTimeDependent() && !var.equals("TIME"))) {
-								throw new Exception("Missing value for variable: " + var);
+								throw new InspireException("Missing value for variable: " + var);
 							}
 							if(var.equals("TIME") && !e.getAssociatedFormula().getIsTimeDependent()) {
-								throw new Exception("Inconsistency error: formula " + e.getAssociatedFormula().getId() + " is not time-dependent, but found var TIME");
+								throw new InspireException("Inconsistency error: formula " + e.getAssociatedFormula().getId() + " is not time-dependent, but found var TIME");
 							}
 						}
 					}
@@ -157,6 +156,6 @@ public class YamlReader {
 			// TODO controllo sugli id
 		}
 		
-		logger.log(Level.INFO, "Validation process successfully completed");
+		LOGGER.log(Level.INFO, "Validation process successfully completed");
 	}
 }

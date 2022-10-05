@@ -1,7 +1,5 @@
 package lungsimulator.components;
 
-import java.util.List;
-
 public class Element {
 	Formula associatedFormula;
 	String type; // component's class name
