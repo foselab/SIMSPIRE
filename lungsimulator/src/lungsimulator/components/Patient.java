@@ -2,9 +2,6 @@ package lungsimulator.components;
 
 import java.util.List;
 
-import lungsimulator.utils.Element;
-import lungsimulator.utils.Formula;
-
 public class Patient {
 	int schema;
 	// list of the circuit's components 

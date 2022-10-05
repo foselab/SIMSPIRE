@@ -15,10 +15,9 @@ import components.ExternalVoltageElm;
 import components.ResistorElm;
 import components.SwitchElm;
 import lungsimulator.components.Archetype;
+import lungsimulator.components.Element;
 import lungsimulator.components.Patient;
 import lungsimulator.components.SimulatorParams;
-import lungsimulator.components.Ventilator;
-import lungsimulator.utils.Element;
 import simulator.CirSim;
 
 public class RealTimePlot {
@@ -56,13 +55,10 @@ public class RealTimePlot {
 	private DCVoltageElm battery;
 	private SwitchElm swDrop;
 	private ResistorElm rDrop;
-	// Ventilator
-	Ventilator v;
 	// Simulation params
 	SimulatorParams sp;
 
 	public RealTimePlot() {
-		this.v = new Ventilator();
 		this.sp = new SimulatorParams();
 	}
 
@@ -410,10 +406,6 @@ public class RealTimePlot {
 
 	public void setPressureDropEnabledWithProbability(Boolean pressureDropEnabledWithProbability) {
 		this.pressureDropEnabledWithProbability = pressureDropEnabledWithProbability;
-	}
-
-	public Ventilator getVentilator() {
-		return v;
 	}
 
 	public SimulatorParams getSimulatorParams() {

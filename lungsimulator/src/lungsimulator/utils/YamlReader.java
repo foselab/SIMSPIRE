@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import lungsimulator.components.Archetype;
+import lungsimulator.components.Element;
 import lungsimulator.components.Patient;
 
 public class YamlReader {

@@ -21,8 +21,8 @@ import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import components.CircuitElm;
 import lungsimulator.components.Archetype;
+import lungsimulator.components.Element;
 import lungsimulator.components.Patient;
-import lungsimulator.utils.Element;
 import lungsimulator.utils.Utils;
 import simulator.CirSim;
 

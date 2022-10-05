@@ -1,4 +1,4 @@
-package lungsimulator.utils;
+package lungsimulator.components;
 
 import java.util.List;
 

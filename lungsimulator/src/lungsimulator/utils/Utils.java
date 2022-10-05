@@ -44,9 +44,9 @@ public class Utils {
 		}
 	}
 
-	public static void updateMaxFlow(RealTimePlot rtp, double[][] initdataFlow) {
+	/*public static void updateMaxFlow(RealTimePlot rtp, double[][] initdataFlow) {
 		if (initdataFlow[1][rtp.getMaxData() - 1] > LungSimulator.maxFlow)
 			LungSimulator.maxFlow = initdataFlow[1][rtp.getMaxData() - 1];
-	}
+	}*/
 
 }
