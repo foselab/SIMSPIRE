@@ -27,7 +27,7 @@ public class RealTimePlot {
 	private static final int SCHEMA_RC = 1;
 
 	// Maximum numebr of data shown in the window
-	int max_data = 500;
+	int maxData = 500;
 
 	// Values
 	double rPatValue;
@@ -237,7 +237,6 @@ public class RealTimePlot {
 					resistance.setX2Y2(e.getX1(), e.getY1());
 					resistance.setResistance(Double.parseDouble(formula.eval().toString()));	
 					elements.add(resistance);
-					System.out.println("RESISTENZA: " + resistance.getResistance());
 				}
 
 				// capacitor
@@ -301,8 +300,8 @@ public class RealTimePlot {
 		return (nowMillis - this.createdMillis) / 1000.0;
 	}
 
-	public void setMax_data(int max_data) {
-		this.max_data = max_data;
+	public void setMaxData(int maxData) {
+		this.maxData = maxData;
 	}
 
 	public void setrPatValue(double rPatValue) {
@@ -421,8 +420,8 @@ public class RealTimePlot {
 		return sp;
 	}
 
-	public int getMax_data() {
-		return max_data;
+	public int getMaxData() {
+		return maxData;
 	}
 
 	public ResistorElm getRPat() {

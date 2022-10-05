@@ -31,7 +31,7 @@ public class GraphicInterface {
 	private static final String PRESSURE_TITLE = "Pressure";
 	private static final String FLOW_TITLE = "Flow";
 	boolean showVentilator;
-	int max_data;
+	int maxData;
 
 	String[] columnNames = { "Element", "V0", "V1", "Current"};
 	String[][] data;
@@ -61,15 +61,15 @@ public class GraphicInterface {
 		int w = 1500;
 		int h = 400;
 		showVentilator = true;
-		max_data = 1000;
+		maxData = 1000;
 
 		// init the arrays for the data
-		initdataPressure = new double[max_data][max_data];
-		initdataVentilatorPressure = new double[max_data][max_data];
-		initdataFlow = new double[max_data][max_data];
+		initdataPressure = new double[maxData][maxData];
+		initdataVentilatorPressure = new double[maxData][maxData];
+		initdataFlow = new double[maxData][maxData];
 
 		// Fill initData with zeros
-		Utils.initVectors(max_data, initdataPressure, initdataVentilatorPressure, initdataFlow);
+		Utils.initVectors(maxData, initdataPressure, initdataVentilatorPressure, initdataFlow);
 
 		// Create the pressure Chart
 		pressureChart = new XYChartBuilder().width(w).height(h).title(PRESSURE_TITLE).xAxisTitle("Time [s]")
@@ -151,21 +151,21 @@ public class GraphicInterface {
 
 	public void updateShownDataValues(double time, CirSim myCircSim) {
 		// Shift data in vectors
-		Utils.shiftData(max_data, initdataPressure, initdataVentilatorPressure, initdataFlow);
+		Utils.shiftData(maxData, initdataPressure, initdataVentilatorPressure, initdataFlow);
 
 		// Insert new data
-		initdataPressure[0][max_data - 1] = time;
-		initdataPressure[1][max_data - 1] = myCircSim.getElm(0).getVoltOne();
+		initdataPressure[0][maxData - 1] = time;
+		initdataPressure[1][maxData - 1] = myCircSim.getElm(0).getVoltOne();
 
 		for (CircuitElm cir : myCircSim.getElmList()) {
 			if (cir.getClass().getSimpleName().equals("ExternalVoltageElm")) {
-				initdataVentilatorPressure[0][max_data - 1] = time;
-				initdataVentilatorPressure[1][max_data - 1] = cir.getVoltageDiff();
+				initdataVentilatorPressure[0][maxData - 1] = time;
+				initdataVentilatorPressure[1][maxData - 1] = cir.getVoltageDiff();
 			}
 		}
 
-		initdataFlow[0][max_data - 1] = time;
-		initdataFlow[1][max_data - 1] = myCircSim.getElm(0).getCurrent();
+		initdataFlow[0][maxData - 1] = time;
+		initdataFlow[1][maxData - 1] = myCircSim.getElm(0).getCurrent();
 
 		int c = 0;
 

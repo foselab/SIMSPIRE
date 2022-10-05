@@ -13,9 +13,9 @@ public class Utils {
 	 * @param initdataVentilatorPressure
 	 * @param initdataFlow
 	 */
-	public static void shiftData(int max_data, double[][] initdataPressure, double[][] initdataVentilatorPressure,
+	public static void shiftData(int maxData, double[][] initdataPressure, double[][] initdataVentilatorPressure,
 			double[][] initdataFlow) {
-		for (int i = 0; i < max_data - 1; i++) {
+		for (int i = 0; i < maxData - 1; i++) {
 			initdataFlow[0][i] = initdataFlow[0][i + 1];
 			initdataFlow[1][i] = initdataFlow[1][i + 1];
 			initdataPressure[0][i] = initdataPressure[0][i + 1];
@@ -33,10 +33,10 @@ public class Utils {
 	 * @param initdataVentilatorPressure
 	 * @param initdataFlow
 	 */
-	public static void initVectors(int max_data, double[][] initdataPressure,
+	public static void initVectors(int maxData, double[][] initdataPressure,
 			double[][] initdataVentilatorPressure, double[][] initdataFlow) {
-		for (int i = 0; i < max_data; i++) {
-			for (int j = 0; j < max_data; j++) {
+		for (int i = 0; i < maxData; i++) {
+			for (int j = 0; j < maxData; j++) {
 				initdataPressure[i][j] = 0;
 				initdataVentilatorPressure[i][j] = 0;
 				initdataFlow[i][j] = 0;
@@ -45,8 +45,8 @@ public class Utils {
 	}
 
 	public static void updateMaxFlow(RealTimePlot rtp, double[][] initdataFlow) {
-		if (initdataFlow[1][rtp.getMax_data() - 1] > LungSimulator.maxFlow)
-			LungSimulator.maxFlow = initdataFlow[1][rtp.getMax_data() - 1];
+		if (initdataFlow[1][rtp.getMaxData() - 1] > LungSimulator.maxFlow)
+			LungSimulator.maxFlow = initdataFlow[1][rtp.getMaxData() - 1];
 	}
 
 }

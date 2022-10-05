@@ -78,7 +78,7 @@ public class LungSimulator {
 	public static double peakOfPressure = 0;
 	public static double oldPeakOfPressure = 0;
 	public static double targetMinuteVolume = 0;
-	public static Logger lungSimulatorLogger;
+	public static final Logger lungSimulatorLogger = null;
 
 	/*private JFrame frame;
 	boolean showVentilator;*/
