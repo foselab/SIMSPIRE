@@ -48,7 +48,7 @@ public class YamlReader {
 	public Patient readPatientModel() throws FileNotFoundException, IOException, ParseException {
 
 		// Loading the YAML file
-		File file = new File(lungModelCB);
+		File file = new File(lungModelAlbanese);
 		assert file.exists();
 
 		LOGGER.log(Level.INFO, "Loading patient model...");
@@ -74,7 +74,7 @@ public class YamlReader {
 	public Archetype readArchetypeParameters() throws FileNotFoundException, IOException, ParseException {
 
 		// Loading the YAML file
-		File file = new File(archetypeParametersCB);
+		File file = new File(archetypeParametersAlbanese);
 		assert file.exists();
 
 		LOGGER.log(Level.INFO, "Loading archetype parameters...");

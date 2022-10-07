@@ -2,6 +2,8 @@ package lungsimulator;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DecimalFormat;
+
 import org.json.simple.parser.ParseException;
 import lungsimulator.components.Archetype;
 import lungsimulator.components.Patient;
@@ -42,27 +44,23 @@ public class LungSimulator {
 	public void simulateCircuit() throws InterruptedException {
 		// Create the circuit equivalent to the lung
 		CirSim myCircSim = rtp.buildCircuitSimulator(patient, archetype);
-		myCircSim.setTimeStep(0.01);
-
-		double time;
+		myCircSim.setTimeStep(0.1);
+		
+		double time = 0;
 
 		while (true) {
-			time = rtp.getElapsedSeconds();
+			time += 0.1;
 			
-			if(time%2==0) {
+			/*if(time%2==0) {
 			archetype.getParameters().put("TIME", String.valueOf(time));
 			myCircSim = rtp.updateCircuitSimulator(patient, archetype);
-			}
+			}*/
 			
 			// Analyze the circuit and simulate a step
 			myCircSim.analyzeCircuit();
 			myCircSim.loopAndContinue(true);
 
-			/* After having analyzed the circuit, then check if a new cycle has started
-			lastCycleTime = rtp.getElapsedSeconds() - startCycleTime;
-			startCycleTime = rtp.getElapsedSeconds();*/
-
-			//Thread.sleep(10);
+			Thread.sleep(100);
 			
 			userInterface.updateShownDataValues(time, myCircSim);
 

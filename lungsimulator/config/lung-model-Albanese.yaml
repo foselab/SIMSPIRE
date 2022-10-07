@@ -2,7 +2,7 @@
 schema: 3
 elementsList:
 - associatedFormula:
-    id: Rml
+    id: Mouth to Larinx Resistance
     isTimeDependent: false
     isExternal: false
     formula: resistanceMl
@@ -14,7 +14,7 @@ elementsList:
   x1: 1 
   y1: 2
 - associatedFormula:
-    id: Rlt
+    id: Larinx to Trachea Resistance 
     isTimeDependent: false
     isExternal: false
     formula: resistanceLt
@@ -26,7 +26,7 @@ elementsList:
   x1: 2 
   y1: 2
 - associatedFormula:
-    id: Rtb
+    id: Trachea to Bronchea Resistance
     isTimeDependent: false
     isExternal: false
     formula: resistanceTb
@@ -38,7 +38,7 @@ elementsList:
   x1: 3 
   y1: 2
 - associatedFormula:
-    id: Rba
+    id: Bronchea to Alveoli Resistance
     isTimeDependent: false
     isExternal: false
     formula: resistanceBa
@@ -50,7 +50,7 @@ elementsList:
   x1: 4 
   y1: 2
 - associatedFormula:
-    id: Cl
+    id: Larinx Capacitance
     isTimeDependent: false
     isExternal: false
     formula: capacitorL
@@ -62,7 +62,7 @@ elementsList:
   x1: 1 
   y1: 0
 - associatedFormula:
-    id: Ctr
+    id: Trachea Capacitance
     isTimeDependent: false
     isExternal: false
     formula: capacitorTr
@@ -74,7 +74,7 @@ elementsList:
   x1: 3 
   y1: 1
 - associatedFormula:
-    id: Cb
+    id: Bronchea Capacitance
     isTimeDependent: false
     isExternal: false
     formula: capacitorB
@@ -86,7 +86,7 @@ elementsList:
   x1: 3 
   y1: 1
 - associatedFormula:
-    id: Ca
+    id: Alveoli Capacitance
     isTimeDependent: false
     isExternal: false
     formula: capacitorA
@@ -98,7 +98,7 @@ elementsList:
   x1: 3 
   y1: 1
 - associatedFormula:
-    id: Ccw
+    id: Chest wall Capacitance
     isTimeDependent: false
     isExternal: false
     formula: capacitorCw
