@@ -8,6 +8,7 @@ import lungsimulator.components.Patient;
 import lungsimulator.utils.YamlReader;
 import simulator.CirSim;
 
+@SuppressWarnings("ucd")
 public class LungSimulator {
 	// Define the new plotter
 	RealTimePlot rtp = new RealTimePlot();

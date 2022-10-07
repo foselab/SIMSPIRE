@@ -2,7 +2,7 @@
 schema: 2
 elementsList:
 - associatedFormula:
-    id: R1
+    id: Endo-tracheal Tube Resistance
     isTimeDependent: false
     isExternal: false
     formula: resistance1
@@ -14,7 +14,7 @@ elementsList:
   x1: 1 
   y1: 1
 - associatedFormula:
-    id: R2
+    id: Tracheo-bronchial Resistance
     isTimeDependent: false
     isExternal: false
     formula: resistance2
@@ -26,7 +26,7 @@ elementsList:
   x1: 2 
   y1: 1
 - associatedFormula:
-    id: C1
+    id: Lung Compliance
     isTimeDependent: false
     isExternal: false
     formula: capacitor1
@@ -38,7 +38,7 @@ elementsList:
   x1: 3 
   y1: 1
 - associatedFormula:
-    id: C2
+    id: Chest wall compliance
     isTimeDependent: false
     isExternal: false
     formula: capacitor2

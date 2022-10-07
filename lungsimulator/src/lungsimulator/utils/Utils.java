@@ -1,5 +1,10 @@
 package lungsimulator.utils;
 
+import lombok.experimental.UtilityClass;
+/**
+ * Contains methods for vectors initialization and data management 
+ */
+@UtilityClass
 public class Utils {
 
 	/**
@@ -10,7 +15,7 @@ public class Utils {
 	 * @param initdataVentilatorPressure
 	 * @param initdataFlow
 	 */
-	public static void shiftData(int maxData, double[][] initdataPressure, double[][] initdataVentilatorPressure,
+	public static void shiftData(final int maxData, double[][] initdataPressure, double[][] initdataVentilatorPressure,
 			double[][] initdataFlow) {
 		for (int i = 0; i < maxData - 1; i++) {
 			initdataFlow[0][i] = initdataFlow[0][i + 1];
@@ -30,7 +35,7 @@ public class Utils {
 	 * @param initdataVentilatorPressure
 	 * @param initdataFlow
 	 */
-	public static void initVectors(int maxData, double[][] initdataPressure,
+	public static void initVectors(final int maxData, double[][] initdataPressure,
 			double[][] initdataVentilatorPressure, double[][] initdataFlow) {
 		for (int i = 0; i < maxData; i++) {
 			for (int j = 0; j < maxData; j++) {
@@ -40,10 +45,4 @@ public class Utils {
 			}
 		}
 	}
-
-	/*public static void updateMaxFlow(RealTimePlot rtp, double[][] initdataFlow) {
-		if (initdataFlow[1][rtp.getMaxData() - 1] > LungSimulator.maxFlow)
-			LungSimulator.maxFlow = initdataFlow[1][rtp.getMaxData() - 1];
-	}*/
-
 }

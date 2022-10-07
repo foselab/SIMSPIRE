@@ -28,14 +28,30 @@ public class GraphicInterface {
 
 	private static final String PRESSURE_TITLE = "Pressure";
 	private static final String FLOW_TITLE = "Flow";
-	boolean showVentilator;
-	int maxData;
-
-	String[] columnNames = { "Element", "V0", "V1", "Current"};
-	String[][] data;
-	double[][] initdataPressure;
-	double[][] initdataVentilatorPressure;
-	double[][] initdataFlow;
+	private static final int MAXDATA = 1000;
+	
+	private static final int IDELEMENTX = 33;
+	private static final int IDELEMENTWIDTH = 400;
+	private static final int IDELEMENTHEIGHT = 20;
+	
+	private static final int VALELEMENTX = 250;
+	private static final int VALELEMENTWIDTH = 50;
+	private static final int VALELEMENTHEIGHT = 20;
+	
+	private static final String UMRES = "cmH2O/L/s";
+	private static final String UMCAP = "L/cmH2O";
+	private static final String UMGEN = "cmH2O";
+	
+	private static final int UMELEMENTX = 310;
+	private static final int UMELEMENTWIDTH = 100;
+	private static final int UMELEMENTHEIGHT = 20;
+	
+	private boolean showVentilator = true;
+	private String[] columnNames = { "Element", "V0", "V1", "Current"};
+	private String[][] data;
+	private double[][] initdataPressure;
+	private double[][] initdataVentilatorPressure;
+	private double[][] initdataFlow;
 
 	private JFrame frame;
 	private XYChart pressureChart;
@@ -43,31 +59,34 @@ public class GraphicInterface {
 	private XChartPanel<XYChart> sw;
 	private XChartPanel<XYChart> sw2;
 	private JPanel patientPanel;
-	private JSpinner resistance = new JSpinner();
-	private JSpinner compliance = new JSpinner();
+	private JSpinner element;
 	private JSpinner voltage = new JSpinner();
 	private JTable dataTable = new JTable();
 
 	public GraphicInterface() {
 	}
-
+	
+	/**
+	 * Graphic interface set up
+	 * @param patient
+	 * @param archetype
+	 */
 	public void frameConfig(Patient patient, Archetype archetype) {
 		frame = new JFrame();
-		frame.setBounds(15, 15, 1500, 800);
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); //fullscreen option
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
 
 		int w = 1500;
 		int h = 400;
-		showVentilator = true;
-		maxData = 1000;
 
-		// init the arrays for the data
-		initdataPressure = new double[maxData][maxData];
-		initdataVentilatorPressure = new double[maxData][maxData];
-		initdataFlow = new double[maxData][maxData];
+		// Init the arrays for the data
+		initdataPressure = new double[MAXDATA][MAXDATA];
+		initdataVentilatorPressure = new double[MAXDATA][MAXDATA];
+		initdataFlow = new double[MAXDATA][MAXDATA];
 
 		// Fill initData with zeros
-		Utils.initVectors(maxData, initdataPressure, initdataVentilatorPressure, initdataFlow);
+		Utils.initVectors(MAXDATA, initdataPressure, initdataVentilatorPressure, initdataFlow);
 
 		// Create the pressure Chart
 		pressureChart = new XYChartBuilder().width(w).height(h).title(PRESSURE_TITLE).xAxisTitle("Time [s]")
@@ -114,56 +133,42 @@ public class GraphicInterface {
 			// resistance
 			if (e.getType().equals("ResistorElm")) {
 				elmValue = archetype.getParameters().get(e.getAssociatedFormula().getVariables().get(0));
-				graphicDesignForResistorElm(e.getAssociatedFormula().getId(), y, Double.parseDouble(elmValue));
+				graphicDesignForElement(e.getAssociatedFormula().getId(), UMRES, y, Double.parseDouble(elmValue));
 				data[c++][0] = e.getAssociatedFormula().getId();
 			}
 
 			// capacitor
 			if (e.getType().equals("CapacitorElm")) {
 				elmValue = archetype.getParameters().get(e.getAssociatedFormula().getVariables().get(0));
-				graphicDesignForCapacitorElm(e.getAssociatedFormula().getId(), y, Double.parseDouble(elmValue));
+				graphicDesignForElement(e.getAssociatedFormula().getId(), UMCAP, y, Double.parseDouble(elmValue));
 				data[c++][0] = e.getAssociatedFormula().getId();
 			}
 
 			if (e.getType().equals("ExternalVoltageElm")) {
-				voltage = new JSpinner();
-
-				JLabel lblVoltageUnit = new JLabel("cmH2O");
-				lblVoltageUnit.setBounds(200, y, 100, 20);
-				patientPanel.add(lblVoltageUnit);
-
-				JLabel lblVoltage = new JLabel(e.getAssociatedFormula().getId());
-				lblVoltage.setBounds(33, y, 100, 20);
-				patientPanel.add(lblVoltage);
-
-				voltage.setBounds(140, y, 50, 20);
-				patientPanel.add(voltage);
+				graphicDesignForElement(e.getAssociatedFormula().getId(), UMGEN, y, 0);
 			}
 
 			y += 28;
 		}
-
-		frame.setVisible(true);
-
 	}
 
 	public void updateShownDataValues(double time, CirSim myCircSim) {
 		// Shift data in vectors
-		Utils.shiftData(maxData, initdataPressure, initdataVentilatorPressure, initdataFlow);
+		Utils.shiftData(MAXDATA, initdataPressure, initdataVentilatorPressure, initdataFlow);
 
 		// Insert new data
-		initdataPressure[0][maxData - 1] = time;
-		initdataPressure[1][maxData - 1] = myCircSim.getElm(0).getVoltOne();
+		initdataPressure[0][MAXDATA - 1] = time;
+		initdataPressure[1][MAXDATA - 1] = myCircSim.getElm(0).getVoltOne();
 
 		for (CircuitElm cir : myCircSim.getElmList()) {
 			if (cir.getClass().getSimpleName().equals("ExternalVoltageElm")) {
-				initdataVentilatorPressure[0][maxData - 1] = time;
-				initdataVentilatorPressure[1][maxData - 1] = cir.getVoltageDiff();
+				initdataVentilatorPressure[0][MAXDATA - 1] = time;
+				initdataVentilatorPressure[1][MAXDATA - 1] = cir.getVoltageDiff();
 			}
 		}
 
-		initdataFlow[0][maxData - 1] = time;
-		initdataFlow[1][maxData - 1] = myCircSim.getElm(0).getCurrent();
+		initdataFlow[0][MAXDATA - 1] = time;
+		initdataFlow[1][MAXDATA - 1] = myCircSim.getElm(0).getCurrent();
 
 		int c = 0;
 
@@ -217,47 +222,34 @@ public class GraphicInterface {
 		sw2.repaint();
 
 	}
-
+	
 	/**
-	 * Create the graphic design for resistances
+	 * Create graphic design for circuit element
+	 * @param elementDescr	element description
+	 * @param elementUnit	unit of measurement
+	 * @param elementY		component height
+	 * @param value	element value
 	 */
-	private void graphicDesignForResistorElm(String id, int y, double resistanceValue) {
-		resistance = new JSpinner();
-
-		JLabel lblResistanceUnit = new JLabel("cmH2O/L/s");
-		lblResistanceUnit.setBounds(200, y, 100, 20);
-		patientPanel.add(lblResistanceUnit);
-
-		JLabel lblResistance = new JLabel(id);
-		lblResistance.setBounds(33, y, 100, 20);
-		patientPanel.add(lblResistance);
-
-		SpinnerNumberModel resistanceModel = new SpinnerNumberModel(0.0, 0.000, 100.0, 0.001);
-		resistance.setModel(resistanceModel);
-		resistance.setBounds(140, y, 50, 20);
-		resistance.setValue(resistanceValue);
-		patientPanel.add(resistance);
-	}
-
-	/**
-	 * Create the graphic design for capacitors
-	 */
-	private void graphicDesignForCapacitorElm(String id, int y, double capacitorValue) {
-		compliance = new JSpinner();
-
-		JLabel lblComplianceUnit = new JLabel("L/cmH2O");
-		lblComplianceUnit.setBounds(200, y, 100, 20);
-		patientPanel.add(lblComplianceUnit);
-
-		JLabel lblCompliance = new JLabel(id);
-		lblCompliance.setBounds(33, y, 100, 20);
-		patientPanel.add(lblCompliance);
-
-		SpinnerNumberModel complianceModel = new SpinnerNumberModel(0.0, 0.000, 100.0, 0.001);
-		compliance.setBounds(140, y, 50, 20);
-		compliance.setModel(complianceModel);
-		compliance.setValue(capacitorValue);
-		patientPanel.add(compliance);
+	private void graphicDesignForElement(final String elementDescr, final String elementUnit, final int elementY, final double value) {
+		element = new JSpinner();
+		
+		// Element description
+		final JLabel elementId = new JLabel(elementDescr);
+		elementId.setBounds(IDELEMENTX, elementY, IDELEMENTWIDTH, IDELEMENTHEIGHT);
+		patientPanel.add(elementId);
+		
+		// Element value
+		final SpinnerNumberModel elementModel = new SpinnerNumberModel(0.0, 0.000, 100.0, 0.001);
+		element.setModel(elementModel);
+		element.setBounds(VALELEMENTX, elementY, VALELEMENTWIDTH, VALELEMENTHEIGHT);
+		element.setValue(value);
+		patientPanel.add(element);
+		
+		// Element unit of measurement
+		final JLabel unit = new JLabel(elementUnit);
+		unit.setBounds(UMELEMENTX, elementY, UMELEMENTWIDTH, UMELEMENTHEIGHT);
+		patientPanel.add(unit);
+		
 	}
 
 	private static Double getMax(double[] ds) {
