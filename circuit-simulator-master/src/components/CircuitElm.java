@@ -16,6 +16,10 @@ import utils.EditInfo;
 import utils.Editable;
 
 public abstract class CircuitElm implements Editable {
+	private String id;
+	private String idLeft;
+	private String idRight;
+	
 	static double voltageRange = 5;
 	static int colorScaleCount = 32;
 	static Color colorScale[];
@@ -935,6 +939,30 @@ public abstract class CircuitElm implements Editable {
 
 	public static double getPowerMult() {
 		return powerMult;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public String getIdLeft() {
+		return idLeft;
+	}
+
+	public void setIdLeft(String idLeft) {
+		this.idLeft = idLeft;
+	}
+
+	public String getIdRight() {
+		return idRight;
+	}
+
+	public void setIdRight(String idRight) {
+		this.idRight = idRight;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public static void setPowerMult(double powerMult) {

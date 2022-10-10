@@ -56,11 +56,20 @@ public class RealTimePlot {
 				// resistance
 				if (e.getType().equals(resistance.getClass().getSimpleName())) {
 					resistance = new ResistorElm(1, 1);
+					resistance.setId(e.getAssociatedFormula().getId());
 					resistance.setX(e.getX());
 					resistance.setY(e.getY());
 					resistance.setX2Y2(e.getX1(), e.getY1());
 					if (!e.getAssociatedFormula().getVariables().contains("TIME")) {
 						resistance.setResistance(Double.parseDouble(formula.eval().toString()));
+					}
+					
+					if(e.isShowLeft()) {
+						resistance.setIdLeft(e.getIdLeft());
+					}
+					
+					if(e.isShowRight()) {
+						resistance.setIdRight(e.getIdRight());
 					}
 					elements.add(resistance);
 				}
@@ -68,29 +77,55 @@ public class RealTimePlot {
 				// capacitor
 				if (e.getType().equals(capacitance.getClass().getSimpleName())) {
 					capacitance = new CapacitorElm(0, 0);
+					capacitance.setId(e.getAssociatedFormula().getId());
 					capacitance.setX(e.getX());
 					capacitance.setY(e.getY());
 					capacitance.setX2Y2(e.getX1(), e.getY1());
 					if (!e.getAssociatedFormula().getVariables().contains("TIME")) {
 					capacitance.setCapacitance(Double.parseDouble(formula.eval().toString()));
 					}
+					
+					if(e.isShowLeft()) {
+						capacitance.setIdLeft(e.getIdLeft());
+					}
+					
+					if(e.isShowRight()) {
+						capacitance.setIdRight(e.getIdRight());
+					}
+					
 					elements.add(capacitance);
 				}
 			}
 
 			// ac voltage
 			if (e.getType().equals(acVoltage.getClass().getSimpleName())) {
+				acVoltage.setId(e.getAssociatedFormula().getId());
 				acVoltage.setX(e.getX());
 				acVoltage.setY(e.getY());
 				acVoltage.setX2Y2(e.getX1(), e.getY1());
+				if(e.isShowLeft()) {
+					acVoltage.setIdLeft(e.getIdLeft());
+				}
+				
+				if(e.isShowRight()) {
+					acVoltage.setIdRight(e.getIdRight());
+				}
 				elements.add(acVoltage);
 			}
 
 			// dc voltage
 			if (e.getType().equals(dcVoltage.getClass().getSimpleName())) {
+				dcVoltage.setId(e.getAssociatedFormula().getId());
 				dcVoltage.setX(e.getX());
 				dcVoltage.setY(e.getY());
 				dcVoltage.setX2Y2(e.getX1(), e.getY1());
+				if(e.isShowLeft()) {
+					dcVoltage.setIdLeft(e.getIdLeft());
+				}
+				
+				if(e.isShowRight()) {
+					dcVoltage.setIdRight(e.getIdRight());
+				}
 				elements.add(dcVoltage);
 
 				if (e.getAssociatedFormula().getIsExternal()) {
@@ -99,9 +134,18 @@ public class RealTimePlot {
 			}
 
 			if (e.getType().equals(externalVoltage.getClass().getSimpleName())) {
+				externalVoltage.setId(e.getAssociatedFormula().getId());
 				externalVoltage.setX(e.getX());
 				externalVoltage.setY(e.getY());
 				externalVoltage.setX2Y2(e.getX1(), e.getY1());
+				
+				if(e.isShowLeft()) {
+					externalVoltage.setIdLeft(e.getIdLeft());
+				}
+				
+				if(e.isShowRight()) {
+					externalVoltage.setIdRight(e.getIdRight());
+				}
 				// externalVoltage.setMaxVoltage(10.0);
 				elements.add(externalVoltage);
 			}

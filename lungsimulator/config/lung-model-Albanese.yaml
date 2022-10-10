@@ -2,7 +2,7 @@
 schema: 3
 elementsList:
 - associatedFormula:
-    id: Mouth to Larinx Resistance
+    id: Mouth to Larynx Resistance
     isTimeDependent: false
     isExternal: false
     formula: resistanceMl
@@ -13,8 +13,12 @@ elementsList:
   y: 2
   x1: 1 
   y1: 2
+  showLeft: true
+  idLeft: Airway Opening
+  showRight: true
+  idRight: Larynx
 - associatedFormula:
-    id: Larinx to Trachea Resistance 
+    id: Larynx to Trachea Resistance 
     isTimeDependent: false
     isExternal: false
     formula: resistanceLt
@@ -25,6 +29,8 @@ elementsList:
   y: 2
   x1: 2 
   y1: 2
+  showRight: true
+  idRight: Trachea
 - associatedFormula:
     id: Trachea to Bronchea Resistance
     isTimeDependent: false
@@ -37,6 +43,8 @@ elementsList:
   y: 2
   x1: 3 
   y1: 2
+  showRight: true
+  idRight: Bronchea
 - associatedFormula:
     id: Bronchea to Alveoli Resistance
     isTimeDependent: false
@@ -49,6 +57,8 @@ elementsList:
   y: 2
   x1: 4 
   y1: 2
+  showRight: true
+  idRight: Alveoli
 - associatedFormula:
     id: Larinx Capacitance
     isTimeDependent: false
@@ -85,6 +95,8 @@ elementsList:
   y: 2
   x1: 3 
   y1: 1
+  showRight: true
+  idRight: Pleural Space
 - associatedFormula:
     id: Alveoli Capacitance
     isTimeDependent: false

@@ -5,7 +5,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
@@ -33,7 +35,7 @@ import simulator.CirSim;
 public class GraphicInterface {
 
 	private static final String PRESSURE_TITLE = "Pressure";
-	private static final String FLOW_TITLE = "Flow";
+	private static final String FLOWSTRING = "Flow";
 	private static final int MAXDATA = 200;
 
 	private static final int IDELEMENTX = 33;
@@ -58,8 +60,12 @@ public class GraphicInterface {
 	private double[][] initdataPressure;
 	private double[][] initdataVentilatorPressure;
 	private double[][] initdataFlow;
-	List<String> ids = new ArrayList<>();
-	private int indexElm = 1;
+	private List<String> flowIds = new ArrayList<>();
+	private List<String> pressureIds = new ArrayList<>();
+	private Map<String, String> pressureCoord = new LinkedHashMap<>();
+
+	private int flowIndexElm = 1;
+	private int pressureIndexElm = 1;
 
 	private JFrame frame;
 	private XYChart pressureChart;
@@ -89,11 +95,90 @@ public class GraphicInterface {
 		int w = 1500;
 		int h = 400;
 
+		patientPanelConfig(patient, archetype);
 
+		// Init the arrays for the data
+		initdataPressure = new double[pressureCoord.size() + 1][MAXDATA];
+		// One row for time values and one row for pressure values
+		initdataVentilatorPressure = new double[2][MAXDATA];
+		// One row for time values and one row for each element of the circuit
+		initdataFlow = new double[flowIds.size() + 1][MAXDATA];
+
+		// Fill initData with zeros
+		Utils.initVectors(MAXDATA, initdataPressure, initdataVentilatorPressure, initdataFlow);
+
+		JPanel flowPanel = new JPanel();
+		frame.getContentPane().add(flowPanel);
+		flowPanel.setLayout(new BoxLayout(flowPanel, BoxLayout.Y_AXIS));
+
+		// Create the flow chart
+		flowChart = new XYChartBuilder().width(w).height(h).title(FLOWSTRING + " in " + flowIds.get(0))
+				.xAxisTitle("Time [s]").yAxisTitle(FLOWSTRING).build();
+		flowChart.addSeries(FLOWSTRING, initdataFlow[0], initdataFlow[1]);
+		flowChart.getStyler().setYAxisMax(2.0).setYAxisMin(-2.0).setSeriesMarkers(new Marker[] { SeriesMarkers.NONE })
+				.setLegendPosition(LegendPosition.InsideS);
+
+		frame.getContentPane().setLayout(new GridLayout(1, 2, 0, 0));
+
+		JComboBox flowList = new JComboBox(flowIds.toArray());
+		flowList.setMaximumSize(new Dimension(w, 200));
+		flowPanel.add(flowList);
+
+		flowList.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JComboBox cb = (JComboBox) e.getSource();
+				String choice = (String) cb.getSelectedItem();
+				flowIndexElm = flowIds.indexOf(choice) + 1;
+				flowChart.setTitle(FLOWSTRING + " in " + choice);
+				flowChart.updateXYSeries(FLOWSTRING, initdataFlow[0], initdataFlow[flowIndexElm], null);
+			}
+		});
+
+		sw2 = new XChartPanel<XYChart>(flowChart);
+		flowPanel.add(sw2);
+
+		// Create the pressure chart
+		pressureChart = new XYChartBuilder().width(w).height(h).title(PRESSURE_TITLE + " at " + pressureIds.get(0))
+				.xAxisTitle("Time [s]").yAxisTitle("Pressure").build();
+		pressureChart.addSeries("Patient Pressure", initdataPressure[0], initdataPressure[1]);
+
+		if (showVentilator) {
+			pressureChart.addSeries("Ventilator Pressure", initdataVentilatorPressure[0],
+					initdataVentilatorPressure[1]);
+		}
+
+		pressureChart.getStyler().setYAxisMax(25.5).setYAxisMin(0.0)
+				.setSeriesMarkers(new Marker[] { SeriesMarkers.NONE, SeriesMarkers.NONE })
+				.setLegendPosition(LegendPosition.InsideS);
+		
+		JComboBox pressureList = new JComboBox(pressureIds.toArray());
+		pressureList.setMaximumSize(new Dimension(w, 200));
+		flowPanel.add(pressureList);
+
+		pressureList.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JComboBox cb = (JComboBox) e.getSource();
+				String choice = (String) cb.getSelectedItem();
+				pressureIndexElm = pressureIds.indexOf(choice) + 1;
+				pressureChart.setTitle(PRESSURE_TITLE + " in " + choice);
+				pressureChart.updateXYSeries("Patient Pressure", initdataPressure[0], initdataPressure[pressureIndexElm], null);
+				
+			}
+		});
+		sw = new XChartPanel<XYChart>(pressureChart);
+		flowPanel.add(sw);
+
+	}
+
+	private void patientPanelConfig(Patient patient, Archetype archetype) {
 		patientPanel = new JPanel();
 		frame.getContentPane().add(patientPanel);
 		patientPanel.setLayout(null);
-		
+
 		int size = patient.getElementsList().size();
 		data = new String[size][size];
 		int c = 0;
@@ -103,12 +188,20 @@ public class GraphicInterface {
 			String elmValue;
 			String elmId = e.getAssociatedFormula().getId();
 
+			if (e.isShowLeft()) {
+				pressureCoord.put(e.getIdLeft(), "left");
+			}
+
+			if (e.isShowRight()) {
+				pressureCoord.put(e.getIdRight(), "right");
+			}
+
 			// resistance
 			if (e.getType().equals("ResistorElm")) {
 				elmValue = archetype.getParameters().get(e.getAssociatedFormula().getVariables().get(0));
 				graphicDesignForElement(elmId, UMRES, y, Double.parseDouble(elmValue));
 				data[c++][0] = elmId;
-				ids.add(elmId);
+				flowIds.add(elmId);
 			}
 
 			// capacitor
@@ -116,7 +209,7 @@ public class GraphicInterface {
 				elmValue = archetype.getParameters().get(e.getAssociatedFormula().getVariables().get(0));
 				graphicDesignForElement(elmId, UMCAP, y, Double.parseDouble(elmValue));
 				data[c++][0] = elmId;
-				ids.add(elmId);
+				flowIds.add(elmId);
 			}
 
 			if (e.getType().equals("ExternalVoltageElm")) {
@@ -126,69 +219,7 @@ public class GraphicInterface {
 			y += 28;
 		}
 
-		// Init the arrays for the data
-		initdataPressure = new double[MAXDATA][MAXDATA];
-		// One row for time values and one row for pressure values
-		initdataVentilatorPressure = new double[2][MAXDATA];
-		// One row for time values and one row for each element of the circuit
-		initdataFlow = new double[ids.size()+1][MAXDATA];
-
-		// Fill initData with zeros
-		Utils.initVectors(MAXDATA, initdataPressure, initdataVentilatorPressure, initdataFlow);
-
-		JPanel flowPanel = new JPanel();
-		frame.getContentPane().add(flowPanel);
-		flowPanel.setLayout(new BoxLayout(flowPanel, BoxLayout.Y_AXIS));
-
-		JComboBox flowList = new JComboBox(ids.toArray());
-		flowList.setMaximumSize(new Dimension(w, 200));
-		flowPanel.add(flowList);
-
-		// Create the pressure Chart
-		pressureChart = new XYChartBuilder().width(w).height(h).title(PRESSURE_TITLE).xAxisTitle("Time [s]")
-				.yAxisTitle("Pressure").build();
-		pressureChart.addSeries("Patient Pressure", initdataPressure[0], initdataPressure[1]);
-
-		if (showVentilator)
-			pressureChart.addSeries("Ventilator Pressure", initdataVentilatorPressure[0],
-					initdataVentilatorPressure[1]);
-
-		pressureChart.getStyler().setYAxisMax(25.5).setYAxisMin(0.0)
-				.setSeriesMarkers(new Marker[] { SeriesMarkers.NONE, SeriesMarkers.NONE })
-				.setLegendPosition(LegendPosition.InsideS);
-
-		// Create the flow chart
-		flowChart = new XYChartBuilder().width(w).height(h).title(FLOW_TITLE + " in " + ids.get(0))
-				.xAxisTitle("Time [s]").yAxisTitle("Flow").build();
-		flowChart.addSeries("Flow", initdataFlow[0], initdataFlow[1]);
-		flowChart.getStyler().setYAxisMax(2.0).setYAxisMin(-2.0).setSeriesMarkers(new Marker[] { SeriesMarkers.NONE })
-				.setLegendPosition(LegendPosition.InsideS);
-
-		frame.getContentPane().setLayout(new GridLayout(1, 2, 0, 0));
-
-		flowList.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JComboBox cb = (JComboBox) e.getSource();
-				String choice = (String) cb.getSelectedItem();
-				indexElm = ids.indexOf(choice) + 1;
-				flowChart.setTitle(FLOW_TITLE + " in " + choice);
-				flowChart.updateXYSeries("Flow", initdataFlow[0], initdataFlow[indexElm], null);
-			}
-		});
-
-		sw2 = new XChartPanel<XYChart>(flowChart);
-		flowPanel.add(sw2);
-		
-		//TODO finire di capire come segnare le pressioni di interesse
-		JComboBox pressureList = new JComboBox(ids.toArray());
-		pressureList.setMaximumSize(new Dimension(w, 200));
-		flowPanel.add(pressureList);
-
-		sw = new XChartPanel<XYChart>(pressureChart);
-		flowPanel.add(sw);
-
+		pressureIds = new ArrayList<>(pressureCoord.keySet());
 	}
 
 	public void updateShownDataValues(double time, CirSim myCircSim) {
@@ -198,15 +229,30 @@ public class GraphicInterface {
 		time = time * Math.pow(10, 1);
 		time = Math.floor(time);
 		time = time / Math.pow(10, 1);
+
 		// Update time
 		initdataPressure[0][MAXDATA - 1] = time;
 		initdataVentilatorPressure[0][MAXDATA - 1] = time;
 		initdataFlow[0][MAXDATA - 1] = time;
 
-		initdataPressure[1][MAXDATA - 1] = myCircSim.getElm(0).getVoltOne();
 		int count = 1;
+		int countPressure = 1;
 
 		for (CircuitElm cir : myCircSim.getElmList()) {
+			if(cir.getIdLeft() != null && pressureCoord.containsKey(cir.getIdLeft())) {
+				if(pressureCoord.get(cir.getIdLeft()).equals("left")) {
+					initdataPressure[countPressure][MAXDATA - 1] = cir.getVoltZero();
+					countPressure++;
+				}
+			}
+			
+			if(cir.getIdRight() != null && pressureCoord.containsKey(cir.getIdRight())) {
+				if(pressureCoord.get(cir.getIdRight()).equals("right")) {
+					initdataPressure[countPressure][MAXDATA - 1] = cir.getVoltOne();
+					countPressure++;
+				}
+			}
+			
 			if (cir.getClass().getSimpleName().equals("ExternalVoltageElm")) {
 				initdataVentilatorPressure[1][MAXDATA - 1] = cir.getVoltageDiff();
 			} else {
@@ -258,7 +304,8 @@ public class GraphicInterface {
 
 		pressureChart.getStyler().setYAxisMax(getMax(initdataVentilatorPressure[1]));
 
-		flowChart.updateXYSeries("Flow", initdataFlow[0], initdataFlow[indexElm], null);
+		flowChart.updateXYSeries(FLOWSTRING, initdataFlow[0], initdataFlow[flowIndexElm], null);
+		pressureChart.updateXYSeries("Patient Pressure", initdataPressure[0], initdataPressure[pressureIndexElm], null);
 
 		// Update the charts
 		sw.revalidate();

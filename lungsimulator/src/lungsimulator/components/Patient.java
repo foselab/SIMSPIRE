@@ -3,11 +3,11 @@ package lungsimulator.components;
 import java.util.List;
 
 public class Patient {
-	int schema;
+	private int schema;
 	// list of the circuit's components 
-	List<Element> elementsList;
+	private List<Element> elementsList;
 	// list of formulas that don't represent an Element of the circuit
-	List<Formula> additionalFormulas;
+	private List<Formula> additionalFormulas;
 
 	public Patient(int schema, List<Element> elementsList, List<Formula> additionalFormulas) {
 		this.schema = schema;

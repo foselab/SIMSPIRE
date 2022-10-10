@@ -19,13 +19,17 @@ public class Utils {
 	public static void shiftData(final int maxData, double[][] initdataPressure, double[][] initdataVentilatorPressure,
 			double[][] initdataFlow) {
 		int flowSize = initdataFlow.length;
+		int pressureSize = initdataPressure.length;
+		
 		for (int i = 0; i < maxData - 1; i++) {
-			for(int j=0; j<flowSize; j++) {
+			for (int j = 0; j < flowSize; j++) {
 				initdataFlow[j][i] = initdataFlow[j][i + 1];
 			}
 
-			initdataPressure[0][i] = initdataPressure[0][i + 1];
-			initdataPressure[1][i] = initdataPressure[1][i + 1];
+			for(int k = 0; k < pressureSize; k++) {
+				initdataPressure[k][i] = initdataPressure[k][i + 1];
+			}
+
 			initdataVentilatorPressure[0][i] = initdataVentilatorPressure[0][i + 1];
 			initdataVentilatorPressure[1][i] = initdataVentilatorPressure[1][i + 1];
 		}
@@ -42,9 +46,15 @@ public class Utils {
 	public static void initVectors(final int maxData, double[][] initdataPressure,
 			double[][] initdataVentilatorPressure, double[][] initdataFlow) {
 		int flowSize = initdataFlow.length;
-		for (int i = 0; i < maxData; i++) {
+		int pressureSize = initdataPressure.length;
+
+		int maxLength = flowSize > pressureSize ? flowSize : pressureSize;
+
+		for (int i = 0; i < maxLength; i++) {
 			for (int j = 0; j < maxData; j++) {
-				initdataPressure[i][j] = 0;
+				if (i < pressureSize) {
+					initdataPressure[i][j] = 0;
+				}
 
 				initdataVentilatorPressure[0][j] = 0;
 				initdataVentilatorPressure[1][j] = 0;

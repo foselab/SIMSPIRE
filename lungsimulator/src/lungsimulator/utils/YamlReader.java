@@ -149,6 +149,22 @@ public class YamlReader {
 					}
 				}
 				
+				if(e.isShowLeft() && (e.getIdLeft() == null || e.getIdLeft().equals(""))) {
+					throw new InspireException("Missing id for left node");
+				}
+				
+				if(!e.isShowLeft() && e.getIdLeft()!= null) {
+					throw new InspireException("Inconsistency error: an id for left node has been set, but showLeft is false");
+				}
+				
+				if(e.isShowRight() && (e.getIdRight() == null || e.getIdRight().equals(""))) {
+					throw new InspireException("Missing id for right node");
+				}
+				
+				if(!e.isShowRight() && e.getIdRight()!= null) {
+					throw new InspireException("Inconsistency error: an id for right node has been set, but showRight is false");
+				}
+				
 			}
 		}
 		
