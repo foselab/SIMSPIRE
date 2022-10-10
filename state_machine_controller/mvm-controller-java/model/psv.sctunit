@@ -1,0 +1,144 @@
+testclass psv for statechart MVMStateMachineCore {
+
+	operation startVentilationPSV () {
+		enter
+		assert active (MAIN_REGION.STARTUP)
+		raise startupEnded
+		proceed 1 cycle
+		assert active (MAIN_REGION.SELFTEST) // it cannot start ventilation
+		raise startVentilation
+		proceed 1 cycle
+		assert active (MAIN_REGION.SELFTEST) // now it goes to ventilation off
+		raise selfTestPassed
+		proceed 1 cycle
+		assert active (MAIN_REGION.VENTILATIONOFF)
+		// set to PSV
+		mode = MVM_mode.PSV
+		raise startVentilation
+		proceed 1 cycle
+		assert active (MAIN_REGION.PSV)
+		// enter inspiration
+		assert active (MAIN_REGION.PSV.R1.INSPIRATION)
+	}
+
+	@Test
+	operation testNormalOperation () {
+		startVentilationPSV
+		mock dropPAW_ITS_PSV returns (false)
+		proceed 100 ms
+		assert active (MAIN_REGION.PSV.R1.INSPIRATION) // now pressure too high
+		mock pawGTMaxPinsp returns (true)
+		proceed 1 cycle
+		assert active (MAIN_REGION.PSV.R1.EXPIRATION)
+		mock pawGTMaxPinsp returns (false)
+		// now go back to inspiratory by breathing 
+		mock min_exp_time_psv returns (2000)
+		proceed 300 ms
+		mock dropPAW_ITS_PSV returns (true)
+		proceed 200 ms
+		assert active (MAIN_REGION.PSV.R1.EXPIRATION)
+		proceed 300 ms
+		assert active (MAIN_REGION.PSV.R1.INSPIRATION)
+		exit
+	}
+	@Test
+	operation testNormalOperation2 () {
+		startVentilationPSV
+		mock dropPAW_ITS_PSV returns (false)
+		proceed 100 ms
+		assert active (MAIN_REGION.PSV.R1.INSPIRATION) // now pressure too high
+		mock flowDropPSV returns (true)
+		proceed 1 cycle
+		assert active (MAIN_REGION.PSV.R1.EXPIRATION)
+		mock pawGTMaxPinsp returns (false)
+		mock flowDropPSV returns (false)
+		// now go back to inspiratory by breathing 
+		mock min_exp_time_psv returns (2000)
+		proceed 500 ms
+		assert active (MAIN_REGION.PSV.R1.EXPIRATION)
+		proceed 500 ms
+		assert active (MAIN_REGION.PSV.R1.EXPIRATION)
+		proceed 500 ms
+		assert active (MAIN_REGION.PSV.R1.EXPIRATION)
+		proceed 500 ms
+		assert active (MAIN_REGION.PSV.R1.EXPIRATION)
+		mock dropPAW_ITS_PSV returns (true)
+		proceed 50000 ms
+		assert active (MAIN_REGION.PSV.R1.EXPIRATION)
+		proceed 200 ms
+		assert active (MAIN_REGION.PSV.R1.INSPIRATION)
+		exit
+	}
+
+
+	@Test
+	operation testApneaLag () {
+		apnealag = 5000
+		startVentilationPSV
+		mock dropPAW_ITS_PSV returns (false)
+		proceed 100 ms
+		assert active (MAIN_REGION.PSV.R1.INSPIRATION)
+		mock pawGTMaxPinsp returns (true)
+		proceed 1 cycle
+		assert active (MAIN_REGION.PSV.R1.EXPIRATION) // proceed more than apnea lag	
+		proceed 5000 ms
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		assert called apneaAlarm 
+		exit
+	}
+	
+	@Test
+	operation testgotoPCV () {
+		apnealag = 5000
+		mock dropPAW_ITS_PSV returns (false)
+		mock min_exp_time_psv returns (2000)
+		startVentilationPSV
+		proceed 100 ms
+		assert active (MAIN_REGION.PSV.R1.INSPIRATION)
+		mock pawGTMaxPinsp returns (true)
+		proceed 1 cycle
+		assert active (MAIN_REGION.PSV.R1.EXPIRATION) 	
+		proceed 1900 ms
+		assert active (MAIN_REGION.PSV.R1.EXPIRATION)
+		// now request to change mode
+		mode = MVM_mode.PCV 	
+		proceed 100 ms
+		assert active (MAIN_REGION.PCV)
+		exit
+	}
+	
+	@Test
+	operation testgotoInspirationBYPause () {
+		apnealag = 5000
+		mock dropPAW_ITS_PSV returns (false)
+		mock min_exp_time_psv returns (2000)
+		startVentilationPSV
+		proceed 100 ms
+		assert active (MAIN_REGION.PSV.R1.INSPIRATION)
+		mock pawGTMaxPinsp returns (true)
+		proceed 1 cycle
+		exp_pause = true
+		assert active (MAIN_REGION.PSV.R1.EXPIRATION) 	
+		proceed 2000 ms
+		assert active (MAIN_REGION.PSV.R1.EXPIRATORYPAUSE)
+		exit
+	}
+	
+	
+		// stop the machine
+	@Test
+	operation testStop () {
+		apnealag = 5000
+		mock dropPAW_ITS_PSV returns (false)
+		mock min_exp_time_psv returns (2000)
+		startVentilationPSV
+		proceed 100 ms
+		assert active (MAIN_REGION.PSV.R1.INSPIRATION)
+		stopVentilation = true
+		proceed 1 cycle
+		assert active (MAIN_REGION.VENTILATIONOFF)
+		assert called finish
+		exit
+	}
+	
+}

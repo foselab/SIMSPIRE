@@ -1,0 +1,242 @@
+testclass pcv for statechart MVMStateMachineSimple { 
+
+    // fails at startup
+	@Test
+	operation testFailure() {
+		enter
+		assert active (MAIN_REGION.STARTUP)
+		raise poweroff
+		proceed 1 cycle
+		assert is_final
+	}
+	
+    // fails at startup
+	@Test
+	operation testFailure2() {
+		enter
+		assert active (MAIN_REGION.STARTUP)
+		raise startupEnded
+		proceed 1 cycle
+		raise poweroff
+		proceed 1 cycle
+		assert is_final
+	}
+
+
+	operation startMachine(){
+		enter
+		assert active (MAIN_REGION.STARTUP)
+		raise startupEnded
+		proceed 1 cycle
+		assert active (MAIN_REGION.SELFTEST)
+		// it cannot start ventilation
+		raise startVentilation
+		proceed 1 cycle
+		assert active (MAIN_REGION.SELFTEST)
+		// now it goes to ventilation off
+		raise selfTestPassed
+		proceed 1 cycle
+		assert active (MAIN_REGION.VENTILATIONOFF)		
+	}
+
+
+    // normal operation at a regular rate
+	@Test
+	operation testNormalOperation () {
+		inspiration_duration_ms = 1000
+		expiration_duration_ms = 1200
+		max_rm_time = 3000
+		mock dropPAW_ITS_PCV returns (false)
+		//
+		startMachine
+		assert mode == MVM_mode.PCV
+		// now it can start ventilation 		
+		raise startVentilation
+		proceed 1 cycle
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		proceed 1000 ms
+		assert active (MAIN_REGION.PCV.R1.EXPIRATION)
+		proceed 1200 ms
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		proceed 500 ms
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		proceed 500 ms
+		assert active (MAIN_REGION.PCV.R1.EXPIRATION)
+		proceed 1 cycle
+		assert active (MAIN_REGION.PCV.R1.EXPIRATION)
+		proceed 1200 ms
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		exit
+	} 
+	// stop the machine
+	@Test
+	operation testStop () {
+		inspiration_duration_ms = 1000
+		expiration_duration_ms = 2000		
+		max_rm_time = 3000
+		mock dropPAW_ITS_PCV returns (false)
+		startMachine
+		//
+		raise startVentilation
+		proceed 1 cycle
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		proceed 1000 ms
+		assert active (MAIN_REGION.PCV.R1.EXPIRATION)
+		proceed 100 ms
+		assert active (MAIN_REGION.PCV.R1.EXPIRATION) //arrives a stop			
+		/*stopVentilation = true
+		proceed 1 cycle
+		assert active (MAIN_REGION.VENTILATIONOFF)
+		assert stopVentilation == false*/
+		raise 		stopVentilation
+		stopVentilation = true
+		proceed 1 cycle
+		assert active (MAIN_REGION.VENTILATIONOFF)
+		assert called finish
+		exit
+	}
+
+	// stop the machine
+	@Test
+	operation testStopInInspiration () {
+		inspiration_duration_ms = 1000
+		expiration_duration_ms = 2000		
+		max_rm_time = 3000
+		mock dropPAW_ITS_PCV returns (false)
+		startMachine
+		//
+		raise startVentilation
+		proceed 1 cycle
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		//raise 		stopVentilation
+		stopVentilation = true
+		proceed 1 cycle
+		assert active (MAIN_REGION.VENTILATIONOFF)
+		assert called finish
+		exit
+	}
+	
+	operation enterExpiratoryPause(){
+		inspiration_duration_ms = 1000
+		expiration_duration_ms = 2000		
+		max_rm_time = 3000
+		mock dropPAW_ITS_PCV returns (false)
+		startMachine
+		// start ventilation
+		raise startVentilation
+		proceed 1 cycle
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		proceed 1000 ms
+		assert active (MAIN_REGION.PCV.R1.EXPIRATION)
+		proceed 100 ms
+		exp_pause = true // pause but the exp must finish
+		assert active (MAIN_REGION.PCV.R1.EXPIRATION)
+		proceed 1900 ms // now it can go to pause		
+	}
+
+	@Test // terminate beacus eof the button
+	operation testExpiratoryPauseTermination () {
+		max_exp_pause
+		enterExpiratoryPause
+		assert active (MAIN_REGION.PCV.R1.EXPIRATORYPAUSE)
+		proceed 50 ms
+		assert active (MAIN_REGION.PCV.R1.EXPIRATORYPAUSE)
+		exp_pause = false // quit pause
+		proceed 1 cycle
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		exit
+	}
+	@Test // terminate beacuse of the timeout
+	operation testExpiratoryPauseTerminationTO () {
+		max_exp_pause
+		enterExpiratoryPause
+		assert active (MAIN_REGION.PCV.R1.EXPIRATORYPAUSE)
+		assert max_exp_pause == 60000
+		proceed 60000 ms
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		// the pause is canceled in  any case
+		assert exp_pause == false
+		exit
+	}
+	// the patient goes from Exp to Insp because of the trigger window
+	@Test
+	operation testtriggerwindow () {
+		inspiration_duration_ms = 1000
+		expiration_duration_ms = 2000		
+		mock dropPAW_ITS_PCV returns (false)
+		startMachine
+		// start ventilation
+		raise startVentilation
+		proceed 1 cycle
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		proceed 1000 ms
+		assert active (MAIN_REGION.PCV.R1.EXPIRATION)
+		proceed 100 ms
+		mock dropPAW_ITS_PCV returns (true)
+		// first 100 - no change (min 700)
+		proceed 100 ms
+		assert active (MAIN_REGION.PCV.R1.EXPIRATION)
+		//
+		proceed 1000 ms		
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		exit
+	}
+	// coughing
+	@Test
+	operation testCoughing () {
+		inspiration_duration_ms = 1000
+		expiration_duration_ms = 2000		
+		mock dropPAW_ITS_PCV returns (false)
+		startMachine
+		// start ventilation
+		raise startVentilation
+		proceed 1 cycle
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		proceed 1000 ms
+		assert active (MAIN_REGION.PCV.R1.EXPIRATION)
+		proceed 2000 ms
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		// now it exeeds the pressure 
+		mock pawGTMaxPinsp returns (true)
+		proceed 100 ms
+		assert active (MAIN_REGION.PCV.R1.EXPIRATION)
+		exit
+	}
+
+    // poweroff during inspiration
+	@Test
+	operation testPoweroff() {
+		startMachine
+		// start ventilation
+		raise startVentilation
+		proceed 1 cycle
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		raise poweroff
+		proceed 1 cycle
+		assert is_final
+	}
+	
+	// got to PSV
+	@Test
+	operation testGotoPSV () {
+		inspiration_duration_ms = 1000
+		expiration_duration_ms = 2000		
+		mock dropPAW_ITS_PCV returns (false)
+		startMachine
+		// start ventilation
+		raise startVentilation
+		proceed 1 cycle
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		proceed 1000 ms
+		assert active (MAIN_REGION.PCV.R1.EXPIRATION)
+		// change mode
+		mode = MVM_mode.PSV
+		proceed 2000 ms
+		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
+		proceed 1000 ms
+		assert active (MAIN_REGION.PSV)
+	}
+	
+		
+	
+}
