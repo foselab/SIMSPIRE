@@ -1,15 +1,19 @@
 package lungsimulator;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,6 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
+import org.knowm.xchart.BitmapEncoder;
+import org.knowm.xchart.BitmapEncoder.BitmapFormat;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
@@ -74,6 +80,10 @@ public class GraphicInterface {
 	private JPanel patientPanel;
 	private JSpinner element;
 	private JSpinner ventilator;
+	private JButton stop;
+	private JButton start;
+	private JButton printData;
+	private boolean state = true;
 
 	/**
 	 * Graphic interface set up
@@ -215,12 +225,38 @@ public class GraphicInterface {
 		}
 
 		pressureIds = new ArrayList<>(pressureCoord.keySet());
+
+		stop = new JButton("Stop");
+		stop.setFont(new Font("Arial", Font.BOLD, 16));
+		stop.setBounds(IDELEMENTX, yStart + 28, 100, 50);
+		stop.setBackground(Color.RED);
+		stop.setForeground(Color.WHITE);
+		stop.setVisible(true);
+
+		start = new JButton("Start");
+		start.setFont(new Font("Arial", Font.BOLD, 16));
+		start.setBounds(IDELEMENTX, yStart + 28, 100, 50);
+		start.setBackground(Color.GREEN);
+		start.setForeground(Color.WHITE);
+		start.setVisible(false);
+		
+		printData = new JButton("Print");
+		printData.setFont(new Font("Arial", Font.BOLD, 16));
+		printData.setBounds(VALELEMENTX, yStart + 28, 100, 50);
+		printData.setBackground(Color.YELLOW);
+		printData.setForeground(Color.BLACK);
+		printData.setVisible(true);
+
+		patientPanel.add(stop);
+		patientPanel.add(start);
+		patientPanel.add(printData);
 	}
-	
+
 	/**
 	 * Shown data are shifted and updated
-	 * @param time	moment in time of the execution
-	 * @param myCircSim	circuit build according to the model
+	 * 
+	 * @param time      moment in time of the execution
+	 * @param myCircSim circuit build according to the model
 	 */
 	public void updateShownDataValues(final double time, final CirSim myCircSim) {
 		// Shift data in vectors
@@ -269,6 +305,40 @@ public class GraphicInterface {
 		flowChart.updateXYSeries(FLOWSERIES, initdataFlow[0], initdataFlow[flowIndexElm], null);
 		pressureChart.updateXYSeries(PRESSURESERIES, initdataPressure[0], initdataPressure[pressureIndexElm], null);
 
+		stop.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				stop.setVisible(false);
+				start.setVisible(true);
+				state = false;
+			}
+		});
+
+		start.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				start.setVisible(false);
+				stop.setVisible(true);
+				state = true;
+			}
+		});
+		
+		printData.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				try {
+					BitmapEncoder.saveBitmap(flowChart, "./Images/FlowChart" + time, BitmapFormat.PNG);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
 		// Update the charts
 		sw.revalidate();
 		sw.repaint();
@@ -301,8 +371,8 @@ public class GraphicInterface {
 		element.setBounds(VALELEMENTX, elementY, VALELEMENTWIDTH, VALELEMENTHEIGHT);
 		element.setValue(value);
 		patientPanel.add(element);
-		
-		if(isVentilator) {
+
+		if (isVentilator) {
 			ventilator = element;
 		}
 
@@ -324,5 +394,10 @@ public class GraphicInterface {
 
 		return max;
 	}
+
+	public boolean getStateOfExecution() {
+		return state;
+	}
+
 
 }

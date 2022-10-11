@@ -14,11 +14,11 @@ import simulator.CirSim;
 public class LungSimulator {
 	// Define the new plotter
 	RealTimePlot rtp = new RealTimePlot();
-	
+
 	public Patient patient;
 	public Archetype archetype;
 	public GraphicInterface userInterface = new GraphicInterface();
-	
+
 	/**
 	 * Init the lung simulator by reading and validating the patient model and
 	 * archetype and set the frame configuration
@@ -40,30 +40,33 @@ public class LungSimulator {
 		// Frame configuration
 		userInterface.frameConfig(patient, archetype);
 	}
-	
+
 	public void simulateCircuit() throws InterruptedException {
 		// Create the circuit equivalent to the lung
 		CirSim myCircSim = rtp.buildCircuitSimulator(patient, archetype);
 		myCircSim.setTimeStep(0.1);
-		
+
 		double time = 0;
 
 		while (true) {
-			time += 0.1;
-			
-			/*if(time%2==0) {
-			archetype.getParameters().put("TIME", String.valueOf(time));
-			myCircSim = rtp.updateCircuitSimulator(patient, archetype);
-			}*/
-			
-			// Analyze the circuit and simulate a step
-			myCircSim.analyzeCircuit();
-			myCircSim.loopAndContinue(true);
+			if (userInterface.getStateOfExecution()) {
+				time += 0.1;
 
-			Thread.sleep(100);
-			
-			userInterface.updateShownDataValues(time, myCircSim);
+				/*
+				 * if(time%2==0) { archetype.getParameters().put("TIME", String.valueOf(time));
+				 * myCircSim = rtp.updateCircuitSimulator(patient, archetype); }
+				 */
 
+				// Analyze the circuit and simulate a step
+				myCircSim.analyzeCircuit();
+				myCircSim.loopAndContinue(true);
+
+				Thread.sleep(100);
+
+				userInterface.updateShownDataValues(time, myCircSim);
+			}else {
+				Thread.sleep(100);
+			}
 		}
 
 	}
