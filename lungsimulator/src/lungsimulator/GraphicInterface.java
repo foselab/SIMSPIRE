@@ -18,10 +18,12 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
 
+import org.apache.commons.math3.util.Precision;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.style.Styler.LegendPosition;
+import org.knowm.xchart.style.XYStyler;
 import org.knowm.xchart.style.markers.Marker;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
@@ -117,6 +119,8 @@ public class GraphicInterface {
 		flowChart.addSeries(FLOWSTRING, initdataFlow[0], initdataFlow[1]);
 		flowChart.getStyler().setYAxisMax(2.0).setYAxisMin(-2.0).setSeriesMarkers(new Marker[] { SeriesMarkers.NONE })
 				.setLegendPosition(LegendPosition.InsideS);
+		
+		flowChart.getStyler().setXAxisDecimalPattern("0.0");
 
 		frame.getContentPane().setLayout(new GridLayout(1, 2, 0, 0));
 
@@ -152,6 +156,13 @@ public class GraphicInterface {
 		pressureChart.getStyler().setYAxisMax(25.5).setYAxisMin(0.0)
 				.setSeriesMarkers(new Marker[] { SeriesMarkers.NONE, SeriesMarkers.NONE })
 				.setLegendPosition(LegendPosition.InsideS);
+		
+		pressureChart.getStyler().setXAxisDecimalPattern("0.0");
+		//pressureChart.getStyler().setXAxisMax(100.0); //imposta il max valore sull'asse x
+		//pressureChart.getStyler().setXAxisTickMarkSpacingHint(pressureChart.getWidth()/10);
+		//pressureChart.getStyler().setAxisTicksMarksVisible(true);
+		//pressureChart.getStyler().setAxisTickMarkLength(15); lunghezza trattini
+		//pressureChart.getStyler().setXAxisMaxLabelCount(10); non funziona per XYStyler
 		
 		JComboBox pressureList = new JComboBox(pressureIds.toArray());
 		pressureList.setMaximumSize(new Dimension(w, 200));
@@ -225,10 +236,6 @@ public class GraphicInterface {
 	public void updateShownDataValues(double time, CirSim myCircSim) {
 		// Shift data in vectors
 		Utils.shiftData(MAXDATA, initdataPressure, initdataVentilatorPressure, initdataFlow);
-
-		time = time * Math.pow(10, 1);
-		time = Math.floor(time);
-		time = time / Math.pow(10, 1);
 
 		// Update time
 		initdataPressure[0][MAXDATA - 1] = time;
