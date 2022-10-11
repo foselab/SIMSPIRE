@@ -13,7 +13,7 @@ testclass psv for statechart MVMStateMachineCore {
 		proceed 1 cycle
 		assert active (MAIN_REGION.VENTILATIONOFF)
 		// set to PSV
-		mode = MVM_mode.PSV
+		mode = MVM_mode_PSV
 		raise startVentilation
 		proceed 1 cycle
 		assert active (MAIN_REGION.PSV)
@@ -101,7 +101,7 @@ testclass psv for statechart MVMStateMachineCore {
 		proceed 1900 ms
 		assert active (MAIN_REGION.PSV.R1.EXPIRATION)
 		// now request to change mode
-		mode = MVM_mode.PCV 	
+		mode = MVM_mode_PCV 	
 		proceed 100 ms
 		assert active (MAIN_REGION.PCV)
 		exit
@@ -134,7 +134,7 @@ testclass psv for statechart MVMStateMachineCore {
 		startVentilationPSV
 		proceed 100 ms
 		assert active (MAIN_REGION.PSV.R1.INSPIRATION)
-		stopVentilation = true
+		raise stopVentilation
 		proceed 1 cycle
 		assert active (MAIN_REGION.VENTILATIONOFF)
 		assert called finish

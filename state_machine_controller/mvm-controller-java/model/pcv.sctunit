@@ -1,4 +1,4 @@
-testclass pcv for statechart MVMStateMachineSimple { 
+testclass pcv for statechart MVMStateMachineCore{ 
 
     // fails at startup
 	@Test
@@ -49,7 +49,7 @@ testclass pcv for statechart MVMStateMachineSimple {
 		mock dropPAW_ITS_PCV returns (false)
 		//
 		startMachine
-		assert mode == MVM_mode.PCV
+		assert mode == MVM_mode_PCV
 		// now it can start ventilation 		
 		raise startVentilation
 		proceed 1 cycle
@@ -89,7 +89,7 @@ testclass pcv for statechart MVMStateMachineSimple {
 		assert active (MAIN_REGION.VENTILATIONOFF)
 		assert stopVentilation == false*/
 		raise 		stopVentilation
-		stopVentilation = true
+		//stopVentilation = true
 		proceed 1 cycle
 		assert active (MAIN_REGION.VENTILATIONOFF)
 		assert called finish
@@ -108,8 +108,8 @@ testclass pcv for statechart MVMStateMachineSimple {
 		raise startVentilation
 		proceed 1 cycle
 		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
-		//raise 		stopVentilation
-		stopVentilation = true
+		raise 		stopVentilation
+		//stopVentilation = true
 		proceed 1 cycle
 		assert active (MAIN_REGION.VENTILATIONOFF)
 		assert called finish
@@ -230,7 +230,7 @@ testclass pcv for statechart MVMStateMachineSimple {
 		proceed 1000 ms
 		assert active (MAIN_REGION.PCV.R1.EXPIRATION)
 		// change mode
-		mode = MVM_mode.PSV
+		mode = MVM_mode_PSV
 		proceed 2000 ms
 		assert active (MAIN_REGION.PCV.R1.INSPIRATION)
 		proceed 1000 ms
