@@ -15,15 +15,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
 
-import org.apache.commons.math3.util.Precision;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.style.Styler.LegendPosition;
-import org.knowm.xchart.style.XYStyler;
 import org.knowm.xchart.style.markers.Marker;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
@@ -37,7 +34,8 @@ import simulator.CirSim;
 public class GraphicInterface {
 
 	private static final String PRESSURE_TITLE = "Pressure";
-	private static final String FLOWSTRING = "Flow";
+	private static final String PRESSURESERIES = "Patient Pressure";
+	private static final String FLOWSERIES = "Flow";
 	private static final int MAXDATA = 200;
 
 	private static final int IDELEMENTX = 33;
@@ -57,11 +55,10 @@ public class GraphicInterface {
 	private static final int UMELEMENTHEIGHT = 20;
 
 	private boolean showVentilator = true;
-	private String[] columnNames = { "Element", "V0", "V1", "Current" };
-	private String[][] data;
 	private double[][] initdataPressure;
 	private double[][] initdataVentilatorPressure;
 	private double[][] initdataFlow;
+
 	private List<String> flowIds = new ArrayList<>();
 	private List<String> pressureIds = new ArrayList<>();
 	private Map<String, String> pressureCoord = new LinkedHashMap<>();
@@ -76,11 +73,7 @@ public class GraphicInterface {
 	private XChartPanel<XYChart> sw2;
 	private JPanel patientPanel;
 	private JSpinner element;
-	private JSpinner voltage = new JSpinner();
-	private JTable dataTable = new JTable();
-
-	public GraphicInterface() {
-	}
+	private JSpinner ventilator;
 
 	/**
 	 * Graphic interface set up
@@ -88,6 +81,7 @@ public class GraphicInterface {
 	 * @param patient
 	 * @param archetype
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void frameConfig(Patient patient, Archetype archetype) {
 		frame = new JFrame();
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // fullscreen option
@@ -114,12 +108,12 @@ public class GraphicInterface {
 		flowPanel.setLayout(new BoxLayout(flowPanel, BoxLayout.Y_AXIS));
 
 		// Create the flow chart
-		flowChart = new XYChartBuilder().width(w).height(h).title(FLOWSTRING + " in " + flowIds.get(0))
-				.xAxisTitle("Time [s]").yAxisTitle(FLOWSTRING).build();
-		flowChart.addSeries(FLOWSTRING, initdataFlow[0], initdataFlow[1]);
+		flowChart = new XYChartBuilder().width(w).height(h).title(FLOWSERIES + " in " + flowIds.get(0))
+				.xAxisTitle("Time [s]").yAxisTitle(FLOWSERIES).build();
+		flowChart.addSeries(FLOWSERIES, initdataFlow[0], initdataFlow[1]);
 		flowChart.getStyler().setYAxisMax(2.0).setYAxisMin(-2.0).setSeriesMarkers(new Marker[] { SeriesMarkers.NONE })
 				.setLegendPosition(LegendPosition.InsideS);
-		
+
 		flowChart.getStyler().setXAxisDecimalPattern("0.0");
 
 		frame.getContentPane().setLayout(new GridLayout(1, 2, 0, 0));
@@ -135,8 +129,8 @@ public class GraphicInterface {
 				JComboBox cb = (JComboBox) e.getSource();
 				String choice = (String) cb.getSelectedItem();
 				flowIndexElm = flowIds.indexOf(choice) + 1;
-				flowChart.setTitle(FLOWSTRING + " in " + choice);
-				flowChart.updateXYSeries(FLOWSTRING, initdataFlow[0], initdataFlow[flowIndexElm], null);
+				flowChart.setTitle(FLOWSERIES + " in " + choice);
+				flowChart.updateXYSeries(FLOWSERIES, initdataFlow[0], initdataFlow[flowIndexElm], null);
 			}
 		});
 
@@ -146,7 +140,7 @@ public class GraphicInterface {
 		// Create the pressure chart
 		pressureChart = new XYChartBuilder().width(w).height(h).title(PRESSURE_TITLE + " at " + pressureIds.get(0))
 				.xAxisTitle("Time [s]").yAxisTitle("Pressure").build();
-		pressureChart.addSeries("Patient Pressure", initdataPressure[0], initdataPressure[1]);
+		pressureChart.addSeries(PRESSURESERIES, initdataPressure[0], initdataPressure[1]);
 
 		if (showVentilator) {
 			pressureChart.addSeries("Ventilator Pressure", initdataVentilatorPressure[0],
@@ -156,28 +150,24 @@ public class GraphicInterface {
 		pressureChart.getStyler().setYAxisMax(25.5).setYAxisMin(0.0)
 				.setSeriesMarkers(new Marker[] { SeriesMarkers.NONE, SeriesMarkers.NONE })
 				.setLegendPosition(LegendPosition.InsideS);
-		
+
 		pressureChart.getStyler().setXAxisDecimalPattern("0.0");
-		//pressureChart.getStyler().setXAxisMax(100.0); //imposta il max valore sull'asse x
-		//pressureChart.getStyler().setXAxisTickMarkSpacingHint(pressureChart.getWidth()/10);
-		//pressureChart.getStyler().setAxisTicksMarksVisible(true);
-		//pressureChart.getStyler().setAxisTickMarkLength(15); lunghezza trattini
-		//pressureChart.getStyler().setXAxisMaxLabelCount(10); non funziona per XYStyler
-		
+
 		JComboBox pressureList = new JComboBox(pressureIds.toArray());
 		pressureList.setMaximumSize(new Dimension(w, 200));
 		flowPanel.add(pressureList);
 
 		pressureList.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JComboBox cb = (JComboBox) e.getSource();
 				String choice = (String) cb.getSelectedItem();
 				pressureIndexElm = pressureIds.indexOf(choice) + 1;
 				pressureChart.setTitle(PRESSURE_TITLE + " in " + choice);
-				pressureChart.updateXYSeries("Patient Pressure", initdataPressure[0], initdataPressure[pressureIndexElm], null);
-				
+				pressureChart.updateXYSeries(PRESSURESERIES, initdataPressure[0], initdataPressure[pressureIndexElm],
+						null);
+
 			}
 		});
 		sw = new XChartPanel<XYChart>(pressureChart);
@@ -185,17 +175,13 @@ public class GraphicInterface {
 
 	}
 
-	private void patientPanelConfig(Patient patient, Archetype archetype) {
+	private void patientPanelConfig(final Patient patient, final Archetype archetype) {
 		patientPanel = new JPanel();
 		frame.getContentPane().add(patientPanel);
 		patientPanel.setLayout(null);
 
-		int size = patient.getElementsList().size();
-		data = new String[size][size];
-		int c = 0;
-
-		int y = 27;
-		for (Element e : patient.getElementsList()) {
+		int yStart = 27;
+		for (final Element e : patient.getElementsList()) {
 			String elmValue;
 			String elmId = e.getAssociatedFormula().getId();
 
@@ -210,30 +196,33 @@ public class GraphicInterface {
 			// resistance
 			if (e.getType().equals("ResistorElm")) {
 				elmValue = archetype.getParameters().get(e.getAssociatedFormula().getVariables().get(0));
-				graphicDesignForElement(elmId, UMRES, y, Double.parseDouble(elmValue));
-				data[c++][0] = elmId;
+				graphicDesignForElement(elmId, UMRES, yStart, Double.parseDouble(elmValue), false);
 				flowIds.add(elmId);
 			}
 
 			// capacitor
 			if (e.getType().equals("CapacitorElm")) {
 				elmValue = archetype.getParameters().get(e.getAssociatedFormula().getVariables().get(0));
-				graphicDesignForElement(elmId, UMCAP, y, Double.parseDouble(elmValue));
-				data[c++][0] = elmId;
+				graphicDesignForElement(elmId, UMCAP, yStart, Double.parseDouble(elmValue), false);
 				flowIds.add(elmId);
 			}
 
 			if (e.getType().equals("ExternalVoltageElm")) {
-				graphicDesignForElement(elmId, UMGEN, y, 0);
+				graphicDesignForElement(elmId, UMGEN, yStart, 0, true);
 			}
 
-			y += 28;
+			yStart += 28;
 		}
 
 		pressureIds = new ArrayList<>(pressureCoord.keySet());
 	}
-
-	public void updateShownDataValues(double time, CirSim myCircSim) {
+	
+	/**
+	 * Shown data are shifted and updated
+	 * @param time	moment in time of the execution
+	 * @param myCircSim	circuit build according to the model
+	 */
+	public void updateShownDataValues(final double time, final CirSim myCircSim) {
 		// Shift data in vectors
 		Utils.shiftData(MAXDATA, initdataPressure, initdataVentilatorPressure, initdataFlow);
 
@@ -245,74 +234,40 @@ public class GraphicInterface {
 		int count = 1;
 		int countPressure = 1;
 
-		for (CircuitElm cir : myCircSim.getElmList()) {
-			if(cir.getIdLeft() != null && pressureCoord.containsKey(cir.getIdLeft())) {
-				if(pressureCoord.get(cir.getIdLeft()).equals("left")) {
-					initdataPressure[countPressure][MAXDATA - 1] = cir.getVoltZero();
-					countPressure++;
-				}
+		for (final CircuitElm cir : myCircSim.getElmList()) {
+			if (cir.getIdLeft() != null && pressureCoord.containsKey(cir.getIdLeft())
+					&& pressureCoord.get(cir.getIdLeft()).equals("left")) {
+				initdataPressure[countPressure][MAXDATA - 1] = cir.getVoltZero();
+				countPressure++;
 			}
-			
-			if(cir.getIdRight() != null && pressureCoord.containsKey(cir.getIdRight())) {
-				if(pressureCoord.get(cir.getIdRight()).equals("right")) {
-					initdataPressure[countPressure][MAXDATA - 1] = cir.getVoltOne();
-					countPressure++;
-				}
+
+			if (cir.getIdRight() != null && pressureCoord.containsKey(cir.getIdRight())
+					&& pressureCoord.get(cir.getIdRight()).equals("right")) {
+				initdataPressure[countPressure][MAXDATA - 1] = cir.getVoltOne();
+				countPressure++;
 			}
-			
+
 			if (cir.getClass().getSimpleName().equals("ExternalVoltageElm")) {
 				initdataVentilatorPressure[1][MAXDATA - 1] = cir.getVoltageDiff();
+				ventilator.setValue(cir.getVoltageDiff());
 			} else {
 				initdataFlow[count][MAXDATA - 1] = cir.getCurrent();
 				count++;
 			}
 		}
 
-		int c = 0;
-
-		for (CircuitElm cir : myCircSim.getElmList()) {
-			if (cir.getClass().getSimpleName().equals("ResistorElm")) {
-				String[] d = { data[c][0], String.valueOf(cir.getVoltZero()), String.valueOf(cir.getVoltOne()),
-						String.valueOf(cir.getCurrent()) };
-				data[c++] = d;
-			}
-
-			if (cir.getClass().getSimpleName().equals("CapacitorElm")) {
-				String[] d = { data[c][0], String.valueOf(cir.getVoltZero()), String.valueOf(cir.getVoltOne()),
-						String.valueOf(cir.getCurrent()) };
-				data[c++] = d;
-			}
-
-			if (cir.getClass().getSimpleName().equals("ExternalVoltageElm")) {
-				voltage = new JSpinner();
-				SpinnerNumberModel resistanceModel = new SpinnerNumberModel(0.0, 0.000, 100.0, 0.001);
-				voltage.setModel(resistanceModel);
-				voltage.setBounds(140, 28 * myCircSim.getElmList().size() - 1, 50, 20);
-				voltage.setValue(cir.getVoltageDiff());
-				patientPanel.add(voltage);
-			}
-		}
-
-		dataTable = new JTable(data, columnNames);
-		dataTable.setBounds(33, 400, 400, 200);
-		for (int i = 0; i < columnNames.length; i++) {
-			dataTable.getColumnModel().getColumn(i).setMinWidth(70);
-		}
-		dataTable.setVisible(true);
-		dataTable.getTableHeader().setBounds(33, 380, 400, 20);
-		patientPanel.add(dataTable);
-		patientPanel.add(dataTable.getTableHeader());
-
-		pressureChart.updateXYSeries("Patient Pressure", initdataPressure[0], initdataPressure[1], null);
+		pressureChart.updateXYSeries(PRESSURESERIES, initdataPressure[0], initdataPressure[1], null);
 		if (showVentilator) {
 			pressureChart.updateXYSeries("Ventilator Pressure", initdataVentilatorPressure[0],
 					initdataVentilatorPressure[1], null);
 		}
 
 		pressureChart.getStyler().setYAxisMax(getMax(initdataVentilatorPressure[1]));
+		flowChart.getStyler().setYAxisMax(getMax(initdataFlow[flowIndexElm]));
+		flowChart.getStyler().setYAxisMin(-getMax(initdataFlow[flowIndexElm]));
 
-		flowChart.updateXYSeries(FLOWSTRING, initdataFlow[0], initdataFlow[flowIndexElm], null);
-		pressureChart.updateXYSeries("Patient Pressure", initdataPressure[0], initdataPressure[pressureIndexElm], null);
+		flowChart.updateXYSeries(FLOWSERIES, initdataFlow[0], initdataFlow[flowIndexElm], null);
+		pressureChart.updateXYSeries(PRESSURESERIES, initdataPressure[0], initdataPressure[pressureIndexElm], null);
 
 		// Update the charts
 		sw.revalidate();
@@ -329,9 +284,10 @@ public class GraphicInterface {
 	 * @param elementUnit  unit of measurement
 	 * @param elementY     component height
 	 * @param value        element value
+	 * @param isVentilator true if the element is the ventilator
 	 */
 	private void graphicDesignForElement(final String elementDescr, final String elementUnit, final int elementY,
-			final double value) {
+			final double value, final boolean isVentilator) {
 		element = new JSpinner();
 
 		// Element description
@@ -345,6 +301,10 @@ public class GraphicInterface {
 		element.setBounds(VALELEMENTX, elementY, VALELEMENTWIDTH, VALELEMENTHEIGHT);
 		element.setValue(value);
 		patientPanel.add(element);
+		
+		if(isVentilator) {
+			ventilator = element;
+		}
 
 		// Element unit of measurement
 		final JLabel unit = new JLabel(elementUnit);
@@ -353,12 +313,12 @@ public class GraphicInterface {
 
 	}
 
-	private static Double getMax(double[] ds) {
-		double max = ds[0];
+	private static Double getMax(final double[] data) {
+		double max = data[0];
 
-		for (Double d : ds) {
-			if (d > max) {
-				max = d;
+		for (final Double value : data) {
+			if (value > max) {
+				max = value;
 			}
 		}
 
