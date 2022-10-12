@@ -1,0 +1,5 @@
+Created with UCDetector 2.0.0	2022-10-10 09:40:22	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+lungsimulator.GraphicInterface.<init>(GraphicInterface.java:33)	Change visibility of Class "GraphicInterface" to default - May cause compile errors!	GraphicInterface	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.GraphicInterface.frameConfig(GraphicInterface.java:84)	Change visibility of Method "GraphicInterface.frameConfig(Patient,Archetype)" to default	GraphicInterface.frameConfig(Patient,Archetype)	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.GraphicInterface.updateShownDataValues(GraphicInterface.java:199)	Change visibility of Method "GraphicInterface.updateShownDataValues(double,CirSim)" to default	GraphicInterface.updateShownDataValues(double,CirSim)	org.ucdetector.analyzeMarkerVisibilityDefault	

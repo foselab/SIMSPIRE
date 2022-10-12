@@ -1,0 +1,41 @@
+Created with UCDetector 2.0.0	2022-10-10 09:17:03	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+lungsimulator.RealTimePlot.<init>(RealTimePlot.java:22)	Change visibility of Class "RealTimePlot" to default - May cause compile errors!	RealTimePlot	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.RealTimePlot.buildCircuitSimulator(RealTimePlot.java:34)	Change visibility of Method "RealTimePlot.buildCircuitSimulator(Patient,Archetype)" to default	RealTimePlot.buildCircuitSimulator(Patient,Archetype)	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.RealTimePlot.updateCircuitSimulator(RealTimePlot.java:122)	Method "RealTimePlot.updateCircuitSimulator(Patient,Archetype)" has 0 references	RealTimePlot.updateCircuitSimulator(Patient,Archetype)	org.ucdetector.analyzeMarkerReference	
+lungsimulator.GraphicInterface.<init>(GraphicInterface.java:33)	Change visibility of Class "GraphicInterface" to default - May cause compile errors!	GraphicInterface	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.GraphicInterface.frameConfig(GraphicInterface.java:83)	Change visibility of Method "GraphicInterface.frameConfig(Patient,Archetype)" to default	GraphicInterface.frameConfig(Patient,Archetype)	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.GraphicInterface.updateShownDataValues(GraphicInterface.java:198)	Change visibility of Method "GraphicInterface.updateShownDataValues(double,CirSim)" to default	GraphicInterface.updateShownDataValues(double,CirSim)	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.GraphicInterface.ids(GraphicInterface.java:61)	Change visibility of Field "GraphicInterface.ids" to private	GraphicInterface.ids	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.Archetype.Archetype(Archetype.java:9)	Constructor "Archetype.Archetype(int,HashMap<String,String>)" has 0 references	Archetype.Archetype(int,HashMap<String,String>)	org.ucdetector.analyzeMarkerReference	
+lungsimulator.components.Archetype.schema(Archetype.java:6)	Change visibility of Field "Archetype.schema" to private	Archetype.schema	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.Archetype.parameters(Archetype.java:7)	Change visibility of Field "Archetype.parameters" to private	Archetype.parameters	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.SimulatorParams.<init>(SimulatorParams.java:3)	Class "SimulatorParams" has 0 references	SimulatorParams	org.ucdetector.analyzeMarkerReference	
+lungsimulator.components.Formula.<init>(Formula.java:5)	Change visibility of Class "Formula" to default - May cause compile errors!	Formula	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.components.Formula.Formula(Formula.java:12)	Constructor "Formula.Formula(String,boolean,boolean,String,List<String>)" has 0 references	Formula.Formula(String,boolean,boolean,String,List<String>)	org.ucdetector.analyzeMarkerReference	
+lungsimulator.components.Formula.id(Formula.java:6)	Change visibility of Field "Formula.id" to private	Formula.id	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.Formula.isTimeDependent(Formula.java:7)	Change visibility of Field "Formula.isTimeDependent" to private	Formula.isTimeDependent	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.Formula.isExternal(Formula.java:8)	Change visibility of Field "Formula.isExternal" to private	Formula.isExternal	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.Formula.formula(Formula.java:9)	Change visibility of Field "Formula.formula" to private	Formula.formula	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.Formula.variables(Formula.java:10)	Change visibility of Field "Formula.variables" to private	Formula.variables	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.Patient.Patient(Patient.java:12)	Constructor "Patient.Patient(int,List<Element>,List<Formula>)" has 0 references	Patient.Patient(int,List<Element>,List<Formula>)	org.ucdetector.analyzeMarkerReference	
+lungsimulator.components.Element.Element(Element.java:8)	Constructor "Element.Element(Formula,String,int,int,int,int)" has 0 references	Element.Element(Formula,String,int,int,int,int)	org.ucdetector.analyzeMarkerReference	
+lungsimulator.components.Element.associatedFormula(Element.java:4)	Change visibility of Field "Element.associatedFormula" to private	Element.associatedFormula	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.Element.type(Element.java:5)	Change visibility of Field "Element.type" to private	Element.type	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.Element.x(Element.java:6)	Change visibility of Field "Element.x" to private	Element.x	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.Element.y(Element.java:6)	Change visibility of Field "Element.y" to private	Element.y	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.Element.x1(Element.java:6)	Change visibility of Field "Element.x1" to private	Element.x1	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.Element.y1(Element.java:6)	Change visibility of Field "Element.y1" to private	Element.y1	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.utils.InspireException.<init>(InspireException.java:3)	Change visibility of Class "InspireException" to default - May cause compile errors!	InspireException	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.utils.InspireException.InspireException(InspireException.java:4)	Change visibility of Constructor "InspireException.InspireException(String)" to default	InspireException.InspireException(String)	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.utils.Randomizer.<init>(Randomizer.java:5)	Class "Randomizer" has 0 references	Randomizer	org.ucdetector.analyzeMarkerReference	
+lungsimulator.utils.YamlReader.lungModelCB(YamlReader.java:20)	Field "YamlReader.lungModelCB" has 0 references	YamlReader.lungModelCB	org.ucdetector.analyzeMarkerReference	
+lungsimulator.utils.YamlReader.archetypeParametersCB(YamlReader.java:21)	Field "YamlReader.archetypeParametersCB" has 0 references	YamlReader.archetypeParametersCB	org.ucdetector.analyzeMarkerReference	
+lungsimulator.utils.YamlReader.lungModelAlbanese(YamlReader.java:24)	Change visibility of Field "YamlReader.lungModelAlbanese" to private	YamlReader.lungModelAlbanese	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.utils.YamlReader.archetypeParametersAlbanese(YamlReader.java:25)	Change visibility of Field "YamlReader.archetypeParametersAlbanese" to private	YamlReader.archetypeParametersAlbanese	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.utils.YamlReader.lungModelBaker(YamlReader.java:28)	Field "YamlReader.lungModelBaker" has 0 references	YamlReader.lungModelBaker	org.ucdetector.analyzeMarkerReference	
+lungsimulator.utils.YamlReader.archetypeParametersBaker(YamlReader.java:29)	Field "YamlReader.archetypeParametersBaker" has 0 references	YamlReader.archetypeParametersBaker	org.ucdetector.analyzeMarkerReference	
+lungsimulator.utils.YamlReader.lungModelJain(YamlReader.java:32)	Field "YamlReader.lungModelJain" has 0 references	YamlReader.lungModelJain	org.ucdetector.analyzeMarkerReference	
+lungsimulator.utils.YamlReader.archetypeParametersJain(YamlReader.java:33)	Field "YamlReader.archetypeParametersJain" has 0 references	YamlReader.archetypeParametersJain	org.ucdetector.analyzeMarkerReference	
+lungsimulator.utils.YamlReader.lungModelAlNaggar(YamlReader.java:36)	Field "YamlReader.lungModelAlNaggar" has 0 references	YamlReader.lungModelAlNaggar	org.ucdetector.analyzeMarkerReference	
+lungsimulator.utils.YamlReader.archetypeParametersAlNaggar(YamlReader.java:37)	Field "YamlReader.archetypeParametersAlNaggar" has 0 references	YamlReader.archetypeParametersAlNaggar	org.ucdetector.analyzeMarkerReference	

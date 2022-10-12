@@ -2,35 +2,48 @@ package lungsimulator;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.DecimalFormat;
 
-import org.json.simple.parser.ParseException;
 import lungsimulator.components.Archetype;
 import lungsimulator.components.Patient;
 import lungsimulator.utils.YamlReader;
 import simulator.CirSim;
 
-@SuppressWarnings("ucd")
+/**
+ * It contains the main logic for the lung simulator
+ */
 public class LungSimulator {
-	// Define the new plotter
-	RealTimePlot rtp = new RealTimePlot();
+	/**
+	 * Reference used to call methods for circuit construction
+	 */
+	private final transient RealTimePlot rtp = new RealTimePlot();
 
-	public Patient patient;
-	public Archetype archetype;
-	public GraphicInterface userInterface = new GraphicInterface();
+	/**
+	 * Patient model description
+	 */
+	public transient Patient patient;
+	
+	/**
+	 * Patient health description
+	 */
+	public transient Archetype archetype;
+	
+	/**
+	 * Manages user interface properties
+	 */
+	public transient GraphicInterface userInterface = new GraphicInterface();
 
 	/**
 	 * Init the lung simulator by reading and validating the patient model and
 	 * archetype and set the frame configuration
 	 * 
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws Exception
+	 * @throws FileNotFoundException one between the lung model and the archetype file 
+	 * (or both) is not located in config folder
+	 * @throws IOException the structure of YAML file is not correct: 
+	 * it could be either lung model or archetype (even both)
 	 */
-	public LungSimulator() throws FileNotFoundException, IOException, ParseException, Exception {
+	public LungSimulator() throws FileNotFoundException, IOException {
 		// Read patient model and patient archetype
-		YamlReader yamlReader = new YamlReader();
+		final YamlReader yamlReader = new YamlReader();
 		patient = yamlReader.readPatientModel();
 		archetype = yamlReader.readArchetypeParameters();
 
@@ -41,10 +54,13 @@ public class LungSimulator {
 		userInterface.frameConfig(patient, archetype);
 	}
 
+	/**
+	 * Circuit construction and resolution for each iteration
+	 * @throws InterruptedException
+	 */
 	public void simulateCircuit() throws InterruptedException {
 		// Create the circuit equivalent to the lung
-		CirSim myCircSim = rtp.buildCircuitSimulator(patient, archetype);
-		myCircSim.setTimeStep(0.1);
+		final CirSim myCircSim = rtp.buildCircuitSimulator(patient, archetype);
 
 		double time = 0;
 
@@ -64,7 +80,7 @@ public class LungSimulator {
 				Thread.sleep(100);
 
 				userInterface.updateShownDataValues(time, myCircSim);
-			}else {
+			} else {
 				Thread.sleep(100);
 			}
 		}
@@ -74,15 +90,17 @@ public class LungSimulator {
 	/**
 	 * Launch the application.
 	 * 
-	 * @throws ParseException
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 * @throws InterruptedException
+	 * @throws IOException the structure of YAML file is not correct: 
+	 * it could be either lung model or archetype (even both)
+	 * @throws FileNotFoundException one between the lung model and the archetype file 
+	 * (or both) is not located in config folder
+	 * @throws InterruptedException internal error
 	 */
-	public static void main(String[] args)
-			throws FileNotFoundException, IOException, ParseException, InterruptedException, Exception {
+	public static void main(final String[] args)
+			throws FileNotFoundException, IOException, InterruptedException {
 
-		LungSimulator mySimulator = new LungSimulator();
+		final LungSimulator mySimulator = new LungSimulator();
 		mySimulator.simulateCircuit();
+
 	}
 }

@@ -43,9 +43,8 @@ public class YamlReader {
 	 * @return patient's model
 	 * @throws FileNotFoundException
 	 * @throws IOException
-	 * @throws ParseException
 	 */
-	public Patient readPatientModel() throws FileNotFoundException, IOException, ParseException {
+	public Patient readPatientModel() throws FileNotFoundException, IOException {
 
 		// Loading the YAML file
 		File file = new File(lungModelAlbanese);
@@ -69,9 +68,8 @@ public class YamlReader {
 	 * @return patient's archetype
 	 * @throws FileNotFoundException
 	 * @throws IOException
-	 * @throws ParseException
 	 */
-	public Archetype readArchetypeParameters() throws FileNotFoundException, IOException, ParseException {
+	public Archetype readArchetypeParameters() throws FileNotFoundException, IOException {
 
 		// Loading the YAML file
 		File file = new File(archetypeParametersAlbanese);
@@ -94,9 +92,8 @@ public class YamlReader {
 	 * Checks for missing or not properly built sections of the patient model and its archetype
 	 * @param patient
 	 * @param archetype
-	 * @throws Exception
 	 */
-	public void validator(Patient patient, Archetype archetype) throws Exception {
+	public void validator(Patient patient, Archetype archetype) {
 
 		LOGGER.log(Level.INFO, "Init validation process");
 		

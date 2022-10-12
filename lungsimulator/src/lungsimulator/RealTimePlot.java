@@ -28,12 +28,11 @@ public class RealTimePlot {
 	/**
 	 * The method builds a circuit according to the patient's components and
 	 * archetype
-	 * 
-	 * @param equivalent circuit
 	 */
 	public CirSim buildCircuitSimulator(Patient patient, Archetype archetype) {
 		Circuit cir = new Circuit();
 		CirSim cirSim = new CirSim(cir);
+		cirSim.setTimeStep(0.1);
 		ResistorElm resistance = new ResistorElm(1, 1);
 		CapacitorElm capacitance = new CapacitorElm(0, 0);
 		ACVoltageElm acVoltage = new ACVoltageElm(1, 1);
