@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -84,6 +86,7 @@ public class GraphicInterface {
 	private JButton start;
 	private JButton printData;
 	private boolean state = true;
+	private int imageCounter = 1;
 
 	/**
 	 * Graphic interface set up
@@ -239,13 +242,29 @@ public class GraphicInterface {
 		start.setBackground(Color.GREEN);
 		start.setForeground(Color.WHITE);
 		start.setVisible(false);
-		
+
 		printData = new JButton("Print");
 		printData.setFont(new Font("Arial", Font.BOLD, 16));
 		printData.setBounds(VALELEMENTX, yStart + 28, 100, 50);
 		printData.setBackground(Color.YELLOW);
 		printData.setForeground(Color.BLACK);
 		printData.setVisible(true);
+
+		printData.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					BitmapEncoder.saveBitmap(flowChart, "./Images/" + imageCounter + "_" + flowChart.getTitle(),
+							BitmapFormat.PNG);
+					BitmapEncoder.saveBitmap(pressureChart, "./Images/" + imageCounter + "_" + pressureChart.getTitle(),
+							BitmapFormat.PNG);
+					imageCounter++;
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 
 		patientPanel.add(stop);
 		patientPanel.add(start);
@@ -324,21 +343,7 @@ public class GraphicInterface {
 				state = true;
 			}
 		});
-		
-		printData.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				try {
-					BitmapEncoder.saveBitmap(flowChart, "./Images/FlowChart" + time, BitmapFormat.PNG);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
-		
+
 		// Update the charts
 		sw.revalidate();
 		sw.repaint();
@@ -398,6 +403,5 @@ public class GraphicInterface {
 	public boolean getStateOfExecution() {
 		return state;
 	}
-
 
 }
