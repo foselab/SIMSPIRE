@@ -1,72 +1,64 @@
 ---
-schema: 6
+schema: 2
 elementsList:
 - associatedFormula:
-    id: Rc
+    id: Endo-tracheal Tube Resistance
     isTimeDependent: false
     isExternal: false
-    formula: resistanceC
+    formula: resistance1
     variables:
-    - resistanceC
+    - resistance1
   type: ResistorElm
   x: 0
-  y: 2
+  y: 1
   x1: 1 
-  y1: 2
-- associatedFormula:
-    id: Rp
-    isTimeDependent: false
-    isExternal: false
-    formula: resistanceP
-    variables:
-    - resistanceP
-  type: ResistorElm
-  x: 1
-  y: 2
-  x1: 2 
-  y1: 2
-- associatedFormula:
-    id: Cs
-    isTimeDependent: false
-    isExternal: false
-    formula: capacitorS
-    variables:
-    - capacitorS
-  type: CapacitorElm
-  x: 1
-  y: 2
-  x1: 1
-  y1: 0
-- associatedFormula:
-    id: Cl
-    isTimeDependent: false
-    isExternal: false
-    formula: capacitorL
-    variables:
-    - capacitorL
-  type: CapacitorElm
-  x: 2
-  y: 2
-  x1: 2
   y1: 1
 - associatedFormula:
-    id: Cw
+    id: Tracheo-bronchial Resistance
     isTimeDependent: false
     isExternal: false
-    formula: capacitorW
+    formula: resistance2
     variables:
-    - capacitorW
+    - resistance2
+  type: ResistorElm
+  x: 1
+  y: 1
+  x1: 2 
+  y1: 1
+- associatedFormula:
+    id: Lung Compliance
+    isTimeDependent: false
+    isExternal: false
+    formula: capacitor1
+    variables:
+    - capacitor1
   type: CapacitorElm
   x: 2
   y: 1
-  x1: 1
-  y1: 0
+  x1: 3 
+  y1: 1
+  showLeft: true
+  idLeft: Alveoli
+  showRight: true
+  idRight: Intrathoracic Pressure
+- associatedFormula:
+    id: Chest wall compliance
+    isTimeDependent: false
+    isExternal: false
+    formula: capacitor2
+    variables:
+    - capacitor2
+  type: CapacitorElm
+  x: 3
+  y: 1
+  x1: 4 
+  y1: 1
 - associatedFormula:
     id: Ventilator
     isTimeDependent: false
     isExternal: true
   type: ExternalVoltageElm
-  x: 1
-  y: 0
+  x: 4
+  y: 1
   x1: 0 
-  y1: 2
+  y1: 1

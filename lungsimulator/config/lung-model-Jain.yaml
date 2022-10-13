@@ -2,7 +2,7 @@
 schema: 5
 elementsList:
 - associatedFormula:
-    id: Ru
+    id: Upper Airway Resistance
     isTimeDependent: false
     isExternal: false
     formula: resistanceU 
@@ -13,8 +13,10 @@ elementsList:
   y: 0
   x1: 1 
   y1: 0
+  showRight: true
+  idRight: Alveoli
 - associatedFormula:
-    id: Rl
+    id: Lung Tissues Resistance
     isTimeDependent: false
     isExternal: false
     formula: resistanceL 
@@ -26,13 +28,12 @@ elementsList:
   x1: 2 
   y1: 0
 - associatedFormula:
-    id: C
+    id: Lung Compliance
     isTimeDependent: true
     isExternal: false
-    formula: capacitor + 0.0625*SIN(TIME)
+    formula: capacitor
     variables:
     - capacitor
-    - TIME
   type: CapacitorElm
   x: 2
   y: 0

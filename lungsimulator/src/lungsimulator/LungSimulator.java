@@ -42,8 +42,17 @@ public class LungSimulator {
 	 * it could be either lung model or archetype (even both)
 	 */
 	public LungSimulator() throws FileNotFoundException, IOException {
+		String chosenSchema = userInterface.selectSchema();
+		final YamlReader yamlReader;
+		
+		if(chosenSchema != null) {
+			if(chosenSchema.contains("***")) {
+				String[] fileNames = chosenSchema.split("***");
+				yamlReader = new YamlReader(fileNames[0], fileNames[1]);
+			}else {
+				yamlReader = new YamlReader(chosenSchema);
+			}
 		// Read patient model and patient archetype
-		final YamlReader yamlReader = new YamlReader();
 		patient = yamlReader.readPatientModel();
 		archetype = yamlReader.readArchetypeParameters();
 
@@ -51,7 +60,7 @@ public class LungSimulator {
 		yamlReader.validator(patient, archetype);
 
 		// Frame configuration
-		userInterface.frameConfig(patient, archetype);
+		userInterface.frameConfig(patient, archetype);}
 	}
 
 	/**

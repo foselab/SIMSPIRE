@@ -15,28 +15,21 @@ import lungsimulator.components.Archetype;
 import lungsimulator.components.Element;
 import lungsimulator.components.Patient;
 
-public class YamlReader {
-	// The electrical analogue of lung
-	static String lungModelCB = "config/lung-model-CB.yaml";
-	static String archetypeParametersCB = "config/archetype-CB.yaml";
+public class YamlReader {	
+	private String lungModelPath;
+	private String archetypePath;
 	
-	// Albanese
-	static String lungModelAlbanese = "config/lung-model-Albanese.yaml";
-	static String archetypeParametersAlbanese = "config/archetype-Albanese.yaml";
-	
-	// Baker
-	static String lungModelBaker = "config/lung-model-Baker.yaml";
-	static String archetypeParametersBaker = "config/archetype-Baker.yaml";
-	
-	// Jain
-	static String lungModelJain = "config/lung-model-Jain.yaml";
-	static String archetypeParametersJain = "config/archetype-Jain.yaml";
-	
-	// Al-Naggar
-	static String lungModelAlNaggar = "config/lung-model-AlNaggar.yaml";
-	static String archetypeParametersAlNaggar = "config/archetype-AlNaggar.yaml";
-
 	private static final Logger LOGGER = Logger.getLogger(YamlReader.class.getName());
+	
+	public YamlReader(String modelName) {
+		this.lungModelPath = "config/lung-model-" + modelName + ".yaml";
+		this.archetypePath = "config/archetype-" + modelName + ".yaml";
+	}
+	
+	public YamlReader(String lungModelName, String archetypeName) {
+		this.lungModelPath = lungModelName;
+		this.archetypePath = archetypeName;
+	}
 	
 	/**
 	 * Given a YAML file of the patient's model, this method builds a new Patient object
@@ -47,7 +40,7 @@ public class YamlReader {
 	public Patient readPatientModel() throws FileNotFoundException, IOException {
 
 		// Loading the YAML file
-		File file = new File(lungModelAlbanese);
+		File file = new File(lungModelPath);
 		assert file.exists();
 
 		LOGGER.log(Level.INFO, "Loading patient model...");
@@ -72,7 +65,7 @@ public class YamlReader {
 	public Archetype readArchetypeParameters() throws FileNotFoundException, IOException {
 
 		// Loading the YAML file
-		File file = new File(archetypeParametersAlbanese);
+		File file = new File(archetypePath);
 		assert file.exists();
 
 		LOGGER.log(Level.INFO, "Loading archetype parameters...");
@@ -96,6 +89,8 @@ public class YamlReader {
 	public void validator(Patient patient, Archetype archetype) {
 
 		LOGGER.log(Level.INFO, "Init validation process");
+		
+		boolean atLeastOnePressurePoint = false;
 		
 		if(patient == null || archetype == null) {
 			throw new InspireException("At least one model is not properly built");
@@ -162,7 +157,15 @@ public class YamlReader {
 					throw new InspireException("Inconsistency error: an id for right node has been set, but showRight is false");
 				}
 				
+				if(e.isShowLeft() || e.isShowRight()) {
+					atLeastOnePressurePoint = true;
+				}
+				
 			}
+		}
+		
+		if(!atLeastOnePressurePoint) {
+			throw new InspireException("You must set at least one known pressure point");
 		}
 		
 		if(patient.getAdditionalFormulas() != null) {

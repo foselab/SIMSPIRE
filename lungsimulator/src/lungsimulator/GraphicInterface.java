@@ -1,24 +1,34 @@
 package lungsimulator;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.GridLayout;
+import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -87,6 +97,33 @@ public class GraphicInterface {
 	private JButton printData;
 	private boolean state = true;
 	private int imageCounter = 1;
+	private String modelChoice;
+
+	public String selectSchema() {
+
+		// options configuration
+		String[] models = { "Model of Albanese", "Model of Al-Naggar", "Model of Baker", "Model of Jain",
+				"Model of Campbell-Brown", "Your own model..." };
+		Object choice = JOptionPane.showInputDialog(null, "Select model", "ChooseModel", JOptionPane.PLAIN_MESSAGE,
+				null, models, models[0]);
+		String var = String.valueOf(choice);
+
+		if (var.equals("Your own model...")) {
+			Object lungFile = JOptionPane.showInputDialog(null,
+					"Insert your lung model file name (e.g. myLungModel.yaml) \n The file must be in config folder",
+					"Choose Lung Model File", JOptionPane.PLAIN_MESSAGE, null, null, null);
+			Object arcFile = JOptionPane.showInputDialog(null,
+					"Insert your archetype file name (e.g. myArcModel.yaml) \n The file must be in config folder",
+					"Choose Archetype File", JOptionPane.PLAIN_MESSAGE, null, null, null);
+			String config = "config/";
+			modelChoice = config + String.valueOf(lungFile) + "***" + config + String.valueOf(arcFile);
+
+		} else {
+			String name = var.replace("Model of ", "");
+			modelChoice = name;
+		}
+		return modelChoice;
+	}
 
 	/**
 	 * Graphic interface set up
@@ -96,6 +133,7 @@ public class GraphicInterface {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void frameConfig(Patient patient, Archetype archetype) {
+		// frame configuration
 		frame = new JFrame();
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // fullscreen option
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
