@@ -3,7 +3,7 @@ package lungsimulator.components;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import lungsimulator.utils.InspireException;
+import lungsimulator.exceptions.InspireException;
 
 /**
  * Contains all the initial values of variables

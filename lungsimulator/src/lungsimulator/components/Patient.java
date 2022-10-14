@@ -2,7 +2,7 @@ package lungsimulator.components;
 
 import java.util.List;
 
-import lungsimulator.utils.InspireException;
+import lungsimulator.exceptions.InspireException;
 
 /**
  * Describes all the attributes of a patient model

@@ -11,6 +11,7 @@ import lungsimulator.components.Archetype;
 import lungsimulator.components.Element;
 import lungsimulator.components.Formula;
 import lungsimulator.components.Patient;
+import lungsimulator.exceptions.InspireException;
 
 /**
  * Check lung model and archetype

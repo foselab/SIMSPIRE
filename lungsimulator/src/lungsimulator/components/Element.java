@@ -1,6 +1,6 @@
 package lungsimulator.components;
 
-import lungsimulator.utils.InspireException;
+import lungsimulator.exceptions.InspireException;
 
 /**
  * Describes an element of the circuit
