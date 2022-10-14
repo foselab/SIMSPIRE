@@ -33,33 +33,6 @@ public class AnalogSwitch2Elm extends AnalogSwitchElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		setBbox(point1, point2, openhs);
-
-		// draw first lead
-		setVoltageColor(g, volts[0]);
-		drawThickLine(g, point1, lead1);
-
-		// draw second lead
-		setVoltageColor(g, volts[1]);
-		drawThickLine(g, swpoles[0], swposts[0]);
-
-		// draw third lead
-		setVoltageColor(g, volts[2]);
-		drawThickLine(g, swpoles[1], swposts[1]);
-
-		// draw switch
-		g.setColor(getLightGrayColor());
-		int position = (open) ? 1 : 0;
-		drawThickLine(g, lead1, swpoles[position]);
-
-		updateDotCount();
-		drawDots(g, point1, lead1, curcount);
-		drawDots(g, swpoles[position], swposts[position], curcount);
-		drawPosts(g);
-	}
-
-	@Override
 	public Point getPost(int n) {
 		return (n == 0) ? point1 : (n == 3) ? ctlPoint : swposts[n - 1];
 	}

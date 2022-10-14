@@ -59,23 +59,6 @@ public class SparkGapElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		int i;
-		double v1 = volts[0];
-		double v2 = volts[1];
-		setBbox(point1, point2, 8);
-		draw2Leads(g);
-		setPowerColor(g, true);
-		setVoltageColor(g, volts[0]);
-		g.fillPolygon(arrow1);
-		setVoltageColor(g, volts[1]);
-		g.fillPolygon(arrow2);
-		if (state)
-			doDots(g);
-		drawPosts(g);
-	}
-
-	@Override
 	void calculateCurrent() {
 		double vd = volts[0] - volts[1];
 		current = vd / resistance;

@@ -71,37 +71,6 @@ public class CapacitorElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		int hs = 12;
-		setBbox(point1, point2, hs);
-
-		// draw first lead and plate
-		setVoltageColor(g, volts[0]);
-		drawThickLine(g, point1, lead1);
-		setPowerColor(g, false);
-		drawThickLine(g, plate1[0], plate1[1]);
-		if (sim.getPowerCheckItem().getState())
-			g.setColor(Color.gray);
-
-		// draw second lead and plate
-		setVoltageColor(g, volts[1]);
-		drawThickLine(g, point2, lead2);
-		setPowerColor(g, false);
-		drawThickLine(g, plate2[0], plate2[1]);
-
-		updateDotCount();
-		if (sim.getDragElm() != this) {
-			drawDots(g, point1, lead1, curcount);
-			drawDots(g, point2, lead2, -curcount);
-		}
-		drawPosts(g);
-		if (sim.getShowValuesCheckItem().getState()) {
-			String s = getShortUnitText(getCapacitance(), "F");
-			drawValues(g, s, hs);
-		}
-	}
-
-	@Override
 	public void stamp() {
 		// capacitor companion model using trapezoidal approximation
 		// (Norton equivalent) consists of a current source in

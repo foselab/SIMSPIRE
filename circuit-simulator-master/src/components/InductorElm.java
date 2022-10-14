@@ -42,23 +42,6 @@ public class InductorElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		double v1 = volts[0];
-		double v2 = volts[1];
-		int hs = 8;
-		setBbox(point1, point2, hs);
-		draw2Leads(g);
-		setPowerColor(g, false);
-		drawCoil(g, 8, lead1, lead2, v1, v2);
-		if (sim.getShowValuesCheckItem().getState()) {
-			String s = getShortUnitText(getInductance(), "H");
-			drawValues(g, s, hs);
-		}
-		doDots(g);
-		drawPosts(g);
-	}
-
-	@Override
 	public void reset() {
 		current = volts[0] = volts[1] = curcount = 0;
 		ind.reset();

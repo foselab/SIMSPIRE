@@ -69,32 +69,6 @@ public class TransformerElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		int i;
-		for (i = 0; i != 4; i++) {
-			setVoltageColor(g, volts[i]);
-			drawThickLine(g, ptEnds[i], ptCoil[i]);
-		}
-		for (i = 0; i != 2; i++) {
-			setPowerColor(g, current[i] * (volts[i] - volts[i + 2]));
-			drawCoil(g, dsign * (i == 1 ? -6 : 6), ptCoil[i], ptCoil[i + 2], volts[i], volts[i + 2]);
-		}
-		g.setColor(needsHighlight() ? getSelectColor() : getLightGrayColor());
-		for (i = 0; i != 2; i++) {
-			drawThickLine(g, ptCore[i], ptCore[i + 2]);
-			curcount[i] = updateDotCount(current[i], curcount[i]);
-		}
-		for (i = 0; i != 2; i++) {
-			drawDots(g, ptEnds[i], ptCoil[i], curcount[i]);
-			drawDots(g, ptCoil[i], ptCoil[i + 2], curcount[i]);
-			drawDots(g, ptEnds[i + 2], ptCoil[i + 2], -curcount[i]);
-		}
-
-		drawPosts(g);
-		setBbox(ptEnds[0], ptEnds[3], 0);
-	}
-
-	@Override
 	public void setPoints() {
 		super.setPoints();
 		point2.y = point1.y;

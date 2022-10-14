@@ -22,7 +22,6 @@ public class OpAmpElm extends CircuitElm {
 		maxOut = 15;
 		minOut = -15;
 		gbw = 1e6;
-		setSize(sim.getSmallGridCheckItem().getState() ? 1 : 2);
 		setGain();
 	}
 
@@ -59,26 +58,6 @@ public class OpAmpElm extends CircuitElm {
 	@Override
 	public boolean nonLinear() {
 		return true;
-	}
-
-	@Override
-	public void draw(Graphics g) {
-		setBbox(point1, point2, opheight * 2);
-		setVoltageColor(g, volts[0]);
-		drawThickLine(g, in1p[0], in1p[1]);
-		setVoltageColor(g, volts[1]);
-		drawThickLine(g, in2p[0], in2p[1]);
-		g.setColor(needsHighlight() ? getSelectColor() : getLightGrayColor());
-		setPowerColor(g, true);
-		drawThickPolygon(g, triangle);
-		g.setFont(plusFont);
-		drawCenteredText(g, "-", textp[0].x, textp[0].y - 2, true);
-		drawCenteredText(g, "+", textp[1].x, textp[1].y, true);
-		setVoltageColor(g, volts[2]);
-		drawThickLine(g, lead2, point2);
-		curcount = updateDotCount(current, curcount);
-		drawDots(g, point2, lead2, curcount);
-		drawPosts(g);
 	}
 
 	@Override

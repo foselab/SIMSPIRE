@@ -50,34 +50,6 @@ public class LEDElm extends DiodeElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		if (needsHighlight() || this == sim.getDragElm()) {
-			super.draw(g);
-			return;
-		}
-		setVoltageColor(g, volts[0]);
-		drawThickLine(g, point1, ledLead1);
-		setVoltageColor(g, volts[1]);
-		drawThickLine(g, ledLead2, point2);
-
-		g.setColor(Color.gray);
-		int cr = 12;
-		drawThickCircle(g, ledCenter.x, ledCenter.y, cr);
-		cr -= 4;
-		double w = 255 * current / .01;
-		if (w > 255)
-			w = 255;
-		Color cc = new Color((int) (colorR * w), (int) (colorG * w), (int) (colorB * w));
-		g.setColor(cc);
-		g.fillOval(ledCenter.x - cr, ledCenter.y - cr, cr * 2, cr * 2);
-		setBbox(point1, point2, cr);
-		updateDotCount();
-		drawDots(g, point1, ledLead1, curcount);
-		drawDots(g, point2, ledLead2, -curcount);
-		drawPosts(g);
-	}
-
-	@Override
 	public void getInfo(String arr[]) {
 		super.getInfo(arr);
 		arr[0] = "LED";

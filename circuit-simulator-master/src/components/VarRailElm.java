@@ -16,7 +16,6 @@ public class VarRailElm extends RailElm {
 		super(xx, yy, WF_VAR);
 		sliderText = "Voltage";
 		frequency = getMaxVoltage();
-		createSlider();
 	}
 
 	public VarRailElm(int xa, int ya, int xb, int yb, int f, StringTokenizer st) {
@@ -24,7 +23,6 @@ public class VarRailElm extends RailElm {
 		sliderText = st.nextToken();
 		while (st.hasMoreTokens())
 			sliderText += ' ' + st.nextToken();
-		createSlider();
 	}
 
 	@Override
@@ -37,24 +35,10 @@ public class VarRailElm extends RailElm {
 		return 172;
 	}
 
-	void createSlider() {
-		waveform = WF_VAR;
-		CirSim.getMain().add(label = new Label(sliderText, Label.CENTER));
-		int value = (int) ((frequency - bias) * 100 / (getMaxVoltage() - bias));
-		CirSim.getMain().add(slider = new Scrollbar(Scrollbar.HORIZONTAL, value, 1, 0, 101));
-		CirSim.getMain().validate();
-	}
-
 	@Override
 	double getVoltage() {
 		frequency = slider.getValue() * (getMaxVoltage() - bias) / 100. + bias;
 		return frequency;
-	}
-
-	@Override
-	public void delete() {
-		CirSim.getMain().remove(label);
-		CirSim.getMain().remove(slider);
 	}
 
 	@Override

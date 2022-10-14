@@ -83,40 +83,6 @@ public class TriodeElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		g.setColor(Color.gray);
-		drawThickCircle(g, point2.x, point2.y, circler);
-		setBbox(point1, plate[0], 16);
-		adjustBbox(cath[0].x, cath[1].y, point2.x + circler, point2.y + circler);
-		setPowerColor(g, true);
-		// draw plate
-		setVoltageColor(g, volts[0]);
-		drawThickLine(g, plate[0], plate[1]);
-		drawThickLine(g, plate[2], plate[3]);
-		// draw grid
-		setVoltageColor(g, volts[1]);
-		int i;
-		for (i = 0; i != 8; i += 2)
-			drawThickLine(g, grid[i], grid[i + 1]);
-		// draw cathode
-		setVoltageColor(g, volts[2]);
-		for (i = 0; i != 3; i++)
-			drawThickLine(g, cath[i], cath[i + 1]);
-		// draw dots
-		curcountp = updateDotCount(currentp, curcountp);
-		curcountc = updateDotCount(currentc, curcountc);
-		curcountg = updateDotCount(currentg, curcountg);
-		if (sim.getDragElm() != this) {
-			drawDots(g, plate[0], midgrid, curcountp);
-			drawDots(g, midgrid, midcath, curcountc);
-			drawDots(g, midcath, cath[1], curcountc + 8);
-			drawDots(g, cath[1], cath[0], curcountc + 8);
-			drawDots(g, point1, midgrid, curcountg);
-		}
-		drawPosts(g);
-	}
-
-	@Override
 	public Point getPost(int n) {
 		return (n == 0) ? plate[0] : (n == 1) ? grid[0] : cath[0];
 	}

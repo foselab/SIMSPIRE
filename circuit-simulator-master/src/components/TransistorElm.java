@@ -71,47 +71,6 @@ public class TransistorElm extends CircuitElm {
 	Polygon rectPoly, arrowPoly;
 
 	@Override
-	public void draw(Graphics g) {
-		setBbox(point1, point2, 16);
-		setPowerColor(g, true);
-		// draw collector
-		setVoltageColor(g, volts[1]);
-		drawThickLine(g, coll[0], coll[1]);
-		// draw emitter
-		setVoltageColor(g, volts[2]);
-		drawThickLine(g, emit[0], emit[1]);
-		// draw arrow
-		g.setColor(getLightGrayColor());
-		g.fillPolygon(arrowPoly);
-		// draw base
-		setVoltageColor(g, volts[0]);
-		if (sim.getPowerCheckItem().getState())
-			g.setColor(Color.gray);
-		drawThickLine(g, point1, base);
-		// draw dots
-		curcount_b = updateDotCount(-ib, curcount_b);
-		drawDots(g, base, point1, curcount_b);
-		curcount_c = updateDotCount(-ic, curcount_c);
-		drawDots(g, coll[1], coll[0], curcount_c);
-		curcount_e = updateDotCount(-ie, curcount_e);
-		drawDots(g, emit[1], emit[0], curcount_e);
-		// draw base rectangle
-		setVoltageColor(g, volts[0]);
-		setPowerColor(g, true);
-		g.fillPolygon(rectPoly);
-
-		if ((needsHighlight() || sim.getDragElm() == this) && dy == 0) {
-			g.setColor(Color.white);
-			g.setFont(unitsFont);
-			int ds = sign(dx);
-			g.drawString("B", base.x - 10 * ds, base.y - 5);
-			g.drawString("C", coll[0].x - 3 + 9 * ds, coll[0].y + 4); // x+6 if ds=1, -12 if -1
-			g.drawString("E", emit[0].x - 3 + 9 * ds, emit[0].y + 4);
-		}
-		drawPosts(g);
-	}
-
-	@Override
 	public Point getPost(int n) {
 		return (n == 0) ? point1 : (n == 1) ? coll[0] : emit[0];
 	}

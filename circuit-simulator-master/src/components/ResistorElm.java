@@ -46,64 +46,6 @@ public class ResistorElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		int segments = 16;
-		int i;
-		int ox = 0;
-		int hs = sim.getEuroResistorCheckItem().getState() ? 6 : 8;
-		double v1 = volts[0];
-		double v2 = volts[1];
-		setBbox(point1, point2, hs);
-		draw2Leads(g);
-		setPowerColor(g, true);
-		double segf = 1. / segments;
-		if (!sim.getEuroResistorCheckItem().getState()) {
-			// draw zigzag
-			for (i = 0; i != segments; i++) {
-				int nx = 0;
-				switch (i & 3) {
-				case 0:
-					nx = 1;
-					break;
-				case 2:
-					nx = -1;
-					break;
-				default:
-					nx = 0;
-					break;
-				}
-				double v = v1 + (v2 - v1) * i / segments;
-				setVoltageColor(g, v);
-				interpPoint(lead1, lead2, ps1, i * segf, hs * ox);
-				interpPoint(lead1, lead2, ps2, (i + 1) * segf, hs * nx);
-				drawThickLine(g, ps1, ps2);
-				ox = nx;
-			}
-		} else {
-			// draw rectangle
-			setVoltageColor(g, v1);
-			interpPoint2(lead1, lead2, ps1, ps2, 0, hs);
-			drawThickLine(g, ps1, ps2);
-			for (i = 0; i != segments; i++) {
-				double v = v1 + (v2 - v1) * i / segments;
-				setVoltageColor(g, v);
-				interpPoint2(lead1, lead2, ps1, ps2, i * segf, hs);
-				interpPoint2(lead1, lead2, ps3, ps4, (i + 1) * segf, hs);
-				drawThickLine(g, ps1, ps3);
-				drawThickLine(g, ps2, ps4);
-			}
-			interpPoint2(lead1, lead2, ps1, ps2, 1, hs);
-			drawThickLine(g, ps1, ps2);
-		}
-		if (sim.getShowValuesCheckItem().getState()) {
-			String s = getShortUnitText(getResistance(), "");
-			drawValues(g, s, hs);
-		}
-		doDots(g);
-		drawPosts(g);
-	}
-
-	@Override
 	void calculateCurrent() {
 		System.out.println(this.getClass().getSimpleName() + " - volts[0] = " + volts[0] + ", volts[1] = " + volts[1]);
 		current = (volts[0] - volts[1]) / getResistance();

@@ -69,36 +69,11 @@ public class DiodeElm extends CircuitElm {
 		interpPoint2(lead1, lead2, cathode[0], cathode[1], 1, hs);
 		poly = createPolygon(pa[0], pa[1], lead2);
 	}
-
-	@Override
-	public void draw(Graphics g) {
-		drawDiode(g);
-		doDots(g);
-		drawPosts(g);
-	}
-
+	
 	@Override
 	public void reset() {
 		diode.reset();
 		volts[0] = volts[1] = curcount = 0;
-	}
-
-	void drawDiode(Graphics g) {
-		setBbox(point1, point2, hs);
-
-		double v1 = volts[0];
-		double v2 = volts[1];
-
-		draw2Leads(g);
-
-		// draw arrow thingy
-		setPowerColor(g, true);
-		setVoltageColor(g, v1);
-		g.fillPolygon(poly);
-
-		// draw thing arrow is pointing to
-		setVoltageColor(g, v2);
-		drawThickLine(g, cathode[0], cathode[1]);
 	}
 
 	@Override

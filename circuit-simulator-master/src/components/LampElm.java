@@ -91,40 +91,6 @@ public class LampElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		double v1 = volts[0];
-		double v2 = volts[1];
-		setBbox(point1, point2, 4);
-		adjustBbox(bulb.x - bulbR, bulb.y - bulbR, bulb.x + bulbR, bulb.y + bulbR);
-		// adjustbbox
-		draw2Leads(g);
-		setPowerColor(g, true);
-		g.setColor(getTempColor());
-		g.fillOval(bulb.x - bulbR, bulb.y - bulbR, bulbR * 2, bulbR * 2);
-		g.setColor(Color.white);
-		drawThickCircle(g, bulb.x, bulb.y, bulbR);
-		setVoltageColor(g, v1);
-		drawThickLine(g, lead1, filament[0]);
-		setVoltageColor(g, v2);
-		drawThickLine(g, lead2, filament[1]);
-		setVoltageColor(g, (v1 + v2) * .5);
-		drawThickLine(g, filament[0], filament[1]);
-		updateDotCount();
-		if (sim.getDragElm() != this) {
-			drawDots(g, point1, lead1, curcount);
-			double cc = curcount + (dn - 16) / 2;
-			drawDots(g, lead1, filament[0], cc);
-			cc += filament_len;
-			drawDots(g, filament[0], filament[1], cc);
-			cc += 16;
-			drawDots(g, filament[1], lead2, cc);
-			cc += filament_len;
-			drawDots(g, lead2, point2, curcount);
-		}
-		drawPosts(g);
-	}
-
-	@Override
 	void calculateCurrent() {
 		current = (volts[0] - volts[1]) / resistance;
 		// System.out.print(this + " res current set to " + current + "\n");

@@ -36,17 +36,6 @@ public class InverterElm extends CircuitElm {
 		return 'I';
 	}
 
-	@Override
-	public void draw(Graphics g) {
-		drawPosts(g);
-		draw2Leads(g);
-		g.setColor(needsHighlight() ? getSelectColor() : getLightGrayColor());
-		drawThickPolygon(g, gatePoly);
-		drawThickCircle(g, pcircle.x, pcircle.y, 3);
-		curcount = updateDotCount(current, curcount);
-		drawDots(g, lead2, point2, curcount);
-	}
-
 	Polygon gatePoly;
 	Point pcircle;
 

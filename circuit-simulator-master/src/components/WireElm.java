@@ -23,22 +23,6 @@ public class WireElm extends ResistorElm {
 	static final int FLAG_SHOWVOLTAGE = 2;
 
 	@Override
-	public void draw(Graphics g) {
-		setVoltageColor(g, volts[0]);
-		drawThickLine(g, point1, point2);
-		doDots(g);
-		setBbox(point1, point2, 3);
-		if (mustShowCurrent()) {
-			String s = getShortUnitText(Math.abs(getCurrent()), "A");
-			drawValues(g, s, 4);
-		} else if (mustShowVoltage()) {
-			String s = getShortUnitText(volts[0], "V");
-			drawValues(g, s, 4);
-		}
-		drawPosts(g);
-	}
-
-	@Override
 	void calculateCurrent() {
 		if (!ideal) {
 			super.calculateCurrent();

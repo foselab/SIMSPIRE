@@ -120,40 +120,6 @@ public class SCRElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		setBbox(point1, point2, hs);
-		adjustBbox(gate[0], gate[1]);
-
-		double v1 = volts[anode];
-		double v2 = volts[cnode];
-
-		draw2Leads(g);
-
-		// draw arrow thingy
-		setPowerColor(g, true);
-		setVoltageColor(g, v1);
-		g.fillPolygon(poly);
-
-		// draw thing arrow is pointing to
-		setVoltageColor(g, v2);
-		drawThickLine(g, cathode[0], cathode[1]);
-
-		drawThickLine(g, lead2, gate[0]);
-		drawThickLine(g, gate[0], gate[1]);
-
-		curcount_a = updateDotCount(ia, curcount_a);
-		curcount_c = updateDotCount(ic, curcount_c);
-		curcount_g = updateDotCount(ig, curcount_g);
-		if (sim.getDragElm() != this) {
-			drawDots(g, point1, lead2, curcount_a);
-			drawDots(g, point2, lead2, curcount_c);
-			drawDots(g, gate[1], gate[0], curcount_g);
-			drawDots(g, gate[0], lead2, curcount_g + distance(gate[1], gate[0]));
-		}
-		drawPosts(g);
-	}
-
-	@Override
 	public Point getPost(int n) {
 		return (n == 0) ? point1 : (n == 1) ? point2 : gate[1];
 	}

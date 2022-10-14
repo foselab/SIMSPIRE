@@ -37,28 +37,6 @@ public class OutputElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		boolean selected = (needsHighlight() || sim.getPlotYElm() == this);
-		Font f = new Font("SansSerif", selected ? Font.BOLD : 0, 14);
-		g.setFont(f);
-		g.setColor(selected ? getSelectColor() : getWhiteColor());
-		String s = (flags & FLAG_VALUE) != 0 ? getVoltageText(volts[0]) : "out";
-		FontMetrics fm = g.getFontMetrics();
-		if (this == sim.getPlotXElm())
-			s = "X";
-		if (this == sim.getPlotYElm())
-			s = "Y";
-		interpPoint(point1, point2, lead1, 1 - (fm.stringWidth(s) / 2 + 8) / dn);
-		setBbox(point1, lead1, 0);
-		drawCenteredText(g, s, getX2(), getY2(), true);
-		setVoltageColor(g, volts[0]);
-		if (selected)
-			g.setColor(getSelectColor());
-		drawThickLine(g, point1, lead1);
-		drawPosts(g);
-	}
-
-	@Override
 	public double getVoltageDiff() {
 		return volts[0];
 	}

@@ -38,34 +38,6 @@ public class ProbeElm extends CircuitElm {
 		center = interpPoint(point1, point2, .5);
 	}
 
-	@Override
-	public void draw(Graphics g) {
-		int hs = 8;
-		setBbox(point1, point2, hs);
-		boolean selected = (needsHighlight() || sim.getPlotYElm() == this);
-		double len = (selected || sim.getDragElm() == this) ? 16 : dn - 32;
-		calcLeads((int) len);
-		setVoltageColor(g, volts[0]);
-		if (selected)
-			g.setColor(getSelectColor());
-		drawThickLine(g, point1, lead1);
-		setVoltageColor(g, volts[1]);
-		if (selected)
-			g.setColor(getSelectColor());
-		drawThickLine(g, lead2, point2);
-		Font f = new Font("SansSerif", Font.BOLD, 14);
-		g.setFont(f);
-		if (this == sim.getPlotXElm())
-			drawCenteredText(g, "X", center.x, center.y, true);
-		if (this == sim.getPlotYElm())
-			drawCenteredText(g, "Y", center.x, center.y, true);
-		if (mustShowVoltage()) {
-			String s = getShortUnitText(volts[0], "V");
-			drawValues(g, s, 4);
-		}
-		drawPosts(g);
-	}
-
 	boolean mustShowVoltage() {
 		return (flags & FLAG_SHOWVOLTAGE) != 0;
 	}

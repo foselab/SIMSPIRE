@@ -16,7 +16,6 @@ public abstract class GateElm extends CircuitElm {
 		super(xx, yy);
 		noDiagonal = true;
 		inputCount = 2;
-		setSize(sim.getSmallGridCheckItem().getState() ? 1 : 2);
 	}
 
 	public GateElm(int xa, int ya, int xb, int yb, int f, StringTokenizer st) {
@@ -75,27 +74,6 @@ public abstract class GateElm extends CircuitElm {
 		}
 		hs2 = gwidth * (inputCount / 2 + 1);
 		setBbox(point1, point2, hs2);
-	}
-
-	@Override
-	public void draw(Graphics g) {
-		int i;
-		for (i = 0; i != inputCount; i++) {
-			setVoltageColor(g, volts[i]);
-			drawThickLine(g, inPosts[i], inGates[i]);
-		}
-		setVoltageColor(g, volts[inputCount]);
-		drawThickLine(g, lead2, point2);
-		g.setColor(needsHighlight() ? getSelectColor() : getLightGrayColor());
-		drawThickPolygon(g, gatePoly);
-		if (linePoints != null)
-			for (i = 0; i != linePoints.length - 1; i++)
-				drawThickLine(g, linePoints[i], linePoints[i + 1]);
-		if (isInverting())
-			drawThickCircle(g, pcircle.x, pcircle.y, 3);
-		curcount = updateDotCount(current, curcount);
-		drawDots(g, lead2, point2, curcount);
-		drawPosts(g);
 	}
 
 	Polygon gatePoly;

@@ -55,48 +55,6 @@ public class SweepElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		setBbox(point1, point2, circleSize);
-		setVoltageColor(g, volts[0]);
-		drawThickLine(g, point1, lead1);
-		g.setColor(needsHighlight() ? getSelectColor() : Color.gray);
-		setPowerColor(g, false);
-		int xc = point2.x;
-		int yc = point2.y;
-		drawThickCircle(g, xc, yc, circleSize);
-		int wl = 8;
-		adjustBbox(xc - circleSize, yc - circleSize, xc + circleSize, yc + circleSize);
-		int i;
-		int xl = 10;
-		int ox = -1, oy = -1;
-		long tm = System.currentTimeMillis();
-		// double w = (this == mouseElm ? 3 : 2);
-		tm %= 2000;
-		if (tm > 1000)
-			tm = 2000 - tm;
-		double w = 1 + tm * .002;
-		if (!sim.getStoppedCheck().getState())
-			w = 1 + 2 * (frequency - minF) / (maxF - minF);
-		for (i = -xl; i <= xl; i++) {
-			int yy = yc + (int) (.95 * Math.sin(i * pi * w / xl) * wl);
-			if (ox != -1)
-				drawThickLine(g, ox, oy, xc + i, yy);
-			ox = xc + i;
-			oy = yy;
-		}
-		if (sim.getShowValuesCheckItem().getState()) {
-			String s = getShortUnitText(frequency, "Hz");
-			if (dx == 0 || dy == 0)
-				drawValues(g, s, circleSize);
-		}
-
-		drawPosts(g);
-		curcount = updateDotCount(-current, curcount);
-		if (sim.getDragElm() != this)
-			drawDots(g, point1, lead1, curcount);
-	}
-
-	@Override
 	public void stamp() {
 		sim.stampVoltageSource(0, nodes[0], voltSource);
 	}

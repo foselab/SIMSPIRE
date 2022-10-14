@@ -108,46 +108,6 @@ public class TransLineElm extends CircuitElm {
 		inner = new Point[] { p7, p8, p5, p6 };
 	}
 
-	@Override
-	public void draw(Graphics g) {
-		setBbox(posts[0], posts[3], 0);
-		int segments = (int) (dn / 2);
-		int ix0 = ptr - 1 + lenSteps;
-		double segf = 1. / segments;
-		int i;
-		g.setColor(Color.darkGray);
-		g.fillRect(inner[2].x, inner[2].y, inner[1].x - inner[2].x + 2, inner[1].y - inner[2].y + 2);
-		for (i = 0; i != 4; i++) {
-			setVoltageColor(g, volts[i]);
-			drawThickLine(g, posts[i], inner[i]);
-		}
-		if (voltageL != null) {
-			for (i = 0; i != segments; i++) {
-				int ix1 = (ix0 - lenSteps * i / segments) % lenSteps;
-				int ix2 = (ix0 - lenSteps * (segments - 1 - i) / segments) % lenSteps;
-				double v = (voltageL[ix1] + voltageR[ix2]) / 2;
-				setVoltageColor(g, v);
-				interpPoint(inner[0], inner[1], ps1, i * segf);
-				interpPoint(inner[2], inner[3], ps2, i * segf);
-				g.drawLine(ps1.x, ps1.y, ps2.x, ps2.y);
-				interpPoint(inner[2], inner[3], ps1, (i + 1) * segf);
-				drawThickLine(g, ps1, ps2);
-			}
-		}
-		setVoltageColor(g, volts[0]);
-		drawThickLine(g, inner[0], inner[1]);
-		drawPosts(g);
-
-		curCount1 = updateDotCount(-current1, curCount1);
-		curCount2 = updateDotCount(current2, curCount2);
-		if (sim.getDragElm() != this) {
-			drawDots(g, posts[0], inner[0], curCount1);
-			drawDots(g, posts[2], inner[2], -curCount1);
-			drawDots(g, posts[1], inner[1], -curCount2);
-			drawDots(g, posts[3], inner[3], curCount2);
-		}
-	}
-
 	int voltSource1, voltSource2;
 	double current1, current2, curCount1, curCount2;
 

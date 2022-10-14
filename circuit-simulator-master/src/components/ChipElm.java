@@ -23,7 +23,6 @@ public abstract class ChipElm extends CircuitElm {
 			bits = (this instanceof DecadeElm) ? 10 : 4;
 		noDiagonal = true;
 		setupPins();
-		setSize(sim.getSmallGridCheckItem().getState() ? 1 : 2);
 	}
 
 	public ChipElm(int xa, int ya, int xb, int yb, int f, StringTokenizer st) {
@@ -55,46 +54,6 @@ public abstract class ChipElm extends CircuitElm {
 	}
 
 	abstract void setupPins();
-
-	@Override
-	public void draw(Graphics g) {
-		drawChip(g);
-	}
-
-	void drawChip(Graphics g) {
-		int i;
-		Font f = new Font("SansSerif", 0, 10 * csize);
-		g.setFont(f);
-		FontMetrics fm = g.getFontMetrics();
-		for (i = 0; i != getPostCount(); i++) {
-			Pin p = pins[i];
-			setVoltageColor(g, volts[i]);
-			Point a = p.post;
-			Point b = p.stub;
-			drawThickLine(g, a, b);
-			p.curcount = updateDotCount(p.current, p.curcount);
-			drawDots(g, b, a, p.curcount);
-			if (p.bubble) {
-				g.setColor(sim.getPrintableCheckItem().getState() ? Color.white : Color.black);
-				drawThickCircle(g, p.bubbleX, p.bubbleY, 1);
-				g.setColor(getLightGrayColor());
-				drawThickCircle(g, p.bubbleX, p.bubbleY, 3);
-			}
-			g.setColor(getWhiteColor());
-			int sw = fm.stringWidth(p.text);
-			g.drawString(p.text, p.textloc.x - sw / 2, p.textloc.y + fm.getAscent() / 2);
-			if (p.lineOver) {
-				int ya = p.textloc.y - fm.getAscent() / 2;
-				g.drawLine(p.textloc.x - sw / 2, ya, p.textloc.x + sw / 2, ya);
-			}
-		}
-		g.setColor(needsHighlight() ? getSelectColor() : getLightGrayColor());
-		drawThickPolygon(g, rectPointsX, rectPointsY, 4);
-		if (clockPointsX != null)
-			g.drawPolyline(clockPointsX, clockPointsY, 3);
-		for (i = 0; i != getPostCount(); i++)
-			drawPost(g, pins[i].post.x, pins[i].post.y, nodes[i]);
-	}
 
 	int rectPointsX[], rectPointsY[];
 	int clockPointsX[], clockPointsY[];

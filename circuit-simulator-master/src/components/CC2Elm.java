@@ -61,12 +61,6 @@ public class CC2Elm extends ChipElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		pins[2].current = pins[0].current * gain;
-		drawChip(g);
-	}
-
-	@Override
 	public int getPostCount() {
 		return 3;
 	}

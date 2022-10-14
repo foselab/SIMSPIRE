@@ -67,31 +67,6 @@ public class LogicOutputElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		Font f = new Font("SansSerif", Font.BOLD, 20);
-		g.setFont(f);
-		// g.setColor(needsHighlight() ? selectColor : lightGrayColor);
-		g.setColor(getLightGrayColor());
-		String s = (volts[0] < threshold) ? "L" : "H";
-		if (isTernary()) {
-			if (volts[0] > 3.75)
-				s = "2";
-			else if (volts[0] > 1.25)
-				s = "1";
-			else
-				s = "0";
-		} else if (isNumeric())
-			s = (volts[0] < threshold) ? "0" : "1";
-		value = s;
-		setBbox(point1, lead1, 0);
-		drawCenteredText(g, s, getX2(), getY2(), true);
-		setVoltageColor(g, volts[0]);
-		drawThickLine(g, point1, lead1);
-		g.fillPolygon(arrowPoly);
-		drawPosts(g);
-	}
-
-	@Override
 	public void stamp() {
 		if (needsPullDown())
 			sim.stampResistor(nodes[0], 0, 1e6);

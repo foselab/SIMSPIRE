@@ -57,32 +57,6 @@ public class ZenerElm extends DiodeElm {
 		poly = createPolygon(pa[0], pa[1], lead2);
 	}
 
-	@Override
-	public void draw(Graphics g) {
-		setBbox(point1, point2, hs);
-
-		double v1 = volts[0];
-		double v2 = volts[1];
-
-		draw2Leads(g);
-
-		// draw arrow thingy
-		setPowerColor(g, true);
-		setVoltageColor(g, v1);
-		g.fillPolygon(poly);
-
-		// draw thing arrow is pointing to
-		setVoltageColor(g, v2);
-		drawThickLine(g, cathode[0], cathode[1]);
-
-		// draw wings on cathode
-		drawThickLine(g, wing[0], cathode[0]);
-		drawThickLine(g, wing[1], cathode[1]);
-
-		doDots(g);
-		drawPosts(g);
-	}
-
 	final double default_zvoltage = 5.6;
 
 	@Override

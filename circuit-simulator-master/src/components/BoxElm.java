@@ -45,21 +45,6 @@ public class BoxElm extends GraphicElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		// g.setColor(needsHighlight() ? selectColor : lightGrayColor);
-		g.setColor(needsHighlight() ? getSelectColor() : Color.GRAY);
-		setBbox(getX(), getY(), getX2(), getY2());
-		if (getX() < getX2() && getY() < getY2())
-			g.fillRect(getX(), getY(), getX2() - getX(), getY2() - getY());
-		else if (getX() > getX2() && getY() < getY2())
-			g.fillRect(getX2(), getY(), getX() - getX2(), getY2() - getY());
-		else if (getX() < getX2() && getY() > getY2())
-			g.fillRect(getX(), getY2(), getX2() - getX(), getY() - getY2());
-		else
-			g.fillRect(getX2(), getY2(), getX() - getX2(), getY() - getY2());
-	}
-
-	@Override
 	public EditInfo getEditInfo(int n) {
 		return null;
 	}

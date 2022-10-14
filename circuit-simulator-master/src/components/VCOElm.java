@@ -98,12 +98,6 @@ public class VCOElm extends ChipElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		computeCurrent();
-		drawChip(g);
-	}
-
-	@Override
 	public int getPostCount() {
 		return 6;
 	}

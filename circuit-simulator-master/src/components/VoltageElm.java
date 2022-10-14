@@ -39,8 +39,6 @@ public class VoltageElm extends CircuitElm {
 	double phaseShift;
 	double dutyCycle;
 	
-	//TODO simulatore con formule
-	String formula;
 	List<String> variables;
 	
 	VoltageElm(int xx, int yy, int wf) {
@@ -163,40 +161,8 @@ public class VoltageElm extends CircuitElm {
 		calcLeads((waveform == WF_DC || waveform == WF_VAR) ? 8 : circleSize * 2);
 	}
 
-	@Override
-	public void draw(Graphics g) {
-		setBbox(getX(), getY(), getX2(), getY2());
-		draw2Leads(g);
-		if (waveform == WF_DC) {
-			setPowerColor(g, false);
-			setVoltageColor(g, volts[0]);
-			interpPoint2(lead1, lead2, ps1, ps2, 0, 10);
-			drawThickLine(g, ps1, ps2);
-			setVoltageColor(g, volts[1]);
-			int hs = 16;
-			setBbox(point1, point2, hs);
-			interpPoint2(lead1, lead2, ps1, ps2, 1, hs);
-			drawThickLine(g, ps1, ps2);
-		} else {
-			setBbox(point1, point2, circleSize);
-			interpPoint(lead1, lead2, ps1, .5);
-			drawWaveform(g, ps1);
-		}
-		updateDotCount();
-		if (sim.getDragElm() != this) {
-			if (waveform == WF_DC)
-				drawDots(g, point1, point2, curcount);
-			else {
-				drawDots(g, point1, lead1, curcount);
-				drawDots(g, point2, lead2, -curcount);
-			}
-		}
-		drawPosts(g);
-	}
-
 	void drawWaveform(Graphics g, Point center) {
 		g.setColor(needsHighlight() ? getSelectColor() : Color.gray);
-		setPowerColor(g, false);
 		int xc = center.x;
 		int yc = center.y;
 		drawThickCircle(g, xc, yc, circleSize);
@@ -249,11 +215,6 @@ public class VoltageElm extends CircuitElm {
 			}
 			break;
 		}
-		}
-		if (sim.getShowValuesCheckItem().getState()) {
-			String s = getShortUnitText(frequency, "Hz");
-			if (dx == 0 || dy == 0)
-				drawValues(g, s, circleSize);
 		}
 	}
 

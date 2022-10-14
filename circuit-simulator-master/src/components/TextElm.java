@@ -72,40 +72,6 @@ public class TextElm extends GraphicElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		// Graphics2D g2 = (Graphics2D)g;
-		// g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-		// RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setColor(needsHighlight() ? getSelectColor() : getLightGrayColor());
-		Font f = new Font("SansSerif", 0, size);
-		g.setFont(f);
-		FontMetrics fm = g.getFontMetrics();
-		int i;
-		int maxw = -1;
-		for (i = 0; i != lines.size(); i++) {
-			int w = fm.stringWidth((lines.elementAt(i)));
-			if (w > maxw)
-				maxw = w;
-		}
-		int cury = getY();
-		setBbox(getX(), getY(), getX(), getY());
-		for (i = 0; i != lines.size(); i++) {
-			String s = (lines.elementAt(i));
-			if ((flags & FLAG_CENTER) != 0)
-				setX((sim.getWinSize().width - fm.stringWidth(s)) / 2);
-			g.drawString(s, getX(), cury);
-			if ((flags & FLAG_BAR) != 0) {
-				int by = cury - fm.getAscent();
-				g.drawLine(getX(), by, getX() + fm.stringWidth(s) - 1, by);
-			}
-			adjustBbox(getX(), cury - fm.getAscent(), getX() + fm.stringWidth(s), cury + fm.getDescent());
-			cury += fm.getHeight();
-		}
-		setX2(boundingBox.x + boundingBox.width);
-		setY2(boundingBox.y + boundingBox.height);
-	}
-
-	@Override
 	public EditInfo getEditInfo(int n) {
 		if (n == 0) {
 			EditInfo ei = new EditInfo("Text", 0, -1, -1);

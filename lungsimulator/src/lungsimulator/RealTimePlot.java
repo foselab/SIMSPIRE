@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.udojava.evalex.Expression;
-
-import circuits.Circuit;
 import components.ACVoltageElm;
 import components.CapacitorElm;
 import components.CircuitElm;
@@ -30,8 +28,7 @@ public class RealTimePlot {
 	 * archetype
 	 */
 	public CirSim buildCircuitSimulator(Patient patient, Archetype archetype) {
-		Circuit cir = new Circuit();
-		CirSim cirSim = new CirSim(cir);
+		CirSim cirSim = new CirSim();
 		cirSim.setTimeStep(0.1);
 		ResistorElm resistance = new ResistorElm(1, 1);
 		CapacitorElm capacitance = new CapacitorElm(0, 0);
@@ -163,8 +160,7 @@ public class RealTimePlot {
 	}
 	
 	public CirSim updateCircuitSimulator(Patient patient, Archetype archetype) {
-		Circuit cir = new Circuit();
-		CirSim cirSim = new CirSim(cir);
+		CirSim cirSim = new CirSim();
 		cirSim.setTimeStep(0.1);
 		ResistorElm resistance = new ResistorElm(1, 1);
 		CapacitorElm capacitance = new CapacitorElm(0, 0);

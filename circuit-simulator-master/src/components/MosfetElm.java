@@ -70,60 +70,6 @@ public class MosfetElm extends CircuitElm {
 	final int hs = 16;
 
 	@Override
-	public void draw(Graphics g) {
-		setBbox(point1, point2, hs);
-		setVoltageColor(g, volts[1]);
-		drawThickLine(g, src[0], src[1]);
-		setVoltageColor(g, volts[2]);
-		drawThickLine(g, drn[0], drn[1]);
-		int segments = 6;
-		int i;
-		setPowerColor(g, true);
-		double segf = 1. / segments;
-		for (i = 0; i != segments; i++) {
-			double v = volts[1] + (volts[2] - volts[1]) * i / segments;
-			setVoltageColor(g, v);
-			interpPoint(src[1], drn[1], ps1, i * segf);
-			interpPoint(src[1], drn[1], ps2, (i + 1) * segf);
-			drawThickLine(g, ps1, ps2);
-		}
-		setVoltageColor(g, volts[1]);
-		drawThickLine(g, src[1], src[2]);
-		setVoltageColor(g, volts[2]);
-		drawThickLine(g, drn[1], drn[2]);
-		if (!drawDigital()) {
-			setVoltageColor(g, pnp == 1 ? volts[1] : volts[2]);
-			g.fillPolygon(arrowPoly);
-		}
-		if (sim.getPowerCheckItem().getState())
-			g.setColor(Color.gray);
-		setVoltageColor(g, volts[0]);
-		drawThickLine(g, point1, gate[1]);
-		drawThickLine(g, gate[0], gate[2]);
-		if (drawDigital() && pnp == -1)
-			drawThickCircle(g, pcircle.x, pcircle.y, pcircler);
-		if ((flags & FLAG_SHOWVT) != 0) {
-			String s = "" + (vt * pnp);
-			g.setColor(getWhiteColor());
-			g.setFont(unitsFont);
-			drawCenteredText(g, s, getX2() + 2, getY2(), false);
-		}
-		if ((needsHighlight() || sim.getDragElm() == this) && dy == 0) {
-			g.setColor(Color.white);
-			g.setFont(unitsFont);
-			int ds = sign(dx);
-			g.drawString("G", gate[1].x - 10 * ds, gate[1].y - 5);
-			g.drawString(pnp == -1 ? "D" : "S", src[0].x - 3 + 9 * ds, src[0].y + 4); // x+6 if ds=1, -12 if -1
-			g.drawString(pnp == -1 ? "S" : "D", drn[0].x - 3 + 9 * ds, drn[0].y + 4);
-		}
-		curcount = updateDotCount(-ids, curcount);
-		drawDots(g, src[0], src[1], curcount);
-		drawDots(g, src[1], drn[1], curcount);
-		drawDots(g, drn[1], drn[0], curcount);
-		drawPosts(g);
-	}
-
-	@Override
 	public Point getPost(int n) {
 		return (n == 0) ? point1 : (n == 1) ? src[0] : drn[0];
 	}

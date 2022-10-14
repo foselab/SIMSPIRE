@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import circuits.Circuit;
 import components.CapacitorElm;
 import components.CircuitElm;
 import components.CircuitNode;
@@ -19,8 +18,6 @@ public class TestResistor {
 
 	@Test
 	public void test1() {
-		
-		Circuit cir = new Circuit();
 		
 		// R
 		ResistorElm R = new ResistorElm(1,1);
@@ -43,7 +40,7 @@ public class TestResistor {
 			c.setPoints();
 		}
 		
-		CirSim cirSim  = new CirSim(cir);				
+		CirSim cirSim  = new CirSim();				
 		cirSim.setElmList(elements);		
 		CircuitElm.sim = cirSim;
 		cirSim.setTimeStep(0.001);

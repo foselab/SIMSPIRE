@@ -54,26 +54,6 @@ public class AnalogSwitchElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		int openhs = 16;
-		int hs = (open) ? openhs : 0;
-		setBbox(point1, point2, openhs);
-
-		draw2Leads(g);
-
-		g.setColor(getLightGrayColor());
-		interpPoint(lead1, lead2, ps, 1, hs);
-		drawThickLine(g, lead1, ps);
-
-		setVoltageColor(g, volts[2]);
-		drawThickLine(g, point3, lead3);
-
-		if (!open)
-			doDots(g);
-		drawPosts(g);
-	}
-
-	@Override
 	void calculateCurrent() {
 		current = (volts[0] - volts[1]) / resistance;
 	}

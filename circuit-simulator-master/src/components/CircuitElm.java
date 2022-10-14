@@ -237,40 +237,11 @@ public abstract class CircuitElm implements Editable {
 		d.y = (int) Math.floor(a.y * (1 - f) + b.y * f - g * gy + .48);
 	}
 
-	void draw2Leads(Graphics g) {
-		// draw first lead
-		setVoltageColor(g, volts[0]);
-		drawThickLine(g, point1, lead1);
-
-		// draw second lead
-		setVoltageColor(g, volts[1]);
-		drawThickLine(g, lead2, point2);
-	}
-
 	Point[] newPointArray(int n) {
 		Point a[] = new Point[n];
 		while (n > 0)
 			a[--n] = new Point();
 		return a;
-	}
-
-	void drawDots(Graphics g, Point pa, Point pb, double pos) {
-		if (sim.getStoppedCheck().getState() || pos == 0 || !sim.getDotsCheckItem().getState())
-			return;
-		int dx = pb.x - pa.x;
-		int dy = pb.y - pa.y;
-		double dn = Math.sqrt(dx * dx + dy * dy);
-		g.setColor(Color.yellow);
-		int ds = 16;
-		pos %= ds;
-		if (pos < 0)
-			pos += ds;
-		double di = 0;
-		for (di = pos; di < dn; di += ds) {
-			int x0 = (int) (pa.x + di * dx / dn);
-			int y0 = (int) (pa.y + di * dy / dn);
-			g.fillRect(x0 - 1, y0 - 1, 4, 4);
-		}
 	}
 
 	Polygon calcArrow(Point a, Point b, double al, double aw) {
@@ -572,7 +543,6 @@ public abstract class CircuitElm implements Editable {
 				hsx = -hsx;
 			interpPoint(p1, p2, ps2, i * segf, hsx * hs);
 			double v = v1 + (v2 - v1) * i / segments;
-			setVoltageColor(g, v);
 			drawThickLine(g, ps1, ps2);
 			ps1.setLocation(ps2);
 		}
@@ -674,30 +644,6 @@ public abstract class CircuitElm implements Editable {
 		return getUnitText(Math.abs(i), "A");
 	}
 
-	void updateDotCount() {
-		curcount = updateDotCount(current, curcount);
-	}
-
-	double updateDotCount(double cur, double cc) {
-		if (sim.getStoppedCheck().getState())
-			return cc;
-		double cadd = cur * getCurrentMult();
-		/*
-		 * if (cur != 0 && cadd <= .05 && cadd >= -.05) cadd = (cadd < 0) ? -.05 : .05;
-		 */
-		cadd %= 8;
-		/*
-		 * if (cadd > 8) cadd = 8; if (cadd < -8) cadd = -8;
-		 */
-		return cc + cadd;
-	}
-
-	void doDots(Graphics g) {
-		updateDotCount();
-		if (sim.getDragElm() != this)
-			drawDots(g, point1, point2, curcount);
-	}
-
 	void doAdjust() {
 	}
 
@@ -711,34 +657,6 @@ public abstract class CircuitElm implements Editable {
 		arr[1] = "I = " + getCurrentDText(getCurrent());
 		arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
 		return 3;
-	}
-
-	void setVoltageColor(Graphics g, double volts) {
-		if (needsHighlight()) {
-			g.setColor(getSelectColor());
-			return;
-		}
-		if (!sim.getVoltsCheckItem().getState()) {
-			if (!sim.getPowerCheckItem().getState()) // && !conductanceCheckItem.getState())
-				g.setColor(getWhiteColor());
-			return;
-		}
-		int c = (int) ((volts + voltageRange) * (colorScaleCount - 1) / (voltageRange * 2));
-		if (c < 0)
-			c = 0;
-		if (c >= colorScaleCount)
-			c = colorScaleCount - 1;
-		g.setColor(colorScale[c]);
-	}
-
-	void setPowerColor(Graphics g, boolean yellow) {
-		/*
-		 * if (conductanceCheckItem.getState()) { setConductanceColor(g,
-		 * current/getVoltageDiff()); return; }
-		 */
-		if (!sim.getPowerCheckItem().getState())
-			return;
-		setPowerColor(g, getPower());
 	}
 
 	void setPowerColor(Graphics g, double w0) {
@@ -967,11 +885,6 @@ public abstract class CircuitElm implements Editable {
 
 	public static void setPowerMult(double powerMult) {
 		CircuitElm.powerMult = powerMult;
-	}
-
-	public void draw(Graphics g) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public String toString() {

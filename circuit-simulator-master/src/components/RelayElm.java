@@ -83,59 +83,7 @@ public class RelayElm extends CircuitElm {
 		return super.dump() + " " + poleCount + " " + inductance + " " + coilCurrent + " " + r_on + " " + r_off + " "
 				+ onCurrent + " " + coilR;
 	}
-
-	@Override
-	public void draw(Graphics g) {
-		int i, p;
-		for (i = 0; i != 2; i++) {
-			setVoltageColor(g, volts[nCoil1 + i]);
-			drawThickLine(g, coilLeads[i], coilPosts[i]);
-		}
-		int x = ((flags & FLAG_SWAP_COIL) != 0) ? 1 : 0;
-		drawCoil(g, dsign * 6, coilLeads[x], coilLeads[1 - x], volts[nCoil1 + x], volts[nCoil2 - x]);
-
-		// draw lines
-		g.setColor(Color.darkGray);
-		for (i = 0; i != poleCount; i++) {
-			if (i == 0)
-				interpPoint(point1, point2, lines[i * 2], .5, openhs * 2 + 5 * dsign - i * openhs * 3);
-			else
-				interpPoint(point1, point2, lines[i * 2], .5,
-						(int) (openhs * (-i * 3 + 3 - .5 + d_position)) + 5 * dsign);
-			interpPoint(point1, point2, lines[i * 2 + 1], .5, (int) (openhs * (-i * 3 - .5 + d_position)) - 5 * dsign);
-			g.drawLine(lines[i * 2].x, lines[i * 2].y, lines[i * 2 + 1].x, lines[i * 2 + 1].y);
-		}
-
-		for (p = 0; p != poleCount; p++) {
-			int po = p * 3;
-			for (i = 0; i != 3; i++) {
-				// draw lead
-				setVoltageColor(g, volts[nSwitch0 + po + i]);
-				drawThickLine(g, swposts[p][i], swpoles[p][i]);
-			}
-
-			interpPoint(swpoles[p][1], swpoles[p][2], ptSwitch[p], d_position);
-			// setVoltageColor(g, volts[nSwitch0]);
-			g.setColor(Color.lightGray);
-			drawThickLine(g, swpoles[p][0], ptSwitch[p]);
-			switchCurCount[p] = updateDotCount(switchCurrent[p], switchCurCount[p]);
-			drawDots(g, swposts[p][0], swpoles[p][0], switchCurCount[p]);
-
-			if (i_position != 2)
-				drawDots(g, swpoles[p][i_position + 1], swposts[p][i_position + 1], switchCurCount[p]);
-		}
-
-		coilCurCount = updateDotCount(coilCurrent, coilCurCount);
-
-		drawDots(g, coilPosts[0], coilLeads[0], coilCurCount);
-		drawDots(g, coilLeads[0], coilLeads[1], coilCurCount);
-		drawDots(g, coilLeads[1], coilPosts[1], coilCurCount);
-
-		drawPosts(g);
-		setBbox(coilPosts[0], coilLeads[1], 0);
-		adjustBbox(swpoles[poleCount - 1][0], swposts[poleCount - 1][1]); // XXX
-	}
-
+	
 	@Override
 	public void setPoints() {
 		super.setPoints();

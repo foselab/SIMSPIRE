@@ -23,11 +23,11 @@ public class Ventilator {
 			ZMQ.Socket socket = context.createSocket(SocketType.REP);
 			socket.bind("tcp://localhost:5555");
 			System.out.println("starting ventilator...");
-			
+	
 			while (!Thread.currentThread().isInterrupted()) {				
 				// If there are no messages available on the specified socket, reply is null (non-blocking mode)
 				byte[] reply = socket.recv(ZMQ.DONTWAIT);
-
+				
 				if (reply != null) {					
 					// Print the message
 					String msg = new String(reply, ZMQ.CHARSET);

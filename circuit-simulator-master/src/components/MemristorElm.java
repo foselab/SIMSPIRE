@@ -51,40 +51,6 @@ public class MemristorElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		int segments = 6;
-		int i;
-		int ox = 0;
-		double v1 = volts[0];
-		double v2 = volts[1];
-		int hs = 2 + (int) (8 * (1 - dopeWidth / totalWidth));
-		setBbox(point1, point2, hs);
-		draw2Leads(g);
-		setPowerColor(g, true);
-		double segf = 1. / segments;
-
-		// draw zigzag
-		for (i = 0; i <= segments; i++) {
-			int nx = (i & 1) == 0 ? 1 : -1;
-			if (i == segments)
-				nx = 0;
-			double v = v1 + (v2 - v1) * i / segments;
-			setVoltageColor(g, v);
-			interpPoint(lead1, lead2, ps1, i * segf, hs * ox);
-			interpPoint(lead1, lead2, ps2, i * segf, hs * nx);
-			drawThickLine(g, ps1, ps2);
-			if (i == segments)
-				break;
-			interpPoint(lead1, lead2, ps1, (i + 1) * segf, hs * nx);
-			drawThickLine(g, ps1, ps2);
-			ox = nx;
-		}
-
-		doDots(g);
-		drawPosts(g);
-	}
-
-	@Override
 	public boolean nonLinear() {
 		return true;
 	}

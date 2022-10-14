@@ -65,24 +65,6 @@ public class LogicInputElm extends SwitchElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		Font f = new Font("SansSerif", Font.BOLD, 20);
-		g.setFont(f);
-		g.setColor(needsHighlight() ? getSelectColor() : getWhiteColor());
-		String s = position == 0 ? "L" : "H";
-		if (isNumeric())
-			s = "" + position;
-		setBbox(point1, lead1, 0);
-		drawCenteredText(g, s, getX2(), getY2(), true);
-		setVoltageColor(g, volts[0]);
-		drawThickLine(g, point1, lead1);
-		g.fillPolygon(arrowPoly);
-		updateDotCount();
-		drawDots(g, point1, lead1, curcount);
-		drawPosts(g);
-	}
-
-	@Override
 	public void setCurrent(int vs, double c) {
 		current = -c;
 	}
