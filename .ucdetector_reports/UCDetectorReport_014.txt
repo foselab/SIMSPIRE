@@ -1,0 +1,8 @@
+Created with UCDetector 2.0.0	2022-10-14 12:19:52	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+lungsimulator.components.Formula.Formula(Formula.java:12)	Constructor "Formula.Formula(String,boolean,boolean,String,List<String>)" has 0 references	Formula.Formula(String,boolean,boolean,String,List<String>)	org.ucdetector.analyzeMarkerReference	
+lungsimulator.components.Formula.id(Formula.java:6)	Change visibility of Field "Formula.id" to private	Formula.id	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.Formula.isTimeDependent(Formula.java:7)	Change visibility of Field "Formula.isTimeDependent" to private	Formula.isTimeDependent	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.Formula.isExternal(Formula.java:8)	Change visibility of Field "Formula.isExternal" to private	Formula.isExternal	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.Formula.formula(Formula.java:9)	Change visibility of Field "Formula.formula" to private	Formula.formula	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.components.Formula.variables(Formula.java:10)	Change visibility of Field "Formula.variables" to private	Formula.variables	org.ucdetector.analyzeMarkerVisibilityPrivate	

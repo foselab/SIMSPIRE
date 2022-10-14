@@ -24,14 +24,14 @@ public class Validator {
 	 * Internal logger for errors report
 	 */
 	private static final Logger LOGGER = Logger.getLogger(Validator.class.getName());
-	
+
 	/**
 	 * Init validator fields
 	 */
 	public Validator() {
 		atLeastOnePres = false;
 	}
-	
+
 	/**
 	 * Checks for missing or not properly built sections of the patient model and
 	 * its archetype
@@ -43,44 +43,27 @@ public class Validator {
 
 		LOGGER.log(Level.INFO, "Init validation process");
 
-		if (patient == null || archetype == null) {
-			throw new InspireException("At least one model is not properly built");
-		}
+		// objects are not null and schema id is equal for both objects
+		checkConsistency(patient, archetype);
 
-		if (patient.getSchema() != archetype.getSchema()) {
-			throw new InspireException("Patient schema and Archetype schema are inconsistent");
-		}
+		// check there are minimum elements required for a proper implementation
+		patient.validate();
+		archetype.validate();
 
 		final List<Element> patientElement = new ArrayList<>(patient.getElementsList());
-
-		if (patientElement == null || patientElement.isEmpty() || patientElement != null && patientElement.size() < 2) {
-			throw new InspireException("Expected at least 2 components");
-		}
-
 		final Map<String, String> archetypeParams = new ConcurrentHashMap<>(archetype.getParameters());
 
-		if (archetypeParams == null || archetypeParams.isEmpty()) {
-			throw new InspireException("Expected some parameters but found 0");
-		}
-
-		String elementType;
-		Formula elementFormula;
-
 		for (final Element e : patientElement) {
-			elementType = e.getType();
-			if (elementType == null || elementType.isEmpty()) {
-				throw new InspireException("Missing element type");
+			// check element
+			e.validate();
+
+			// check formula
+			checkElementFormula(archetypeParams, e.getAssociatedFormula(), e.getType(), e.getElementName());
+
+			// once one pressure point is found, there is no need to keep checking
+			if (!atLeastOnePres) {
+				atLeastOnePres = e.atLeastOnePressurePoint();
 			}
-
-			if (e.getX() < 0 || e.getY() < 0 || e.getX1() < 0 || e.getX1() < 0) {
-				throw new InspireException("Invalid coordinates");
-			}
-
-			elementFormula = e.getAssociatedFormula();
-			checkElementFormula(archetypeParams, elementFormula, elementType);
-
-			checkPressurePoints(e);
-
 		}
 
 		if (!atLeastOnePres) {
@@ -90,33 +73,18 @@ public class Validator {
 		LOGGER.log(Level.INFO, "Validation process successfully completed");
 	}
 
-	private void checkPressurePoints(final Element element) {
-		
-		if (element.isShowLeft() && (element.getIdLeft() == null || element.getIdLeft().equals(""))) {
-			throw new InspireException("Missing id for left node");
+	private void checkConsistency(final Patient patient, final Archetype archetype) {
+		if (patient == null || archetype == null) {
+			throw new InspireException("At least one model is not properly built");
 		}
 
-		if (!element.isShowLeft() && element.getIdLeft() != null) {
-			throw new InspireException(
-					"Inconsistency error: an id for left node has been set, but showLeft is false");
-		}
-
-		if (element.isShowRight() && (element.getIdRight() == null || element.getIdRight().equals(""))) {
-			throw new InspireException("Missing id for right node");
-		}
-
-		if (!element.isShowRight() && element.getIdRight() != null) {
-			throw new InspireException(
-					"Inconsistency error: an id for right node has been set, but showRight is false");
-		}
-
-		if (element.isShowLeft() || element.isShowRight()) {
-			atLeastOnePres = true;
+		if (patient.getSchema() != archetype.getSchema()) {
+			throw new InspireException("Patient schema and Archetype schema are inconsistent");
 		}
 	}
 
 	private void checkElementFormula(final Map<String, String> archetypeParams, final Formula elementFormula,
-			final String elementType) {
+			final String elementType, final String elementName) {
 		String formula;
 		if (elementFormula == null) {
 			throw new InspireException("Missing formula associated to " + elementType + " element");
@@ -125,21 +93,21 @@ public class Validator {
 			if (formula == null || formula.isEmpty()) {
 				throw new InspireException("Missing formula for element: " + elementType);
 			}
-			checkElementVariables(archetypeParams, elementFormula, elementType);
+			checkElementVariables(archetypeParams, elementFormula, elementType, elementName);
 		}
 	}
 
 	private void checkElementVariables(final Map<String, String> archetypeParams, final Formula elementFormula,
-			final String elementType) {
+			final String elementType, final String elementName) {
 		final List<String> elementVariables = new ArrayList<>(elementFormula.getVariables());
 		boolean varIsTime;
 
 		if (elementVariables == null || elementVariables.isEmpty()) {
 			throw new InspireException(
-					"Missing variables for formula: " + elementFormula.getId() + "of element " + elementType);
+					"Missing variables for formula: " + elementName + "of element " + elementType);
 		} else {
-			checkTimeDependency(elementFormula, elementVariables);
-			
+			checkTimeDependency(elementFormula, elementVariables, elementName);
+
 			for (final String var : elementVariables) {
 				varIsTime = "TIME".equals(var);
 
@@ -150,18 +118,18 @@ public class Validator {
 		}
 	}
 
-	private void checkTimeDependency(final Formula elementFormula, final List<String> elementVariables) {
+	private void checkTimeDependency(final Formula elementFormula, final List<String> elementVariables, final String elementName) {
 		final boolean timeIsAVar = elementVariables.contains("TIME");
 		final boolean formulaHasTime = elementFormula.getIsTimeDependent();
-		
+
 		if (timeIsAVar && !formulaHasTime) {
-				throw new InspireException("Inconsistency error: formula " + elementFormula.getId()
-						+ " is not time-dependent, but var TIME was found");
+			throw new InspireException("Inconsistency error: formula " + elementName
+					+ " is not time-dependent, but var TIME was found");
 		}
-		
-		if(!timeIsAVar && formulaHasTime) {
-			throw new InspireException("Inconsistency error: formula " + elementFormula.getId()
-			+ " is time-dependent, but var TIME was not found");
+
+		if (!timeIsAVar && formulaHasTime) {
+			throw new InspireException("Inconsistency error: formula " + elementName
+					+ " is time-dependent, but var TIME was not found");
 		}
 	}
 }

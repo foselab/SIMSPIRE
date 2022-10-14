@@ -55,7 +55,7 @@ public class RealTimePlot {
 				// resistance
 				if (e.getType().equals(resistance.getClass().getSimpleName())) {
 					resistance = new ResistorElm(1, 1);
-					resistance.setId(e.getAssociatedFormula().getId());
+					resistance.setId(e.getElementName());
 					resistance.setX(e.getX());
 					resistance.setY(e.getY());
 					resistance.setX2Y2(e.getX1(), e.getY1());
@@ -76,7 +76,7 @@ public class RealTimePlot {
 				// capacitor
 				if (e.getType().equals(capacitance.getClass().getSimpleName())) {
 					capacitance = new CapacitorElm(0, 0);
-					capacitance.setId(e.getAssociatedFormula().getId());
+					capacitance.setId(e.getElementName());
 					capacitance.setX(e.getX());
 					capacitance.setY(e.getY());
 					capacitance.setX2Y2(e.getX1(), e.getY1());
@@ -98,7 +98,7 @@ public class RealTimePlot {
 
 			// ac voltage
 			if (e.getType().equals(acVoltage.getClass().getSimpleName())) {
-				acVoltage.setId(e.getAssociatedFormula().getId());
+				acVoltage.setId(e.getElementName());
 				acVoltage.setX(e.getX());
 				acVoltage.setY(e.getY());
 				acVoltage.setX2Y2(e.getX1(), e.getY1());
@@ -114,7 +114,7 @@ public class RealTimePlot {
 
 			// dc voltage
 			if (e.getType().equals(dcVoltage.getClass().getSimpleName())) {
-				dcVoltage.setId(e.getAssociatedFormula().getId());
+				dcVoltage.setId(e.getElementName());
 				dcVoltage.setX(e.getX());
 				dcVoltage.setY(e.getY());
 				dcVoltage.setX2Y2(e.getX1(), e.getY1());
@@ -133,7 +133,7 @@ public class RealTimePlot {
 			}
 
 			if (e.getType().equals(externalVoltage.getClass().getSimpleName())) {
-				externalVoltage.setId(e.getAssociatedFormula().getId());
+				externalVoltage.setId(e.getElementName());
 				externalVoltage.setX(e.getX());
 				externalVoltage.setY(e.getY());
 				externalVoltage.setX2Y2(e.getX1(), e.getY1());

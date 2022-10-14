@@ -1,0 +1,3 @@
+Created with UCDetector 2.0.0	2022-10-14 12:21:41	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+lungsimulator.components.Formula.Formula(Formula.java:15)	Constructor "Formula.Formula(String,boolean,boolean,String,List<String>)" has 0 references	Formula.Formula(String,boolean,boolean,String,List<String>)	org.ucdetector.analyzeMarkerReference	

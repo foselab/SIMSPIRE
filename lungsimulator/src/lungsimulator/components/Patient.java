@@ -2,26 +2,41 @@ package lungsimulator.components;
 
 import java.util.List;
 
-public class Patient {
-	private int schema;
-	// list of the circuit's components 
-	private List<Element> elementsList;
-	// list of formulas that don't represent an Element of the circuit
-	private List<Formula> additionalFormulas;
+import lungsimulator.utils.InspireException;
 
-	public Patient(int schema, List<Element> elementsList, List<Formula> additionalFormulas) {
-		this.schema = schema;
-		this.elementsList = elementsList;
-		this.additionalFormulas = additionalFormulas;
-	}
+/**
+ * Describes all the attributes of a patient model
+ */
+public class Patient {
+	/**
+	 * Label assigned to the patient model
+	 */
+	private int schema;
 	
+	/**
+	 *  List of all circuit components
+	 */
+	private List<Element> elementsList;
+	
+	/**
+	 * Constructor to properly use YAML file
+	 */
 	public Patient() {}
+	
+	/**
+	 * Checks there are at least two elements
+	 */
+	public void validate() {
+		if (elementsList == null || elementsList.isEmpty() || elementsList != null && elementsList.size() < 2) {
+			throw new InspireException("Expected at least 2 components");
+		}
+	}
 
 	public int getSchema() {
 		return schema;
 	}
 
-	public void setSchema(int schema) {
+	public void setSchema(final int schema) {
 		this.schema = schema;
 	}
 
@@ -29,15 +44,7 @@ public class Patient {
 		return elementsList;
 	}
 
-	public void setElementsList(List<Element> elementsList) {
+	public void setElementsList(final List<Element> elementsList) {
 		this.elementsList = elementsList;
-	}
-
-	public List<Formula> getAdditionalFormulas() {
-		return additionalFormulas;
-	}
-
-	public void setAdditionalFormulas(List<Formula> additionalFormulas) {
-		this.additionalFormulas = additionalFormulas;
 	}
 }

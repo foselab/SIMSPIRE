@@ -234,7 +234,7 @@ public class GraphicInterface {
 		int yStart = 27;
 		for (final Element e : patient.getElementsList()) {
 			String elmValue;
-			String elmId = e.getAssociatedFormula().getId();
+			String elmId = e.getElementName();
 
 			if (e.isShowLeft()) {
 				pressureCoord.put(e.getIdLeft(), "left");

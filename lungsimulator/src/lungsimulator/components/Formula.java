@@ -2,27 +2,39 @@ package lungsimulator.components;
 
 import java.util.List;
 
+/**
+ * Describes the properties of the formula used to calculate the element's value
+ */
 public class Formula {
-	String id;
-	boolean isTimeDependent;
-	boolean isExternal;
-	String formula;
-	List<String> variables;
+	/**
+	 * True if the formula has a time variable
+	 */
+	private boolean isTimeDependent;
 	
-	public Formula(String id, boolean isTimeDependent, boolean isExternal, String formula, List<String> variables) {
-		this.id = id;
-		this.isTimeDependent = isTimeDependent;
-		this.isExternal = isExternal;
-		this.formula = formula;
-		this.variables = variables;
-	}
+	/**
+	 * True if the value is not in the archetype
+	 */
+	private boolean isExternal;
 	
+	/**
+	 * The formula to calculate the element's value
+	 */
+	private String formula;
+	
+	/**
+	 * Variables associated to the formula
+	 */
+	private List<String> variables;
+	
+	/**
+	 * Constructor to properly use YAML file
+	 */
 	public Formula() {}
 	
 	public boolean getIsTimeDependent() {
 		return isTimeDependent;
 	}
-	public void setIsTimeDependent(boolean isTimeDependent) {
+	public void setIsTimeDependent(final boolean isTimeDependent) {
 		this.isTimeDependent = isTimeDependent;
 	}
 	
@@ -30,29 +42,21 @@ public class Formula {
 		return isExternal;
 	}
 
-	public void setIsExternal(boolean isExternal) {
+	public void setIsExternal(final boolean isExternal) {
 		this.isExternal = isExternal;
 	}
 
 	public String getFormula() {
 		return formula;
 	}
-	public void setFormula(String formula) {
+	public void setFormula(final String formula) {
 		this.formula = formula;
 	}
 	public List<String> getVariables() {
 		return variables;
 	}
-	public void setVariables(List<String> variables) {
+	public void setVariables(final List<String> variables) {
 		this.variables = variables;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 }

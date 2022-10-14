@@ -11,7 +11,6 @@ public class Utils {
 	/**
 	 * Shift data when a new one has to be included
 	 *
-	 * @param rtp
 	 * @param initdataPressure
 	 * @param initdataVentilatorPressure
 	 * @param initdataFlow
@@ -38,7 +37,6 @@ public class Utils {
 	/**
 	 * Init data vectors with zeros
 	 *
-	 * @param rtp
 	 * @param initdataPressure
 	 * @param initdataVentilatorPressure
 	 * @param initdataFlow

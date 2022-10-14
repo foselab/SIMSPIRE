@@ -1,31 +1,51 @@
 package lungsimulator.components;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import lungsimulator.utils.InspireException;
+
+/**
+ * Contains all the initial values of variables
+ */
 public class Archetype {
-	int schema;
-	HashMap<String, String> parameters;
+	/**
+	 * Label assigned to the chosen archetype
+	 */
+	private int schema;
 	
-	public Archetype(int schema, HashMap<String, String> parameters) {
-		this.schema = schema;
-		this.parameters = parameters;
-	}
+	/**
+	 * Maps each variable to its initial value
+	 */
+	private Map<String, String> parameters = new ConcurrentHashMap<>();
 	
+	/**
+	 * Constructor to properly use YAML file
+	 */
 	public Archetype() {}
+	
+	/**
+	 * Checks there is at least one variable
+	 */
+	public void validate() {
+		if (parameters == null || parameters.isEmpty()) {
+			throw new InspireException("Expected some parameters but found 0");
+		}
+	}
 
 	public int getSchema() {
 		return schema;
 	}
 
-	public void setSchema(int schema) {
+	public void setSchema(final int schema) {
 		this.schema = schema;
 	}
 
-	public HashMap<String, String> getParameters() {
+	public Map<String, String> getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(HashMap<String, String> parameters) {
+	public void setParameters(final Map<String, String> parameters) {
 		this.parameters = parameters;
 	}
 }

@@ -1,0 +1,4 @@
+Created with UCDetector 2.0.0	2022-10-14 11:57:30	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+lungsimulator.components.Archetype.Archetype(Archetype.java:17)	Constructor "Archetype.Archetype(int,HashMap<String,String>)" has 0 references	Archetype.Archetype(int,HashMap<String,String>)	org.ucdetector.analyzeMarkerReference	
+lungsimulator.components.Archetype.parameters(Archetype.java:15)	Change visibility of Field "Archetype.parameters" to private	Archetype.parameters	org.ucdetector.analyzeMarkerVisibilityPrivate	
