@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import lungsimulator.components.Archetype;
 import lungsimulator.components.Patient;
+import lungsimulator.components.SimulatorParams;
 import lungsimulator.utils.Validator;
 import lungsimulator.utils.YamlReader;
 import simulator.CirSim;
@@ -27,6 +28,11 @@ public class LungSimulator {
 	 * Patient health description
 	 */
 	public transient Archetype archetype;
+	
+	/**
+	 * Patient demographic data
+	 */
+	public transient SimulatorParams demographicData;
 
 	/**
 	 * Manages user interface properties
@@ -50,20 +56,21 @@ public class LungSimulator {
 		if (chosenSchema != null) {
 			if (chosenSchema.contains("***")) {
 				final String[] fileNames = chosenSchema.split("***");
-				yamlReader = new YamlReader(fileNames[0], fileNames[1]);
+				yamlReader = new YamlReader(fileNames[0], fileNames[1], fileNames[2]);
 			} else {
 				yamlReader = new YamlReader(chosenSchema);
 			}
 			// Read patient model and patient archetype
 			patient = yamlReader.readPatientModel();
 			archetype = yamlReader.readArchetypeParameters();
+			demographicData = yamlReader.readDemographicData();
 
 			// Validation
 			final Validator validator = new Validator();
-			validator.evaluate(patient, archetype);
+			validator.evaluate(patient, archetype, demographicData);
 
 			// Frame configuration
-			userInterface.frameConfig(patient, archetype);
+			userInterface.frameConfig(patient, archetype, demographicData);
 		}
 	}
 

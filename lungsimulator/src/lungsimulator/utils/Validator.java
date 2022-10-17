@@ -11,6 +11,7 @@ import lungsimulator.components.Archetype;
 import lungsimulator.components.Element;
 import lungsimulator.components.Formula;
 import lungsimulator.components.Patient;
+import lungsimulator.components.SimulatorParams;
 import lungsimulator.exceptions.InspireException;
 
 /**
@@ -34,22 +35,25 @@ public class Validator {
 	}
 
 	/**
-	 * Checks for missing or not properly built sections of the patient model and
-	 * its archetype
+	 * Checks for missing or not properly built sections of the patient model,
+	 * its archetype and its demographic data
 	 * 
 	 * @param patient   the chosen patient model
 	 * @param archetype the chosen archetype
+	 * @param demographicData demographic data of the patient
 	 */
-	public void evaluate(final Patient patient, final Archetype archetype) {
+	public void evaluate(final Patient patient, final Archetype archetype, final SimulatorParams demographicData) {
 
 		LOGGER.log(Level.INFO, "Init validation process");
 
 		// objects are not null and schema id is equal for both objects
-		checkConsistency(patient, archetype);
+		checkConsistency(patient, archetype, demographicData);
 
 		// check there are minimum elements required for a proper implementation
 		patient.validate();
 		archetype.validate();
+		// check demographic data are legit
+		demographicData.validate();
 
 		final List<Element> patientElement = new ArrayList<>(patient.getElementsList());
 		final Map<String, String> archetypeParams = new ConcurrentHashMap<>(archetype.getParameters());
@@ -74,9 +78,17 @@ public class Validator {
 		LOGGER.log(Level.INFO, "Validation process successfully completed");
 	}
 
-	private void checkConsistency(final Patient patient, final Archetype archetype) {
-		if (patient == null || archetype == null) {
-			throw new InspireException("At least one model is not properly built");
+	private void checkConsistency(final Patient patient, final Archetype archetype, SimulatorParams demographicData) {
+		if (patient == null) {
+			throw new InspireException("Lung model file is not properly built");
+		}
+		
+		if(archetype == null) {
+			throw new InspireException("Archetype file is not properly built");
+		}
+		
+		if(demographicData == null) {
+			throw new InspireException("Demographic data file is not properly built");
 		}
 
 		if (patient.getSchema() != archetype.getSchema()) {

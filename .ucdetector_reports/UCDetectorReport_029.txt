@@ -1,0 +1,4 @@
+Created with UCDetector 2.0.0	2022-10-17 12:04:01	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+lungsimulator.utils.YamlReader.YamlReader(YamlReader.java:58)	Constructor "YamlReader.YamlReader(String,String,String)" has 0 references	YamlReader.YamlReader(String,String,String)	org.ucdetector.analyzeMarkerReference	
+lungsimulator.utils.YamlReader.readDemographicData(YamlReader.java:132)	Method "YamlReader.readDemographicData()" has 0 references	YamlReader.readDemographicData()	org.ucdetector.analyzeMarkerReference	

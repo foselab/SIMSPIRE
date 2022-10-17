@@ -1,0 +1,3 @@
+Created with UCDetector 2.0.0	2022-10-17 15:08:03	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+lungsimulator.components.SimulatorParams.SimulatorParams(SimulatorParams.java:12)	Constructor "SimulatorParams.SimulatorParams(String,int,double,double)" has 0 references	SimulatorParams.SimulatorParams(String,int,double,double)	org.ucdetector.analyzeMarkerReference	

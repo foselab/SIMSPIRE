@@ -1,31 +1,20 @@
 package lungsimulator;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.GridLayout;
-import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Semaphore;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -46,6 +35,7 @@ import components.CircuitElm;
 import lungsimulator.components.Archetype;
 import lungsimulator.components.Element;
 import lungsimulator.components.Patient;
+import lungsimulator.components.SimulatorParams;
 import lungsimulator.utils.Utils;
 import simulator.CirSim;
 
@@ -115,8 +105,12 @@ public class GraphicInterface {
 			Object arcFile = JOptionPane.showInputDialog(null,
 					"Insert your archetype file name (e.g. myArcModel.yaml) \n The file must be in config folder",
 					"Choose Archetype File", JOptionPane.PLAIN_MESSAGE, null, null, null);
+			Object demFile = JOptionPane.showInputDialog(null,
+					"Insert your demographic data file name (e.g. myDemModel.yaml) \n The file must be in config folder",
+					"Choose Demographic Data File", JOptionPane.PLAIN_MESSAGE, null, null, null);
 			String config = "config/";
-			modelChoice = config + String.valueOf(lungFile) + "***" + config + String.valueOf(arcFile);
+			modelChoice = config + String.valueOf(lungFile) + "***" + config + String.valueOf(arcFile) + "***" + config
+					+ String.valueOf(demFile);
 
 		} else {
 			String name = var.replace("Model of ", "");
@@ -132,7 +126,7 @@ public class GraphicInterface {
 	 * @param archetype
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void frameConfig(Patient patient, Archetype archetype) {
+	public void frameConfig(Patient patient, Archetype archetype, SimulatorParams demographicData) {
 		// frame configuration
 		frame = new JFrame();
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // fullscreen option
@@ -142,7 +136,7 @@ public class GraphicInterface {
 		int w = 1500;
 		int h = 400;
 
-		patientPanelConfig(patient, archetype);
+		patientPanelConfig(patient, archetype, demographicData);
 
 		// Init the arrays for the data
 		initdataPressure = new double[pressureCoord.size() + 1][MAXDATA];
@@ -226,12 +220,12 @@ public class GraphicInterface {
 
 	}
 
-	private void patientPanelConfig(final Patient patient, final Archetype archetype) {
+	private void patientPanelConfig(final Patient patient, final Archetype archetype, SimulatorParams demographicData) {
 		patientPanel = new JPanel();
 		frame.getContentPane().add(patientPanel);
 		patientPanel.setLayout(null);
 
-		int yStart = 27;
+		int yInit = 27;
 		for (final Element e : patient.getElementsList()) {
 			String elmValue;
 			String elmId = e.getElementName();
@@ -247,43 +241,44 @@ public class GraphicInterface {
 			// resistance
 			if (e.getType().equals("ResistorElm")) {
 				elmValue = archetype.getParameters().get(e.getAssociatedFormula().getVariables().get(0));
-				graphicDesignForElement(elmId, UMRES, yStart, Double.parseDouble(elmValue), false);
+				graphicDesignForElement(elmId, UMRES, yInit, Double.parseDouble(elmValue), false);
 				flowIds.add(elmId);
 			}
 
 			// capacitor
 			if (e.getType().equals("CapacitorElm")) {
 				elmValue = archetype.getParameters().get(e.getAssociatedFormula().getVariables().get(0));
-				graphicDesignForElement(elmId, UMCAP, yStart, Double.parseDouble(elmValue), false);
+				graphicDesignForElement(elmId, UMCAP, yInit, Double.parseDouble(elmValue), false);
 				flowIds.add(elmId);
 			}
 
 			if (e.getType().equals("ExternalVoltageElm")) {
-				graphicDesignForElement(elmId, UMGEN, yStart, 0, true);
+				graphicDesignForElement(elmId, UMGEN, yInit, 0, true);
 			}
 
-			yStart += 28;
+			yInit += 28;
 		}
 
 		pressureIds = new ArrayList<>(pressureCoord.keySet());
-
+		
+		int yButton = yInit + 28;
 		stop = new JButton("Stop");
 		stop.setFont(new Font("Arial", Font.BOLD, 16));
-		stop.setBounds(IDELEMENTX, yStart + 28, 100, 50);
+		stop.setBounds(IDELEMENTX, yButton, 100, 50);
 		stop.setBackground(Color.RED);
 		stop.setForeground(Color.WHITE);
 		stop.setVisible(true);
 
 		start = new JButton("Start");
 		start.setFont(new Font("Arial", Font.BOLD, 16));
-		start.setBounds(IDELEMENTX, yStart + 28, 100, 50);
+		start.setBounds(IDELEMENTX, yButton, 100, 50);
 		start.setBackground(Color.GREEN);
 		start.setForeground(Color.WHITE);
 		start.setVisible(false);
 
 		printData = new JButton("Print");
 		printData.setFont(new Font("Arial", Font.BOLD, 16));
-		printData.setBounds(VALELEMENTX, yStart + 28, 100, 50);
+		printData.setBounds(VALELEMENTX, yButton, 100, 50);
 		printData.setBackground(Color.YELLOW);
 		printData.setForeground(Color.BLACK);
 		printData.setVisible(true);
@@ -307,6 +302,82 @@ public class GraphicInterface {
 		patientPanel.add(stop);
 		patientPanel.add(start);
 		patientPanel.add(printData);
+
+		demographicDataSetUp(demographicData, yButton);
+	}
+
+	private void demographicDataSetUp(SimulatorParams demographicData, int yLast) {
+		yLast+=102;
+		final JLabel elementId = new JLabel("Patient demographic data");
+		elementId.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
+		patientPanel.add(elementId);
+		
+		yLast+=28;
+		
+		final JLabel gender = new JLabel("Gender ");
+		gender.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
+		patientPanel.add(gender);
+		
+		String[] genders = {"Male", "Female"};
+		JComboBox<String> gendersBox = new JComboBox<String>(genders);
+		gendersBox.setBounds(IDELEMENTX + 80, yLast, 100, 20);
+		if("MALE".equalsIgnoreCase(demographicData.getGender())) {
+			gendersBox.setSelectedItem("Male");
+		}else {
+			gendersBox.setSelectedItem("Female");
+		}
+		patientPanel.add(gendersBox);
+		
+		yLast+=28;
+		
+		final JLabel age = new JLabel("Age (years)");
+		age.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
+		patientPanel.add(age);
+		
+		final SpinnerNumberModel ageModel = new SpinnerNumberModel(demographicData.getAge(), 18, 126, 1);
+		JSpinner ageElm = new JSpinner(ageModel);
+		ageElm.setBounds(IDELEMENTX + 80, yLast, VALELEMENTWIDTH, VALELEMENTHEIGHT);
+		patientPanel.add(ageElm);
+		
+		yLast+=28;
+		
+		final JLabel height = new JLabel("Height (m)");
+		height.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
+		patientPanel.add(height);
+		
+		final SpinnerNumberModel heightModel = new SpinnerNumberModel(demographicData.getHeight(), 0.55, 2.60, 0.01);
+		JSpinner heightElm = new JSpinner(heightModel);
+		heightElm.setBounds(IDELEMENTX + 80, yLast, VALELEMENTWIDTH, VALELEMENTHEIGHT);
+		patientPanel.add(heightElm);
+		
+		yLast+=28;
+		
+		final JLabel weight = new JLabel("Weigth (kg)");
+		weight.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
+		patientPanel.add(weight);
+		
+		final SpinnerNumberModel weightModel = new SpinnerNumberModel(demographicData.getWeight(), 25, 600, 0.1);
+		JSpinner weightElm = new JSpinner(weightModel);
+		weightElm.setBounds(IDELEMENTX + 80, yLast, VALELEMENTWIDTH, VALELEMENTHEIGHT);
+		patientPanel.add(weightElm);
+		
+		yLast+=28;
+		
+		final JLabel ibw = new JLabel("Ibw (kg)");
+		ibw.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
+		patientPanel.add(ibw);
+		
+		final JLabel ibwValue = new JLabel(String.valueOf(demographicData.getIbw()));
+		ibwValue.setBounds(IDELEMENTX + 80, yLast, VALELEMENTWIDTH, VALELEMENTHEIGHT);
+		patientPanel.add(ibwValue);
+
+
+		/* Element value
+		final SpinnerNumberModel elementModel = new SpinnerNumberModel(0.0, 0.000, 100.0, 0.001);
+		element.setModel(elementModel);
+		element.setBounds(VALELEMENTX, elementY, VALELEMENTWIDTH, VALELEMENTHEIGHT);
+		element.setValue(value);
+		patientPanel.add(element);*/
 	}
 
 	/**

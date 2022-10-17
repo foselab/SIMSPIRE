@@ -1,8 +1,8 @@
 ---
 schema: 6
 elementsList:
-- associatedFormula:
-    id: Central Airways Resistance
+- elementName: Central Airways Resistance
+  associatedFormula:
     isTimeDependent: false
     isExternal: false
     formula: resistanceC
@@ -17,8 +17,8 @@ elementsList:
   idLeft: Airway Opening
   showRight: true
   idRight: Central Airways
-- associatedFormula:
-    id: Peripheral Airways Resistance
+- elementName: Peripheral Airways Resistance 
+  associatedFormula:   
     isTimeDependent: false
     isExternal: false
     formula: resistanceP
@@ -29,8 +29,8 @@ elementsList:
   y: 2
   x1: 2 
   y1: 2
-- associatedFormula:
-    id: Shunt Compliance
+- elementName: Shunt Compliance
+  associatedFormula:
     isTimeDependent: false
     isExternal: false
     formula: capacitorS
@@ -41,8 +41,8 @@ elementsList:
   y: 2
   x1: 1
   y1: 0
-- associatedFormula:
-    id: Lung Compliance
+- elementName: Lung Compliance
+  associatedFormula:
     isTimeDependent: false
     isExternal: false
     formula: capacitorL
@@ -57,8 +57,8 @@ elementsList:
   idLeft: Alveoli
   showRight: true
   idRight: Pleural Pressure
-- associatedFormula:
-    id: Chest wall Compliance
+- elementName: Chest wall Compliance
+  associatedFormula:
     isTimeDependent: false
     isExternal: false
     formula: capacitorW
@@ -69,8 +69,8 @@ elementsList:
   y: 1
   x1: 1
   y1: 0
-- associatedFormula:
-    id: Ventilator
+- elementName: Ventilator 
+  associatedFormula:
     isTimeDependent: false
     isExternal: true
   type: ExternalVoltageElm
