@@ -1,12 +1,7 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class LogicOutputElm extends CircuitElm {
 	final int FLAG_TERNARY = 1;
@@ -84,30 +79,6 @@ public class LogicOutputElm extends CircuitElm {
 		if (isNumeric())
 			arr[1] = value;
 		arr[2] = "V = " + getVoltageText(volts[0]);
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Threshold", threshold, 10, -10);
-		if (n == 1) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new Checkbox("Current Required", needsPullDown());
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			threshold = ei.getValue();
-		if (n == 1) {
-			if (ei.checkbox.getState())
-				flags = FLAG_PULLDOWN;
-			else
-				flags &= ~FLAG_PULLDOWN;
-		}
 	}
 
 	@Override

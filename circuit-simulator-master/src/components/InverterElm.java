@@ -1,11 +1,9 @@
 package components;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
 
-import utils.EditInfo;
 
 public class InverterElm extends CircuitElm {
 	double slewRate; // V/ns
@@ -85,18 +83,6 @@ public class InverterElm extends CircuitElm {
 		arr[0] = "inverter";
 		arr[1] = "Vi = " + getVoltageText(volts[0]);
 		arr[2] = "Vo = " + getVoltageText(volts[1]);
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Slew Rate (V/ns)", slewRate, 0, 0);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		slewRate = ei.getValue();
 	}
 
 	// there is no current path through the inverter input, but there

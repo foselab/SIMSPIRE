@@ -123,10 +123,6 @@ public class RealTimePlot {
 					dcVoltage.setIdRight(e.getIdRight());
 				}
 				elements.add(dcVoltage);
-
-				if (e.getAssociatedFormula().getIsExternal()) {
-					cirSim.ventilatorIndex = elements.size() - 1;
-				}
 			}
 
 			if (e.getType().equals(externalVoltage.getClass().getSimpleName())) {
@@ -215,9 +211,6 @@ public class RealTimePlot {
 				dcVoltage.setX2Y2(e.getX1(), e.getY1());
 				elements.add(dcVoltage);
 
-				if (e.getAssociatedFormula().getIsExternal()) {
-					cirSim.ventilatorIndex = elements.size() - 1;
-				}
 			}
 
 			if (e.getType().equals(externalVoltage.getClass().getSimpleName())) {

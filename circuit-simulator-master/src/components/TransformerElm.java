@@ -5,8 +5,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
 
-import utils.EditInfo;
-
 public class TransformerElm extends CircuitElm {
 	double inductance, ratio, couplingCoef;
 	Point ptEnds[], ptCoil[], ptCore[];
@@ -203,37 +201,5 @@ public class TransformerElm extends CircuitElm {
 		if (comparePair(n1, n2, 1, 3))
 			return true;
 		return false;
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Primary Inductance (H)", inductance, .01, 5);
-		if (n == 1)
-			return new EditInfo("Ratio", ratio, 1, 10).setDimensionless();
-		if (n == 2)
-			return new EditInfo("Coupling Coefficient", couplingCoef, 0, 1).setDimensionless();
-		if (n == 3) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new Checkbox("Trapezoidal Approximation", isTrapezoidal());
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			inductance = ei.getValue();
-		if (n == 1)
-			ratio = ei.getValue();
-		if (n == 2 && ei.getValue() > 0 && ei.getValue() < 1)
-			couplingCoef = ei.getValue();
-		if (n == 3) {
-			if (ei.checkbox.getState())
-				flags &= ~Inductor.FLAG_BACK_EULER;
-			else
-				flags |= Inductor.FLAG_BACK_EULER;
-		}
 	}
 }

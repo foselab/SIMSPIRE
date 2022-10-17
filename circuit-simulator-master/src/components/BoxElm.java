@@ -1,10 +1,6 @@
 package components;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class BoxElm extends GraphicElm {
 
@@ -42,15 +38,6 @@ public class BoxElm extends GraphicElm {
 	public void drag(int xx, int yy) {
 		setX(xx);
 		setY(yy);
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
 	}
 
 	@Override

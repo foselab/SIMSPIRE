@@ -1,10 +1,7 @@
 package components;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class TappedTransformerElm extends CircuitElm {
 	double inductance, ratio;
@@ -209,22 +206,5 @@ public class TappedTransformerElm extends CircuitElm {
 		if (comparePair(n1, n2, 2, 4))
 			return true;
 		return false;
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Primary Inductance (H)", inductance, .01, 5);
-		if (n == 1)
-			return new EditInfo("Ratio", ratio, 1, 10).setDimensionless();
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			inductance = ei.getValue();
-		if (n == 1)
-			ratio = ei.getValue();
 	}
 }

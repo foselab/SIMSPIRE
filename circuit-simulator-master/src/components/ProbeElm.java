@@ -1,12 +1,7 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class ProbeElm extends CircuitElm {
 	static final int FLAG_SHOWVOLTAGE = 1;
@@ -51,26 +46,6 @@ public class ProbeElm extends CircuitElm {
 	@Override
 	public boolean getConnection(int n1, int n2) {
 		return false;
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new Checkbox("Show Voltage", mustShowVoltage());
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0) {
-			if (ei.checkbox.getState())
-				flags = FLAG_SHOWVOLTAGE;
-			else
-				flags &= ~FLAG_SHOWVOLTAGE;
-		}
 	}
 
 	@Override

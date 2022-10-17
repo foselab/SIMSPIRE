@@ -1,14 +1,10 @@
 package components;
 // stub implementation of DiacElm, based on SparkGapElm
 
-// FIXME need to add DiacElm.java to srclist
-// FIXME need to uncomment DiacElm line from CirSim.java
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
 
 import simulator.CirSim;
-import utils.EditInfo;
 
 public class DiacElm extends CircuitElm {
 	double onresistance, offresistance, breakdown, holdcurrent;
@@ -100,30 +96,5 @@ public class DiacElm extends CircuitElm {
 		arr[5] = "Roff = " + getUnitText(offresistance, CirSim.getOhmString());
 		arr[6] = "Vbrkdn = " + getUnitText(breakdown, "V");
 		arr[7] = "Ihold = " + getUnitText(holdcurrent, "A");
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("On resistance (ohms)", onresistance, 0, 0);
-		if (n == 1)
-			return new EditInfo("Off resistance (ohms)", offresistance, 0, 0);
-		if (n == 2)
-			return new EditInfo("Breakdown voltage (volts)", breakdown, 0, 0);
-		if (n == 3)
-			return new EditInfo("Hold current (amps)", holdcurrent, 0, 0);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (ei.getValue() > 0 && n == 0)
-			onresistance = ei.getValue();
-		if (ei.getValue() > 0 && n == 1)
-			offresistance = ei.getValue();
-		if (ei.getValue() > 0 && n == 2)
-			breakdown = ei.getValue();
-		if (ei.getValue() > 0 && n == 3)
-			holdcurrent = ei.getValue();
 	}
 }

@@ -1,6 +1,5 @@
 package components;
 
-import java.awt.Graphics;
 import java.awt.Label;
 import java.awt.Point;
 import java.awt.Scrollbar;
@@ -9,7 +8,6 @@ import java.awt.event.AdjustmentListener;
 import java.util.StringTokenizer;
 
 import simulator.CirSim;
-import utils.EditInfo;
 
 public class PotElm extends CircuitElm implements AdjustmentListener {
 	double position, maxResistance, resistance1, resistance2;
@@ -127,29 +125,6 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 		arr[3] = "R2 = " + getUnitText(resistance2, CirSim.getOhmString());
 		arr[4] = "I1 = " + getCurrentDText(current1);
 		arr[5] = "I2 = " + getCurrentDText(current2);
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		// ohmString doesn't work here on linux
-		if (n == 0)
-			return new EditInfo("Resistance (ohms)", maxResistance, 0, 0);
-		if (n == 1) {
-			EditInfo ei = new EditInfo("Slider Text", 0, -1, -1);
-			ei.setText(sliderText);
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			maxResistance = ei.getValue();
-		if (n == 1) {
-			sliderText = ei.getTextf().getText();
-			label.setText(sliderText);
-		}
 	}
 
 	@Override

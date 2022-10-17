@@ -1,11 +1,9 @@
 package components;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
 
-import utils.EditInfo;
 
 public class CurrentElm extends CircuitElm {
 	double currentValue;
@@ -52,18 +50,6 @@ public class CurrentElm extends CircuitElm {
 	public void stamp() {
 		current = currentValue;
 		sim.stampCurrentSource(nodes[0], nodes[1], current);
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Current (A)", currentValue, 0, .1);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		currentValue = ei.getValue();
 	}
 
 	@Override

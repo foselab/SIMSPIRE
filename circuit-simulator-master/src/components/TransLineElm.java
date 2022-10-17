@@ -1,12 +1,9 @@
 package components;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
 
 import simulator.CirSim;
-import utils.EditInfo;
 
 public class TransLineElm extends CircuitElm {
 	double delay, imped;
@@ -199,26 +196,5 @@ public class TransLineElm extends CircuitElm {
 		arr[1] = getUnitText(imped, CirSim.getOhmString());
 		arr[2] = "length = " + getUnitText(2.9979e8 * delay, "m");
 		arr[3] = "delay = " + getUnitText(delay, "s");
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Delay (s)", delay, 0, 0);
-		if (n == 1)
-			return new EditInfo("Impedance (ohms)", imped, 0, 0);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0) {
-			delay = ei.getValue();
-			reset();
-		}
-		if (n == 1) {
-			imped = ei.getValue();
-			reset();
-		}
 	}
 }

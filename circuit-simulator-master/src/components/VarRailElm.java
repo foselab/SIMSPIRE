@@ -4,9 +4,6 @@ import java.awt.Label;
 import java.awt.Scrollbar;
 import java.util.StringTokenizer;
 
-import simulator.CirSim;
-import utils.EditInfo;
-
 public class VarRailElm extends RailElm {
 	Scrollbar slider;
 	Label label;
@@ -39,32 +36,6 @@ public class VarRailElm extends RailElm {
 	double getVoltage() {
 		frequency = slider.getValue() * (getMaxVoltage() - bias) / 100. + bias;
 		return frequency;
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Min Voltage", bias, -20, 20);
-		if (n == 1)
-			return new EditInfo("Max Voltage", getMaxVoltage(), -20, 20);
-		if (n == 2) {
-			EditInfo ei = new EditInfo("Slider Text", 0, -1, -1);
-			ei.setText(sliderText);
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			bias = ei.getValue();
-		if (n == 1)
-			setMaxVoltage(ei.getValue());
-		if (n == 2) {
-			sliderText = ei.getTextf().getText();
-			label.setText(sliderText);
-		}
 	}
 
 	@Override

@@ -1,12 +1,10 @@
 package components;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
 
 import simulator.CirSim;
-import utils.EditInfo;
 
 public class LampElm extends CircuitElm {
 	double resistance;
@@ -136,31 +134,5 @@ public class LampElm extends CircuitElm {
 		arr[3] = "R = " + getUnitText(resistance, CirSim.getOhmString());
 		arr[4] = "P = " + getUnitText(getPower(), "W");
 		arr[5] = "T = " + ((int) temp) + " K";
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		// ohmString doesn't work here on linux
-		if (n == 0)
-			return new EditInfo("Nominal Power", nom_pow, 0, 0);
-		if (n == 1)
-			return new EditInfo("Nominal Voltage", nom_v, 0, 0);
-		if (n == 2)
-			return new EditInfo("Warmup Time (s)", warmTime, 0, 0);
-		if (n == 3)
-			return new EditInfo("Cooldown Time (s)", coolTime, 0, 0);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0 && ei.getValue() > 0)
-			nom_pow = ei.getValue();
-		if (n == 1 && ei.getValue() > 0)
-			nom_v = ei.getValue();
-		if (n == 2 && ei.getValue() > 0)
-			warmTime = ei.getValue();
-		if (n == 3 && ei.getValue() > 0)
-			coolTime = ei.getValue();
 	}
 }

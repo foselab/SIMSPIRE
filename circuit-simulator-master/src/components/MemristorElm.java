@@ -1,11 +1,9 @@
 package components;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
 
 import simulator.CirSim;
-import utils.EditInfo;
 
 public class MemristorElm extends CircuitElm {
 	double r_on, r_off, dopeWidth, totalWidth, mobility, resistance;
@@ -103,34 +101,5 @@ public class MemristorElm extends CircuitElm {
 	@Override
 	public String getScopeUnits(int x) {
 		return (x == 2) ? CirSim.getOhmString() : (x == 1) ? "W" : "V";
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Max Resistance (ohms)", r_on, 0, 0);
-		if (n == 1)
-			return new EditInfo("Min Resistance (ohms)", r_off, 0, 0);
-		if (n == 2)
-			return new EditInfo("Width of Doped Region (nm)", dopeWidth * 1e9, 0, 0);
-		if (n == 3)
-			return new EditInfo("Total Width (nm)", totalWidth * 1e9, 0, 0);
-		if (n == 4)
-			return new EditInfo("Mobility (um^2/(s*V))", mobility * 1e12, 0, 0);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			r_on = ei.getValue();
-		if (n == 1)
-			r_off = ei.getValue();
-		if (n == 2)
-			dopeWidth = ei.getValue() * 1e-9;
-		if (n == 3)
-			totalWidth = ei.getValue() * 1e-9;
-		if (n == 4)
-			mobility = ei.getValue() * 1e-12;
 	}
 }

@@ -1,13 +1,7 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.util.StringTokenizer;
 import java.util.Vector;
-
-import utils.EditInfo;
 
 public class TextElm extends GraphicElm {
 	String text;
@@ -69,50 +63,6 @@ public class TextElm extends GraphicElm {
 		setY(yy);
 		setX2(xx + 16);
 		setY2(yy);
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0) {
-			EditInfo ei = new EditInfo("Text", 0, -1, -1);
-			ei.setText(text);
-			return ei;
-		}
-		if (n == 1)
-			return new EditInfo("Size", size, 5, 100);
-		if (n == 2) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new Checkbox("Center", (flags & FLAG_CENTER) != 0);
-			return ei;
-		}
-		if (n == 3) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new Checkbox("Draw Bar On Top", (flags & FLAG_BAR) != 0);
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0) {
-			text = ei.getTextf().getText();
-			split();
-		}
-		if (n == 1)
-			size = (int) ei.getValue();
-		if (n == 3) {
-			if (ei.checkbox.getState())
-				flags |= FLAG_BAR;
-			else
-				flags &= ~FLAG_BAR;
-		}
-		if (n == 2) {
-			if (ei.checkbox.getState())
-				flags |= FLAG_CENTER;
-			else
-				flags &= ~FLAG_CENTER;
-		}
 	}
 
 	@Override

@@ -1,11 +1,8 @@
 package components;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public abstract class GateElm extends CircuitElm {
 	final int FLAG_SMALL = 1;
@@ -125,19 +122,6 @@ public abstract class GateElm extends CircuitElm {
 		lastOutput = f;
 		double res = f ? 5 : 0;
 		sim.updateVoltageSource(0, nodes[inputCount], voltSource, res);
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("# of Inputs", inputCount, 1, 8).setDimensionless();
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		inputCount = (int) ei.getValue();
-		setPoints();
 	}
 
 	// there is no current path through the gate inputs, but there

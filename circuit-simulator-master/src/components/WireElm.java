@@ -1,10 +1,6 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Graphics;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class WireElm extends ResistorElm {
 	public static boolean ideal = false;
@@ -83,37 +79,6 @@ public class WireElm extends ResistorElm {
 	@Override
 	public boolean isWire() {
 		return ideal;
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Show Current", mustShowCurrent()));
-			return ei;
-		}
-		if (n == 1) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Show Voltage", mustShowVoltage()));
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0) {
-			if (ei.getCheckbox().getState())
-				flags = FLAG_SHOWCURRENT;
-			else
-				flags &= ~FLAG_SHOWCURRENT;
-		}
-		if (n == 1) {
-			if (ei.getCheckbox().getState())
-				flags = FLAG_SHOWVOLTAGE;
-			else
-				flags &= ~FLAG_SHOWVOLTAGE;
-		}
 	}
 
 	@Override

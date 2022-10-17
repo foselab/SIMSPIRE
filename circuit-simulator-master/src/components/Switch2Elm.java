@@ -1,11 +1,7 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class Switch2Elm extends SwitchElm {
 	int link;
@@ -107,29 +103,6 @@ public class Switch2Elm extends SwitchElm {
 	public void getInfo(String arr[]) {
 		arr[0] = (link == 0) ? "switch (SPDT)" : "switch (DPDT)";
 		arr[1] = "I = " + getCurrentDText(getCurrent());
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 1) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Center Off", hasCenterOff()));
-			return ei;
-		}
-		return super.getEditInfo(n);
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 1) {
-			flags &= ~FLAG_CENTER_OFF;
-			if (ei.getCheckbox().getState())
-				flags |= FLAG_CENTER_OFF;
-			if (hasCenterOff())
-				setMomentary(false);
-			setPoints();
-		} else
-			super.setEditValue(n, ei);
 	}
 
 	boolean hasCenterOff() {

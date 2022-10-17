@@ -1,12 +1,7 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class CapacitorElm extends CircuitElm {
 	private double capacitance;
@@ -128,30 +123,6 @@ public class CapacitorElm extends CircuitElm {
 		arr[4] = "P = " + getUnitText(getPower(), "W");
 		// double v = getVoltageDiff();
 		// arr[4] = "U = " + getUnitText(.5*capacitance*v*v, "J");
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Capacitance (F)", getCapacitance(), 0, 0);
-		if (n == 1) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Trapezoidal Approximation", isTrapezoidal()));
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0 && ei.getValue() > 0)
-			setCapacitance(ei.getValue());
-		if (n == 1) {
-			if (ei.getCheckbox().getState())
-				flags &= ~FLAG_BACK_EULER;
-			else
-				flags |= FLAG_BACK_EULER;
-		}
 	}
 
 	@Override

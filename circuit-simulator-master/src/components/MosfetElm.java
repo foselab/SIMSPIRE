@@ -1,13 +1,8 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class MosfetElm extends CircuitElm {
 	int pnp;
@@ -239,28 +234,5 @@ public class MosfetElm extends CircuitElm {
 	@Override
 	public boolean getConnection(int n1, int n2) {
 		return !(n1 == 0 || n2 == 0);
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Threshold Voltage", pnp * vt, .01, 5);
-		if (n == 1) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new Checkbox("Digital Symbol", drawDigital());
-			return ei;
-		}
-
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			vt = pnp * ei.getValue();
-		if (n == 1) {
-			flags = (ei.checkbox.getState()) ? (flags | FLAG_DIGITAL) : (flags & ~FLAG_DIGITAL);
-			setPoints();
-		}
 	}
 }

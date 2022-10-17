@@ -1,14 +1,7 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public abstract class ChipElm extends CircuitElm {
 	int csize, cspc, cspc2;
@@ -224,39 +217,6 @@ public abstract class ChipElm extends CircuitElm {
 	@Override
 	public boolean hasGroundConnection(int n1) {
 		return pins[n1].output;
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Flip X", (flags & FLAG_FLIP_X) != 0));
-			return ei;
-		}
-		if (n == 1) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Flip Y", (flags & FLAG_FLIP_Y) != 0));
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0) {
-			if (ei.getCheckbox().getState())
-				flags |= FLAG_FLIP_X;
-			else
-				flags &= ~FLAG_FLIP_X;
-			setPoints();
-		}
-		if (n == 1) {
-			if (ei.getCheckbox().getState())
-				flags |= FLAG_FLIP_Y;
-			else
-				flags &= ~FLAG_FLIP_Y;
-			setPoints();
-		}
 	}
 
 	final int SIDE_N = 0;

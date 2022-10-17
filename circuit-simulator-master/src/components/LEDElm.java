@@ -1,11 +1,8 @@
 package components;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
 
-import utils.EditInfo;
 
 public class LEDElm extends DiodeElm {
 	double colorR, colorG, colorB;
@@ -53,31 +50,6 @@ public class LEDElm extends DiodeElm {
 	public void getInfo(String arr[]) {
 		super.getInfo(arr);
 		arr[0] = "LED";
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return super.getEditInfo(n);
-		if (n == 1)
-			return new EditInfo("Red Value (0-1)", colorR, 0, 1).setDimensionless();
-		if (n == 2)
-			return new EditInfo("Green Value (0-1)", colorG, 0, 1).setDimensionless();
-		if (n == 3)
-			return new EditInfo("Blue Value (0-1)", colorB, 0, 1).setDimensionless();
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			super.setEditValue(0, ei);
-		if (n == 1)
-			colorR = ei.getValue();
-		if (n == 2)
-			colorG = ei.getValue();
-		if (n == 3)
-			colorB = ei.getValue();
 	}
 
 	@Override

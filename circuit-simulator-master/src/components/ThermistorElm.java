@@ -10,7 +10,6 @@ import java.awt.Scrollbar;
 import java.util.StringTokenizer;
 
 import simulator.CirSim;
-import utils.EditInfo;
 
 public class ThermistorElm extends CircuitElm {
 	double minresistance, maxresistance;
@@ -88,23 +87,5 @@ public class ThermistorElm extends CircuitElm {
 		arr[3] = "R = " + getUnitText(resistance, CirSim.getOhmString());
 		arr[4] = "Ron = " + getUnitText(minresistance, CirSim.getOhmString());
 		arr[5] = "Roff = " + getUnitText(maxresistance, CirSim.getOhmString());
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		// ohmString doesn't work here on linux
-		if (n == 0)
-			return new EditInfo("Min resistance (ohms)", minresistance, 0, 0);
-		if (n == 1)
-			return new EditInfo("Max resistance (ohms)", maxresistance, 0, 0);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (ei.getValue() > 0 && n == 0)
-			minresistance = ei.getValue();
-		if (ei.getValue() > 0 && n == 1)
-			maxresistance = ei.getValue();
 	}
 }

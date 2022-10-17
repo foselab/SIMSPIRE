@@ -12,8 +12,6 @@ import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMQ.Socket;
 
-import utils.EditInfo;
-
 public class VoltageElm extends CircuitElm {
 	static final int FLAG_COS = 2;
 	int waveform;
@@ -161,63 +159,6 @@ public class VoltageElm extends CircuitElm {
 		calcLeads((waveform == WF_DC || waveform == WF_VAR) ? 8 : circleSize * 2);
 	}
 
-	void drawWaveform(Graphics g, Point center) {
-		g.setColor(needsHighlight() ? getSelectColor() : Color.gray);
-		int xc = center.x;
-		int yc = center.y;
-		drawThickCircle(g, xc, yc, circleSize);
-		int wl = 8;
-		adjustBbox(xc - circleSize, yc - circleSize, xc + circleSize, yc + circleSize);
-		int xc2;
-		switch (waveform) {
-		case WF_DC: {
-			break;
-		}
-		case WF_SQUARE:
-			xc2 = (int) (wl * 2 * dutyCycle - wl + xc);
-			xc2 = max(xc - wl + 3, min(xc + wl - 3, xc2));
-			drawThickLine(g, xc - wl, yc - wl, xc - wl, yc);
-			drawThickLine(g, xc - wl, yc - wl, xc2, yc - wl);
-			drawThickLine(g, xc2, yc - wl, xc2, yc + wl);
-			drawThickLine(g, xc + wl, yc + wl, xc2, yc + wl);
-			drawThickLine(g, xc + wl, yc, xc + wl, yc + wl);
-			break;
-		case WF_PULSE:
-			yc += wl / 2;
-			drawThickLine(g, xc - wl, yc - wl, xc - wl, yc);
-			drawThickLine(g, xc - wl, yc - wl, xc - wl / 2, yc - wl);
-			drawThickLine(g, xc - wl / 2, yc - wl, xc - wl / 2, yc);
-			drawThickLine(g, xc - wl / 2, yc, xc + wl, yc);
-			break;
-		case WF_SAWTOOTH:
-			drawThickLine(g, xc, yc - wl, xc - wl, yc);
-			drawThickLine(g, xc, yc - wl, xc, yc + wl);
-			drawThickLine(g, xc, yc + wl, xc + wl, yc);
-			break;
-		case WF_TRIANGLE: {
-			int xl = 5;
-			drawThickLine(g, xc - xl * 2, yc, xc - xl, yc - wl);
-			drawThickLine(g, xc - xl, yc - wl, xc, yc);
-			drawThickLine(g, xc, yc, xc + xl, yc + wl);
-			drawThickLine(g, xc + xl, yc + wl, xc + xl * 2, yc);
-			break;
-		}
-		case WF_AC: {
-			int i;
-			int xl = 10;
-			int ox = -1, oy = -1;
-			for (i = -xl; i <= xl; i++) {
-				int yy = yc + (int) (.95 * Math.sin(i * pi / xl) * wl);
-				if (ox != -1)
-					drawThickLine(g, ox, oy, xc + i, yy);
-				ox = xc + i;
-				oy = yy;
-			}
-			break;
-		}
-		}
-	}
-
 	@Override
 	public int getVoltageSourceCount() {
 		return 1;
@@ -268,71 +209,6 @@ public class VoltageElm extends CircuitElm {
 				arr[i++] = "wavelength = " + getUnitText(2.9979e8 / frequency, "m");
 			arr[i++] = "P = " + getUnitText(getPower(), "W");
 		}
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo(waveform == WF_DC ? "Voltage" : "Max Voltage", getMaxVoltage(), -20, 20);
-		if (n == 1) {
-			EditInfo ei = new EditInfo("Waveform", waveform, -1, -1);
-			ei.setChoice(new Choice());
-			ei.getChoice().add("D/C");
-			ei.getChoice().add("A/C");
-			ei.getChoice().add("Square Wave");
-			ei.getChoice().add("Triangle");
-			ei.getChoice().add("Sawtooth");
-			ei.getChoice().add("Pulse");
-			ei.getChoice().select(waveform);
-			return ei;
-		}
-		if (waveform == WF_DC)
-			return null;
-		if (n == 2)
-			return new EditInfo("Frequency (Hz)", frequency, 4, 500);
-		if (n == 3)
-			return new EditInfo("DC Offset (V)", bias, -20, 20);
-		if (n == 4)
-			return new EditInfo("Phase Offset (degrees)", phaseShift * 180 / pi, -180, 180).setDimensionless();
-		if (n == 5 && waveform == WF_SQUARE)
-			return new EditInfo("Duty Cycle", dutyCycle * 100, 0, 100).setDimensionless();
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			setMaxVoltage(ei.getValue());
-		if (n == 3)
-			bias = ei.getValue();
-		if (n == 2) {
-			// adjust time zero to maintain continuity ind the waveform
-			// even though the frequency has changed.
-			double oldfreq = frequency;
-			frequency = ei.getValue();
-			double maxfreq = 1 / (8 * sim.getTimeStep());
-			if (frequency > maxfreq)
-				frequency = maxfreq;
-			double adj = frequency - oldfreq;
-			freqTimeZero = sim.getT() - oldfreq * (sim.getT() - freqTimeZero) / frequency;
-		}
-		if (n == 1) {
-			int ow = waveform;
-			waveform = ei.getChoice().getSelectedIndex();
-			if (waveform == WF_DC && ow != WF_DC) {
-				ei.setNewDialog(true);
-				bias = 0;
-			} else if (waveform != WF_DC && ow == WF_DC) {
-				ei.setNewDialog(true);
-			}
-			if ((waveform == WF_SQUARE || ow == WF_SQUARE) && waveform != ow)
-				ei.setNewDialog(true);
-			setPoints();
-		}
-		if (n == 4)
-			phaseShift = ei.getValue() * pi / 180;
-		if (n == 5)
-			dutyCycle = ei.getValue() * .01;
 	}
 
 	public double getMaxVoltage() {

@@ -1,12 +1,10 @@
 package components;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
 
 import simulator.CirSim;
-import utils.EditInfo;
 
 public class SparkGapElm extends CircuitElm {
 	double resistance, onresistance, offresistance, breakdown, holdcurrent;
@@ -99,31 +97,5 @@ public class SparkGapElm extends CircuitElm {
 		arr[4] = "Ron = " + getUnitText(onresistance, CirSim.getOhmString());
 		arr[5] = "Roff = " + getUnitText(offresistance, CirSim.getOhmString());
 		arr[6] = "Vbreakdown = " + getUnitText(breakdown, "V");
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		// ohmString doesn't work here on linux
-		if (n == 0)
-			return new EditInfo("On resistance (ohms)", onresistance, 0, 0);
-		if (n == 1)
-			return new EditInfo("Off resistance (ohms)", offresistance, 0, 0);
-		if (n == 2)
-			return new EditInfo("Breakdown voltage", breakdown, 0, 0);
-		if (n == 3)
-			return new EditInfo("Holding current (A)", holdcurrent, 0, 0);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (ei.getValue() > 0 && n == 0)
-			onresistance = ei.getValue();
-		if (ei.getValue() > 0 && n == 1)
-			offresistance = ei.getValue();
-		if (ei.getValue() > 0 && n == 2)
-			breakdown = ei.getValue();
-		if (ei.getValue() > 0 && n == 3)
-			holdcurrent = ei.getValue();
 	}
 }

@@ -1,18 +1,10 @@
 package scope;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.PopupMenu;
 import java.awt.Rectangle;
-import java.awt.event.ItemEvent;
-import java.awt.image.BufferedImage;
-import java.awt.image.MemoryImageSource;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.StringTokenizer;
 
 import components.CircuitElm;
 import components.LogicOutputElm;
-import components.MemristorElm;
 import components.OutputElm;
 import components.ProbeElm;
 import components.TransistorElm;
@@ -47,8 +39,6 @@ public class Scope {
 	private CircuitElm elm;
 	CircuitElm xElm;
 	CircuitElm yElm;
-	MemoryImageSource imageSource;
-	Image image;
 	int pixels[];
 	int draw_ox, draw_oy;
 	float dpixels[];
@@ -323,12 +313,6 @@ public class Scope {
 				Class dbiclass = Class.forName("java.awt.image.DataBufferInt");
 				Class rasclass = Class.forName("java.awt.image.Raster");
 				Constructor cstr = biclass.getConstructor(new Class[] { int.class, int.class, int.class });
-				image = (Image) cstr.newInstance(
-						new Object[] { new Integer(w), new Integer(h), new Integer(BufferedImage.TYPE_INT_RGB) });
-				Method m = biclass.getMethod("getRaster");
-				Object ras = m.invoke(image);
-				Object db = rasclass.getMethod("getDataBuffer").invoke(ras);
-				pixels = (int[]) dbiclass.getMethod("getData").invoke(db);
 			} catch (Exception ee) {
 				// ee.printStackTrace();
 				System.out.println("BufferedImage failed");
@@ -339,9 +323,6 @@ public class Scope {
 			int i;
 			for (i = 0; i != w * h; i++)
 				pixels[i] = 0xFF000000;
-			imageSource = new MemoryImageSource(w, h, pixels, 0, w);
-			imageSource.setAnimated(true);
-			imageSource.setFullBufferUpdates(true);
 		}
 		dpixels = new float[w * h];
 		draw_ox = draw_oy = -1;

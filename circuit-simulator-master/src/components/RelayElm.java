@@ -1,12 +1,7 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 // 0 = switch
 // 1 = switch end 1
@@ -229,55 +224,6 @@ public class RelayElm extends CircuitElm {
 			arr[ln++] = "I" + (i + 1) + " = " + getCurrentDText(switchCurrent[i]);
 		arr[ln++] = "coil I = " + getCurrentDText(coilCurrent);
 		arr[ln++] = "coil Vd = " + getVoltageDText(volts[nCoil1] - volts[nCoil2]);
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Inductance (H)", inductance, 0, 0);
-		if (n == 1)
-			return new EditInfo("On Resistance (ohms)", r_on, 0, 0);
-		if (n == 2)
-			return new EditInfo("Off Resistance (ohms)", r_off, 0, 0);
-		if (n == 3)
-			return new EditInfo("On Current (A)", onCurrent, 0, 0);
-		if (n == 4)
-			return new EditInfo("Number of Poles", poleCount, 1, 4).setDimensionless();
-		if (n == 5)
-			return new EditInfo("Coil Resistance (ohms)", coilR, 0, 0);
-		if (n == 6) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new Checkbox("Swap Coil Direction", (flags & FLAG_SWAP_COIL) != 0);
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0 && ei.getValue() > 0) {
-			inductance = ei.getValue();
-			ind.setup(inductance, coilCurrent, Inductor.FLAG_BACK_EULER);
-		}
-		if (n == 1 && ei.getValue() > 0)
-			r_on = ei.getValue();
-		if (n == 2 && ei.getValue() > 0)
-			r_off = ei.getValue();
-		if (n == 3 && ei.getValue() > 0)
-			onCurrent = ei.getValue();
-		if (n == 4 && ei.getValue() >= 1) {
-			poleCount = (int) ei.getValue();
-			setPoints();
-		}
-		if (n == 5 && ei.getValue() > 0)
-			coilR = ei.getValue();
-		if (n == 6) {
-			if (ei.checkbox.getState())
-				flags |= FLAG_SWAP_COIL;
-			else
-				flags &= ~FLAG_SWAP_COIL;
-			setPoints();
-		}
 	}
 
 	@Override

@@ -1,9 +1,6 @@
 package components;
 
-import java.awt.Checkbox;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class DFlipFlopElm extends ChipElm {
 	final int FLAG_RESET = 2;
@@ -69,29 +66,5 @@ public class DFlipFlopElm extends ChipElm {
 	@Override
 	public int getDumpType() {
 		return 155;
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 2) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Reset Pin", hasReset()));
-			return ei;
-		}
-		return super.getEditInfo(n);
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 2) {
-			if (ei.getCheckbox().getState())
-				flags |= FLAG_RESET;
-			else
-				flags &= ~FLAG_RESET;
-			setupPins();
-			allocNodes();
-			setPoints();
-		}
-		super.setEditValue(n, ei);
 	}
 }

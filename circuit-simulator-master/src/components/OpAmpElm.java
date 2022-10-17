@@ -1,12 +1,9 @@
 package components;
 
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class OpAmpElm extends CircuitElm {
 	int opsize, opheight, opwidth, opaddtext;
@@ -191,22 +188,5 @@ public class OpAmpElm extends CircuitElm {
 	@Override
 	public int getDumpType() {
 		return 'a';
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Max Output (V)", maxOut, 1, 20);
-		if (n == 1)
-			return new EditInfo("Min Output (V)", minOut, -20, 0);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			maxOut = ei.getValue();
-		if (n == 1)
-			minOut = ei.getValue();
 	}
 }

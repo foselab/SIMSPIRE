@@ -1,14 +1,10 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
 
 import scope.Scope;
-import utils.EditInfo;
 
 public class TransistorElm extends CircuitElm {
 	int pnp;
@@ -269,33 +265,6 @@ public class TransistorElm extends CircuitElm {
 			return "A";
 		default:
 			return "V";
-		}
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Beta/hFE", beta, 10, 1000).setDimensionless();
-		if (n == 1) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Swap E/C", (flags & FLAG_FLIP) != 0));
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0) {
-			beta = ei.getValue();
-			setup();
-		}
-		if (n == 1) {
-			if (ei.getCheckbox().getState())
-				flags |= FLAG_FLIP;
-			else
-				flags &= ~FLAG_FLIP;
-			setPoints();
 		}
 	}
 

@@ -1,11 +1,6 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class SweepElm extends CircuitElm {
 	double maxV, maxF, minF, sweepTime, frequency;
@@ -139,58 +134,5 @@ public class SweepElm extends CircuitElm {
 		arr[3] = "f = " + getUnitText(frequency, "Hz");
 		arr[4] = "range = " + getUnitText(minF, "Hz") + " .. " + getUnitText(maxF, "Hz");
 		arr[5] = "time = " + getUnitText(sweepTime, "s");
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Min Frequency (Hz)", minF, 0, 0);
-		if (n == 1)
-			return new EditInfo("Max Frequency (Hz)", maxF, 0, 0);
-		if (n == 2)
-			return new EditInfo("Sweep Time (s)", sweepTime, 0, 0);
-		if (n == 3) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Logarithmic", (flags & FLAG_LOG) != 0));
-			return ei;
-		}
-		if (n == 4)
-			return new EditInfo("Max Voltage", maxV, 0, 0);
-		if (n == 5) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Bidirectional", (flags & FLAG_BIDIR) != 0));
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		double maxfreq = 1 / (8 * sim.getTimeStep());
-		if (n == 0) {
-			minF = ei.getValue();
-			if (minF > maxfreq)
-				minF = maxfreq;
-		}
-		if (n == 1) {
-			maxF = ei.getValue();
-			if (maxF > maxfreq)
-				maxF = maxfreq;
-		}
-		if (n == 2)
-			sweepTime = ei.getValue();
-		if (n == 3) {
-			flags &= ~FLAG_LOG;
-			if (ei.getCheckbox().getState())
-				flags |= FLAG_LOG;
-		}
-		if (n == 4)
-			maxV = ei.getValue();
-		if (n == 5) {
-			flags &= ~FLAG_BIDIR;
-			if (ei.getCheckbox().getState())
-				flags |= FLAG_BIDIR;
-		}
-		setParams();
 	}
 }

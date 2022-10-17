@@ -1,12 +1,9 @@
 package components;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
 
 import simulator.CirSim;
-import utils.EditInfo;
-
 public class ResistorElm extends CircuitElm {
 	private double resistance;
 
@@ -63,20 +60,6 @@ public class ResistorElm extends CircuitElm {
 		getBasicInfo(arr);
 		arr[3] = "R = " + getUnitText(getResistance(), CirSim.getOhmString());
 		arr[4] = "P = " + getUnitText(getPower(), "W");
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		// ohmString doesn't work here on linux
-		if (n == 0)
-			return new EditInfo("Resistance (ohms)", getResistance(), 0, 0);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (ei.getValue() > 0)
-			setResistance(ei.getValue());
 	}
 
 	@Override

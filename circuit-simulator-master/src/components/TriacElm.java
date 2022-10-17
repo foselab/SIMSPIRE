@@ -1,14 +1,9 @@
 package components;
 // stub implementation of TriacElm, based on SCRElm
 
-// FIXME need to add TriacElm to srclist
-// FIXME need to uncomment TriacElm line from CirSim.java
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 // Silicon-Controlled Rectifier
 // 3 nodes, 1 internal node
@@ -191,27 +186,5 @@ public class TriacElm extends CircuitElm {
 		ic = (volts[cnode] - volts[gnode]) / cresistance;
 		ia = (volts[anode] - volts[inode]) / aresistance;
 		ig = -ic - ia;
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		// ohmString doesn't work here on linux
-		if (n == 0)
-			return new EditInfo("Trigger Current (A)", triggerI, 0, 0);
-		if (n == 1)
-			return new EditInfo("Holding Current (A)", holdingI, 0, 0);
-		if (n == 2)
-			return new EditInfo("Gate-Cathode Resistance (ohms)", cresistance, 0, 0);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0 && ei.getValue() > 0)
-			triggerI = ei.getValue();
-		if (n == 1 && ei.getValue() > 0)
-			holdingI = ei.getValue();
-		if (n == 2 && ei.getValue() > 0)
-			cresistance = ei.getValue();
 	}
 }

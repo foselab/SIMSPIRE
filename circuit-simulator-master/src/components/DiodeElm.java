@@ -1,11 +1,8 @@
 package components;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class DiodeElm extends CircuitElm {
 	Diode diode;
@@ -98,19 +95,6 @@ public class DiodeElm extends CircuitElm {
 		arr[2] = "Vd = " + getVoltageText(getVoltageDiff());
 		arr[3] = "P = " + getUnitText(getPower(), "W");
 		arr[4] = "Vf = " + getVoltageText(fwdrop);
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Fwd Voltage @ 1A", fwdrop, 10, 1000);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		fwdrop = ei.getValue();
-		setup();
 	}
 
 	@Override

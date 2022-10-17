@@ -1,11 +1,8 @@
 package components;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 // Zener code contributed by J. Mike Rollins
 // http://www.camotruck.net/rollins/simulator.html
@@ -64,24 +61,6 @@ public class ZenerElm extends DiodeElm {
 		super.getInfo(arr);
 		arr[0] = "Zener diode";
 		arr[5] = "Vz = " + getVoltageText(zvoltage);
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Fwd Voltage @ 1A", fwdrop, 10, 1000);
-		if (n == 1)
-			return new EditInfo("Zener Voltage @ 5mA", zvoltage, 1, 25);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			fwdrop = ei.getValue();
-		if (n == 1)
-			zvoltage = ei.getValue();
-		setup();
 	}
 
 	@Override
