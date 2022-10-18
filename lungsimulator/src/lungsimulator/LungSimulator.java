@@ -6,6 +6,7 @@ import java.io.IOException;
 import lungsimulator.components.Archetype;
 import lungsimulator.components.Patient;
 import lungsimulator.components.SimulatorParams;
+import lungsimulator.graphic.GraphicInterface;
 import lungsimulator.utils.Validator;
 import lungsimulator.utils.YamlReader;
 import simulator.CirSim;
@@ -54,8 +55,8 @@ public class LungSimulator {
 		YamlReader yamlReader;
 
 		if (chosenSchema != null) {
-			if (chosenSchema.contains("***")) {
-				final String[] fileNames = chosenSchema.split("***");
+			if (chosenSchema.contains(",")) {
+				final String[] fileNames = chosenSchema.split(",");
 				yamlReader = new YamlReader(fileNames[0], fileNames[1], fileNames[2]);
 			} else {
 				yamlReader = new YamlReader(chosenSchema);

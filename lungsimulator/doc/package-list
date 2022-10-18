@@ -1,4 +1,5 @@
 lungsimulator
 lungsimulator.components
 lungsimulator.exceptions
+lungsimulator.graphic
 lungsimulator.utils

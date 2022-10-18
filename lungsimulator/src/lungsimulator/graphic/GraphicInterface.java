@@ -1,4 +1,4 @@
-package lungsimulator;
+package lungsimulator.graphic;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -46,27 +46,6 @@ import simulator.CirSim;
 
 public class GraphicInterface {
 
-	private static final String PRESSURE_TITLE = "Pressure";
-	private static final String PRESSURESERIES = "Patient Pressure";
-	private static final String FLOWSERIES = "Flow";
-	private static final int MAXDATA = 200;
-
-	private static final int IDELEMENTX = 33;
-	private static final int IDELEMENTWIDTH = 400;
-	private static final int IDELEMENTHEIGHT = 20;
-
-	private static final int VALELEMENTX = 250;
-	private static final int VALELEMENTWIDTH = 50;
-	private static final int VALELEMENTHEIGHT = 20;
-
-	private static final String UMRES = "cmH2O/L/s";
-	private static final String UMCAP = "L/cmH2O";
-	private static final String UMGEN = "cmH2O";
-
-	private static final int UMELEMENTX = 310;
-	private static final int UMELEMENTWIDTH = 100;
-	private static final int UMELEMENTHEIGHT = 20;
-
 	private boolean showVentilator = true;
 	private double[][] initdataPressure;
 	private double[][] initdataVentilatorPressure;
@@ -96,7 +75,6 @@ public class GraphicInterface {
 	private String modelChoice;
 
 	public String selectSchema() {
-
 		// options configuration
 		String[] models = { "Model of Albanese", "Model of Al-Naggar", "Model of Baker", "Model of Jain",
 				"Model of Campbell-Brown", "Your own model..." };
@@ -105,22 +83,10 @@ public class GraphicInterface {
 		String var = String.valueOf(choice);
 
 		if (var.equals("Your own model...")) {
-			Object lungFile = JOptionPane.showInputDialog(null,
-					"Insert your lung model file name (e.g. myLungModel.yaml) \n The file must be in config folder",
-					"Choose Lung Model File", JOptionPane.PLAIN_MESSAGE, null, null, null);
-			Object arcFile = JOptionPane.showInputDialog(null,
-					"Insert your archetype file name (e.g. myArcModel.yaml) \n The file must be in config folder",
-					"Choose Archetype File", JOptionPane.PLAIN_MESSAGE, null, null, null);
-			Object demFile = JOptionPane.showInputDialog(null,
-					"Insert your demographic data file name (e.g. myDemModel.yaml) \n The file must be in config folder",
-					"Choose Demographic Data File", JOptionPane.PLAIN_MESSAGE, null, null, null);
-			String config = "config/";
-			modelChoice = config + String.valueOf(lungFile) + "***" + config + String.valueOf(arcFile) + "***" + config
-					+ String.valueOf(demFile);
-
+			ChooseFileWindow chooseFileWindow = new ChooseFileWindow();
+			modelChoice = chooseFileWindow.getResult();
 		} else {
-			String name = var.replace("Model of ", "");
-			modelChoice = name;
+			modelChoice = var.replace("Model of ", "");
 		}
 		return modelChoice;
 	}
@@ -145,23 +111,23 @@ public class GraphicInterface {
 		patientPanelConfig(patient, archetype, demographicData);
 
 		// Init the arrays for the data
-		initdataPressure = new double[pressureCoord.size() + 1][MAXDATA];
+		initdataPressure = new double[pressureCoord.size() + 1][GraphicConstants.MAXDATA];
 		// One row for time values and one row for pressure values
-		initdataVentilatorPressure = new double[2][MAXDATA];
+		initdataVentilatorPressure = new double[2][GraphicConstants.MAXDATA];
 		// One row for time values and one row for each element of the circuit
-		initdataFlow = new double[flowIds.size() + 1][MAXDATA];
+		initdataFlow = new double[flowIds.size() + 1][GraphicConstants.MAXDATA];
 
 		// Fill initData with zeros
-		Utils.initVectors(MAXDATA, initdataPressure, initdataVentilatorPressure, initdataFlow);
+		Utils.initVectors(GraphicConstants.MAXDATA, initdataPressure, initdataVentilatorPressure, initdataFlow);
 
 		JPanel flowPanel = new JPanel();
 		frame.getContentPane().add(flowPanel);
 		flowPanel.setLayout(new BoxLayout(flowPanel, BoxLayout.Y_AXIS));
 
 		// Create the flow chart
-		flowChart = new XYChartBuilder().width(w).height(h).title(FLOWSERIES + " in " + flowIds.get(0))
-				.xAxisTitle("Time [s]").yAxisTitle(FLOWSERIES).build();
-		flowChart.addSeries(FLOWSERIES, initdataFlow[0], initdataFlow[1]);
+		flowChart = new XYChartBuilder().width(w).height(h).title(GraphicConstants.FLOWSERIES + " in " + flowIds.get(0))
+				.xAxisTitle("Time [s]").yAxisTitle(GraphicConstants.FLOWSERIES).build();
+		flowChart.addSeries(GraphicConstants.FLOWSERIES, initdataFlow[0], initdataFlow[1]);
 		flowChart.getStyler().setYAxisMax(2.0).setYAxisMin(-2.0).setSeriesMarkers(new Marker[] { SeriesMarkers.NONE })
 				.setLegendPosition(LegendPosition.InsideS);
 
@@ -180,8 +146,8 @@ public class GraphicInterface {
 				JComboBox cb = (JComboBox) e.getSource();
 				String choice = (String) cb.getSelectedItem();
 				flowIndexElm = flowIds.indexOf(choice) + 1;
-				flowChart.setTitle(FLOWSERIES + " in " + choice);
-				flowChart.updateXYSeries(FLOWSERIES, initdataFlow[0], initdataFlow[flowIndexElm], null);
+				flowChart.setTitle(GraphicConstants.FLOWSERIES + " in " + choice);
+				flowChart.updateXYSeries(GraphicConstants.FLOWSERIES, initdataFlow[0], initdataFlow[flowIndexElm], null);
 			}
 		});
 
@@ -189,9 +155,9 @@ public class GraphicInterface {
 		flowPanel.add(sw2);
 
 		// Create the pressure chart
-		pressureChart = new XYChartBuilder().width(w).height(h).title(PRESSURE_TITLE + " at " + pressureIds.get(0))
+		pressureChart = new XYChartBuilder().width(w).height(h).title(GraphicConstants.PRESSURE_TITLE + " at " + pressureIds.get(0))
 				.xAxisTitle("Time [s]").yAxisTitle("Pressure").build();
-		pressureChart.addSeries(PRESSURESERIES, initdataPressure[0], initdataPressure[1]);
+		pressureChart.addSeries(GraphicConstants.PRESSURESERIES, initdataPressure[0], initdataPressure[1]);
 
 		if (showVentilator) {
 			pressureChart.addSeries("Ventilator Pressure", initdataVentilatorPressure[0],
@@ -215,8 +181,8 @@ public class GraphicInterface {
 				JComboBox cb = (JComboBox) e.getSource();
 				String choice = (String) cb.getSelectedItem();
 				pressureIndexElm = pressureIds.indexOf(choice) + 1;
-				pressureChart.setTitle(PRESSURE_TITLE + " in " + choice);
-				pressureChart.updateXYSeries(PRESSURESERIES, initdataPressure[0], initdataPressure[pressureIndexElm],
+				pressureChart.setTitle(GraphicConstants.PRESSURE_TITLE + " in " + choice);
+				pressureChart.updateXYSeries(GraphicConstants.PRESSURESERIES, initdataPressure[0], initdataPressure[pressureIndexElm],
 						null);
 
 			}
@@ -248,19 +214,19 @@ public class GraphicInterface {
 			// resistance
 			if (e.getType().equals("ResistorElm")) {
 				elmValue = archetype.getParameters().get(e.getAssociatedFormula().getVariables().get(0));
-				graphicDesignForElement(elmId, UMRES, yInit, Double.parseDouble(elmValue), false, isTimeDependent);
+				graphicDesignForElement(elmId, GraphicConstants.UMRES, yInit, Double.parseDouble(elmValue), false, isTimeDependent);
 				flowIds.add(elmId);
 			}
 
 			// capacitor
 			if (e.getType().equals("CapacitorElm")) {
 				elmValue = archetype.getParameters().get(e.getAssociatedFormula().getVariables().get(0));
-				graphicDesignForElement(elmId, UMCAP, yInit, Double.parseDouble(elmValue), false, isTimeDependent);
+				graphicDesignForElement(elmId, GraphicConstants.UMCAP, yInit, Double.parseDouble(elmValue), false, isTimeDependent);
 				flowIds.add(elmId);
 			}
 
 			if (e.getType().equals("ExternalVoltageElm")) {
-				graphicDesignForElement(elmId, UMGEN, yInit, 0, true, isTimeDependent);
+				graphicDesignForElement(elmId, GraphicConstants.UMGEN, yInit, 0, true, isTimeDependent);
 			}
 
 			yInit += 28;
@@ -271,21 +237,21 @@ public class GraphicInterface {
 		int yButton = yInit + 28;
 		stop = new JButton("Stop");
 		stop.setFont(new Font("Arial", Font.BOLD, 16));
-		stop.setBounds(IDELEMENTX, yButton, 100, 50);
+		stop.setBounds(GraphicConstants.IDELEMENTX, yButton, 100, 50);
 		stop.setBackground(Color.RED);
 		stop.setForeground(Color.WHITE);
 		stop.setVisible(true);
 
 		start = new JButton("Start");
 		start.setFont(new Font("Arial", Font.BOLD, 16));
-		start.setBounds(IDELEMENTX, yButton, 100, 50);
+		start.setBounds(GraphicConstants.IDELEMENTX, yButton, 100, 50);
 		start.setBackground(Color.GREEN);
 		start.setForeground(Color.WHITE);
 		start.setVisible(false);
 
 		printData = new JButton("Print");
 		printData.setFont(new Font("Arial", Font.BOLD, 16));
-		printData.setBounds(VALELEMENTX, yButton, 100, 50);
+		printData.setBounds(GraphicConstants.VALELEMENTX, yButton, 100, 50);
 		printData.setBackground(Color.YELLOW);
 		printData.setForeground(Color.BLACK);
 		printData.setVisible(true);
@@ -316,18 +282,18 @@ public class GraphicInterface {
 	private void demographicDataSetUp(SimulatorParams demographicData, int yLast) {
 		yLast += 102;
 		final JLabel elementId = new JLabel("Patient demographic data");
-		elementId.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
+		elementId.setBounds(GraphicConstants.IDELEMENTX, yLast, 200, GraphicConstants.IDELEMENTHEIGHT);
 		patientPanel.add(elementId);
 
 		yLast += 28;
 
 		final JLabel gender = new JLabel("Gender ");
-		gender.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
+		gender.setBounds(GraphicConstants.IDELEMENTX, yLast, 200, GraphicConstants.IDELEMENTHEIGHT);
 		patientPanel.add(gender);
 
 		String[] genders = { "Male", "Female" };
 		JComboBox<String> gendersBox = new JComboBox<String>(genders);
-		gendersBox.setBounds(IDELEMENTX + 80, yLast, 100, 20);
+		gendersBox.setBounds(GraphicConstants.IDELEMENTX + 80, yLast, 100, 20);
 		if ("MALE".equalsIgnoreCase(demographicData.getGender())) {
 			gendersBox.setSelectedItem("Male");
 		} else {
@@ -338,44 +304,44 @@ public class GraphicInterface {
 		yLast += 28;
 
 		final JLabel age = new JLabel("Age (years)");
-		age.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
+		age.setBounds(GraphicConstants.IDELEMENTX, yLast, 200, GraphicConstants.IDELEMENTHEIGHT);
 		patientPanel.add(age);
 
 		final SpinnerNumberModel ageModel = new SpinnerNumberModel(demographicData.getAge(), 18, 126, 1);
 		JSpinner ageElm = new JSpinner(ageModel);
-		ageElm.setBounds(IDELEMENTX + 80, yLast, VALELEMENTWIDTH, VALELEMENTHEIGHT);
+		ageElm.setBounds(GraphicConstants.IDELEMENTX + 80, yLast, GraphicConstants.VALELEMENTWIDTH, GraphicConstants.VALELEMENTHEIGHT);
 		patientPanel.add(ageElm);
 
 		yLast += 28;
 
 		final JLabel height = new JLabel("Height (m)");
-		height.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
+		height.setBounds(GraphicConstants.IDELEMENTX, yLast, 200, GraphicConstants.IDELEMENTHEIGHT);
 		patientPanel.add(height);
 
 		final SpinnerNumberModel heightModel = new SpinnerNumberModel(demographicData.getHeight(), 0.55, 2.60, 0.01);
 		JSpinner heightElm = new JSpinner(heightModel);
-		heightElm.setBounds(IDELEMENTX + 80, yLast, VALELEMENTWIDTH, VALELEMENTHEIGHT);
+		heightElm.setBounds(GraphicConstants.IDELEMENTX + 80, yLast, GraphicConstants.VALELEMENTWIDTH, GraphicConstants.VALELEMENTHEIGHT);
 		patientPanel.add(heightElm);
 
 		yLast += 28;
 
 		final JLabel weight = new JLabel("Weigth (kg)");
-		weight.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
+		weight.setBounds(GraphicConstants.IDELEMENTX, yLast, 200, GraphicConstants.IDELEMENTHEIGHT);
 		patientPanel.add(weight);
 
 		final SpinnerNumberModel weightModel = new SpinnerNumberModel(demographicData.getWeight(), 25, 600, 0.1);
 		JSpinner weightElm = new JSpinner(weightModel);
-		weightElm.setBounds(IDELEMENTX + 80, yLast, VALELEMENTWIDTH, VALELEMENTHEIGHT);
+		weightElm.setBounds(GraphicConstants.IDELEMENTX + 80, yLast, GraphicConstants.VALELEMENTWIDTH, GraphicConstants.VALELEMENTHEIGHT);
 		patientPanel.add(weightElm);
 
 		yLast += 28;
 
 		final JLabel ibw = new JLabel("Ibw (kg)");
-		ibw.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
+		ibw.setBounds(GraphicConstants.IDELEMENTX, yLast, 200, GraphicConstants.IDELEMENTHEIGHT);
 		patientPanel.add(ibw);
 
 		final JLabel ibwValue = new JLabel(String.valueOf(demographicData.getIbw()));
-		ibwValue.setBounds(IDELEMENTX + 80, yLast, VALELEMENTWIDTH, VALELEMENTHEIGHT);
+		ibwValue.setBounds(GraphicConstants.IDELEMENTX + 80, yLast, GraphicConstants.VALELEMENTWIDTH, GraphicConstants.VALELEMENTHEIGHT);
 		patientPanel.add(ibwValue);
 	}
 
@@ -387,12 +353,12 @@ public class GraphicInterface {
 	 */
 	public void updateShownDataValues(final double time, final CirSim myCircSim) {
 		// Shift data in vectors
-		Utils.shiftData(MAXDATA, initdataPressure, initdataVentilatorPressure, initdataFlow);
+		Utils.shiftData(GraphicConstants.MAXDATA, initdataPressure, initdataVentilatorPressure, initdataFlow);
 
 		// Update time
-		initdataPressure[0][MAXDATA - 1] = time;
-		initdataVentilatorPressure[0][MAXDATA - 1] = time;
-		initdataFlow[0][MAXDATA - 1] = time;
+		initdataPressure[0][GraphicConstants.MAXDATA - 1] = time;
+		initdataVentilatorPressure[0][GraphicConstants.MAXDATA - 1] = time;
+		initdataFlow[0][GraphicConstants.MAXDATA - 1] = time;
 
 		int count = 1;
 		int countPressure = 1;
@@ -404,26 +370,26 @@ public class GraphicInterface {
 
 			if (cir.getIdLeft() != null && pressureCoord.containsKey(cir.getIdLeft())
 					&& pressureCoord.get(cir.getIdLeft()).equals("left")) {
-				initdataPressure[countPressure][MAXDATA - 1] = cir.getVoltZero();
+				initdataPressure[countPressure][GraphicConstants.MAXDATA - 1] = cir.getVoltZero();
 				countPressure++;
 			}
 
 			if (cir.getIdRight() != null && pressureCoord.containsKey(cir.getIdRight())
 					&& pressureCoord.get(cir.getIdRight()).equals("right")) {
-				initdataPressure[countPressure][MAXDATA - 1] = cir.getVoltOne();
+				initdataPressure[countPressure][GraphicConstants.MAXDATA - 1] = cir.getVoltOne();
 				countPressure++;
 			}
 
 			if (cir.getClass().getSimpleName().equals("ExternalVoltageElm")) {
-				initdataVentilatorPressure[1][MAXDATA - 1] = cir.getVoltageDiff();
+				initdataVentilatorPressure[1][GraphicConstants.MAXDATA - 1] = cir.getVoltageDiff();
 				ventilator.setValue(cir.getVoltageDiff());
 			} else {
-				initdataFlow[count][MAXDATA - 1] = cir.getCurrent();
+				initdataFlow[count][GraphicConstants.MAXDATA - 1] = cir.getCurrent();
 				count++;
 			}
 		}
 
-		pressureChart.updateXYSeries(PRESSURESERIES, initdataPressure[0], initdataPressure[1], null);
+		pressureChart.updateXYSeries(GraphicConstants.PRESSURESERIES, initdataPressure[0], initdataPressure[1], null);
 		if (showVentilator) {
 			pressureChart.updateXYSeries("Ventilator Pressure", initdataVentilatorPressure[0],
 					initdataVentilatorPressure[1], null);
@@ -433,8 +399,8 @@ public class GraphicInterface {
 		flowChart.getStyler().setYAxisMax(getMax(initdataFlow[flowIndexElm]));
 		flowChart.getStyler().setYAxisMin(-getMax(initdataFlow[flowIndexElm]));
 
-		flowChart.updateXYSeries(FLOWSERIES, initdataFlow[0], initdataFlow[flowIndexElm], null);
-		pressureChart.updateXYSeries(PRESSURESERIES, initdataPressure[0], initdataPressure[pressureIndexElm], null);
+		flowChart.updateXYSeries(GraphicConstants.FLOWSERIES, initdataFlow[0], initdataFlow[flowIndexElm], null);
+		pressureChart.updateXYSeries(GraphicConstants.PRESSURESERIES, initdataPressure[0], initdataPressure[pressureIndexElm], null);
 
 		stop.addActionListener(new ActionListener() {
 
@@ -507,13 +473,13 @@ public class GraphicInterface {
 
 		// Element description
 		final JLabel elementId = new JLabel(elementDescr);
-		elementId.setBounds(IDELEMENTX, elementY, IDELEMENTWIDTH, IDELEMENTHEIGHT);
+		elementId.setBounds(GraphicConstants.IDELEMENTX, elementY, GraphicConstants.IDELEMENTWIDTH, GraphicConstants.IDELEMENTHEIGHT);
 		patientPanel.add(elementId);
 
 		// Element value
 		final SpinnerNumberModel elementModel = new SpinnerNumberModel(0.0, 0.000, 100.0, 0.001);
 		element.setModel(elementModel);
-		element.setBounds(VALELEMENTX, elementY, VALELEMENTWIDTH, VALELEMENTHEIGHT);
+		element.setBounds(GraphicConstants.VALELEMENTX, elementY, GraphicConstants.VALELEMENTWIDTH, GraphicConstants.VALELEMENTHEIGHT);
 		element.setValue(value);
 		patientPanel.add(element);
 
@@ -527,7 +493,7 @@ public class GraphicInterface {
 
 		// Element unit of measurement
 		final JLabel unit = new JLabel(elementUnit);
-		unit.setBounds(UMELEMENTX, elementY, UMELEMENTWIDTH, UMELEMENTHEIGHT);
+		unit.setBounds(GraphicConstants.UMELEMENTX, elementY, GraphicConstants.UMELEMENTWIDTH, GraphicConstants.UMELEMENTHEIGHT);
 		patientPanel.add(unit);
 
 	}
