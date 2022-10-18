@@ -64,7 +64,6 @@ public class DiodeElm extends CircuitElm {
 		Point pa[] = newPointArray(2);
 		interpPoint2(lead1, lead2, pa[0], pa[1], 0, hs);
 		interpPoint2(lead1, lead2, cathode[0], cathode[1], 1, hs);
-		poly = createPolygon(pa[0], pa[1], lead2);
 	}
 	
 	@Override

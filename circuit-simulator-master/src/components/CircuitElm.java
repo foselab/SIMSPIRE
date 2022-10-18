@@ -1,8 +1,6 @@
 package components;
 
 import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
 import java.text.NumberFormat;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -15,7 +13,7 @@ public abstract class CircuitElm {
 	private String idRight;
 	public static CirSim sim;
 
-	public static NumberFormat showFormat, shortFormat, noCommaFormat;
+	public static NumberFormat showFormat;
 	static final double pi = 3.14159265358979323846;
 
 	private int x;
@@ -30,7 +28,6 @@ public abstract class CircuitElm {
 	Point point1, point2, lead1, lead2;
 	double volts[];
 	double current, curcount;
-	Rectangle boundingBox;
 	boolean noDiagonal;
 	public boolean selected;
 
@@ -51,7 +48,6 @@ public abstract class CircuitElm {
 		setY(setY2(yy)); // y = y2 = yy
 		flags = getDefaultFlags(); // 0
 		allocNodes(); // initialize nodes and volts as a list of 2 elements
-		initBoundingBox();
 	}
 
 	CircuitElm(int xa, int ya, int xb, int yb, int f) {
@@ -61,13 +57,6 @@ public abstract class CircuitElm {
 		setY2(yb);
 		flags = f;
 		allocNodes();
-		initBoundingBox();
-	}
-
-	void initBoundingBox() {
-		boundingBox = new Rectangle();
-		boundingBox.setBounds(min(getX(), getX2()), min(getY(), getY2()), abs(getX2() - getX()) + 1,
-				abs(getY2() - getY()) + 1);
 	}
 
 	void allocNodes() {
@@ -177,79 +166,6 @@ public abstract class CircuitElm {
 		return a;
 	}
 
-	Polygon calcArrow(Point a, Point b, double al, double aw) {
-		Polygon poly = new Polygon();
-		Point p1 = new Point();
-		Point p2 = new Point();
-		int adx = b.x - a.x;
-		int ady = b.y - a.y;
-		double l = Math.sqrt(adx * adx + ady * ady);
-		poly.addPoint(b.x, b.y);
-		interpPoint2(a, b, p1, p2, 1 - al / l, aw);
-		poly.addPoint(p1.x, p1.y);
-		poly.addPoint(p2.x, p2.y);
-		return poly;
-	}
-
-	Polygon calcArrowReverse(Point a, Point b, double al, double aw) {
-		Polygon poly = new Polygon();
-		Point p1 = new Point();
-		Point p2 = new Point();
-		double adx = b.x - a.x;
-		double ady = b.y - a.y;
-		double l = Math.sqrt(adx * adx + ady * ady);
-		if (l > 0) {
-			adx /= l;
-			ady /= l;
-			double bdx = -ady; // orthogonal unit vector
-			double bdy = adx; //
-			poly.addPoint((int) Math.round(b.x + 1 - adx * al), (int) Math.round(b.y + 1 - ady * al));
-			poly.addPoint((int) Math.round(b.x + 1 - bdx * al), (int) Math.round(b.y + 1 - bdy * aw));
-			poly.addPoint((int) Math.round(b.x + 1 + bdx * al), (int) Math.round(b.y + 1 + bdy * aw));
-		}
-		return poly;
-	}
-
-	Polygon createPolygon(Point a, Point b, Point c) {
-		Polygon p = new Polygon();
-		p.addPoint(a.x, a.y);
-		p.addPoint(b.x, b.y);
-		p.addPoint(c.x, c.y);
-		return p;
-	}
-
-	Polygon createPolygon(Point a, Point b, Point c, Point d) {
-		Polygon p = new Polygon();
-		p.addPoint(a.x, a.y);
-		p.addPoint(b.x, b.y);
-		p.addPoint(c.x, c.y);
-		p.addPoint(d.x, d.y);
-		return p;
-	}
-
-	Polygon createPolygon(Point a[]) {
-		Polygon p = new Polygon();
-		int i;
-		for (i = 0; i != a.length; i++)
-			p.addPoint(a[i].x, a[i].y);
-		return p;
-	}
-
-	public void drag(int xx, int yy) {
-		xx = sim.snapGrid(xx);
-		yy = sim.snapGrid(yy);
-		if (noDiagonal) {
-			if (Math.abs(getX() - xx) < Math.abs(getY() - yy)) {
-				xx = getX();
-			} else {
-				yy = getY();
-			}
-		}
-		setX2(xx);
-		setY2(yy);
-		setPoints();
-	}
-
 	public void stamp() {
 	}
 
@@ -315,47 +231,6 @@ public abstract class CircuitElm {
 	 */
 	public Point getPost(int n) {
 		return (n == 0) ? point1 : (n == 1) ? point2 : null;
-	}
-
-	void setBbox(int x1, int y1, int x2, int y2) {
-		if (x1 > x2) {
-			int q = x1;
-			x1 = x2;
-			x2 = q;
-		}
-		if (y1 > y2) {
-			int q = y1;
-			y1 = y2;
-			y2 = q;
-		}
-		boundingBox.setBounds(x1, y1, x2 - x1 + 1, y2 - y1 + 1);
-	}
-
-	void setBbox(Point p1, Point p2, double w) {
-		setBbox(p1.x, p1.y, p2.x, p2.y);
-		int gx = p2.y - p1.y;
-		int gy = p1.x - p2.x;
-		int dpx = (int) (dpx1 * w);
-		int dpy = (int) (dpy1 * w);
-		adjustBbox(p1.x + dpx, p1.y + dpy, p1.x - dpx, p1.y - dpy);
-	}
-
-	void adjustBbox(int x1, int y1, int x2, int y2) {
-		if (x1 > x2) {
-			int q = x1;
-			x1 = x2;
-			x2 = q;
-		}
-		if (y1 > y2) {
-			int q = y1;
-			y1 = y2;
-			y2 = q;
-		}
-		x1 = min(boundingBox.x, x1);
-		y1 = min(boundingBox.y, y1);
-		x2 = max(boundingBox.x + boundingBox.width - 1, x2);
-		y2 = max(boundingBox.y + boundingBox.height - 1, y2);
-		boundingBox.setBounds(x1, y1, x2 - x1, y2 - y1);
 	}
 
 	public boolean isCenteredText() {
@@ -471,10 +346,6 @@ public abstract class CircuitElm {
 		double x = p1.x - p2.x;
 		double y = p1.y - p2.y;
 		return Math.sqrt(x * x + y * y);
-	}
-
-	public Rectangle getBoundingBox() {
-		return boundingBox;
 	}
 	
 	public int getShortcut() {

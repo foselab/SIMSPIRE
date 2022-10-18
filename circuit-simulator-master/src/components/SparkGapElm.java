@@ -1,7 +1,5 @@
 package components;
 
-import java.awt.Point;
-import java.awt.Polygon;
 import java.util.StringTokenizer;
 
 import simulator.CirSim;
@@ -42,18 +40,12 @@ public class SparkGapElm extends CircuitElm {
 		return super.dump() + " " + onresistance + " " + offresistance + " " + breakdown + " " + holdcurrent;
 	}
 
-	Polygon arrow1, arrow2;
-
 	@Override
 	public void setPoints() {
 		super.setPoints();
 		int dist = 16;
 		int alen = 8;
 		calcLeads(dist + alen);
-		Point p1 = interpPoint(point1, point2, (dn - alen) / (2 * dn));
-		arrow1 = calcArrow(point1, p1, alen, alen);
-		p1 = interpPoint(point1, point2, (dn + alen) / (2 * dn));
-		arrow2 = calcArrow(point2, p1, alen, alen);
 	}
 
 	@Override

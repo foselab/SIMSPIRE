@@ -58,7 +58,6 @@ public class LogicOutputElm extends CircuitElm {
 	public void setPoints() {
 		super.setPoints();
 		lead1 = interpPoint(point1, point2, 1 - 12 / dn);
-		arrowPoly = calcArrow(point1, lead1, 8, 8);
 	}
 
 	@Override

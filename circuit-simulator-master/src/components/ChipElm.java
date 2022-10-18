@@ -55,23 +55,7 @@ public abstract class ChipElm extends CircuitElm {
 	boolean lastClock;
 
 	@Override
-	public void drag(int xx, int yy) {
-		yy = sim.snapGrid(yy);
-		if (xx < getX()) {
-			xx = getX();
-			yy = getY();
-		} else {
-			setY(setY2(yy));
-			setX2(sim.snapGrid(xx));
-		}
-		setPoints();
-	}
-
-	@Override
 	public void setPoints() {
-		if (getX2() - getX() > sizeX * cspc2 && this == sim.getDragElm())
-			setSize(2);
-		int hs = cspc;
 		int x0 = getX() + cspc2;
 		int y0 = getY();
 		int xr = x0 - cspc;
@@ -80,7 +64,6 @@ public abstract class ChipElm extends CircuitElm {
 		int ys = sizeY * cspc2;
 		rectPointsX = new int[] { xr, xr + xs, xr + xs, xr };
 		rectPointsY = new int[] { yr, yr, yr + ys, yr + ys };
-		setBbox(xr, yr, rectPointsX[2], rectPointsY[2]);
 		int i;
 		for (i = 0; i != getPostCount(); i++) {
 			Pin p = pins[i];
@@ -164,7 +147,6 @@ public abstract class ChipElm extends CircuitElm {
 
 	@Override
 	public String dump() {
-		int t = getDumpType();
 		String s = super.dump();
 		if (needsBits())
 			s += " " + bits;

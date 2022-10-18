@@ -17,7 +17,7 @@ public class LungSimulator {
 	/**
 	 * Reference used to call methods for circuit construction
 	 */
-	private final transient RealTimePlot rtp = new RealTimePlot();
+	private final transient CircuitBuilder rtp = new CircuitBuilder();
 
 	/**
 	 * Patient model description
@@ -81,7 +81,7 @@ public class LungSimulator {
 	 */
 	public void simulateCircuit() throws InterruptedException {
 		// Create the circuit equivalent to the lung
-		final CirSim myCircSim = rtp.buildCircuitSimulator(patient, archetype);
+		CirSim myCircSim = rtp.buildCircuitSimulator(patient, archetype);
 
 		double time = 0;
 
@@ -89,10 +89,10 @@ public class LungSimulator {
 			if (userInterface.getStateOfExecution()) {
 				time += 0.1;
 
-				/*
-				 * if(time%2==0) { archetype.getParameters().put("TIME", String.valueOf(time));
-				 * myCircSim = rtp.updateCircuitSimulator(patient, archetype); }
-				 */
+				//update values for time dependent components
+				if(rtp.isTimeDependentCir()) {
+					myCircSim = rtp.updateCircuitSimulator(archetype, time);
+				}
 
 				// Analyze the circuit and simulate a step
 				myCircSim.analyzeCircuit();

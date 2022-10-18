@@ -1,13 +1,11 @@
 package components;
 
-import java.awt.Polygon;
 import java.util.StringTokenizer;
 
 public class LogicInputElm extends SwitchElm {
 	final int FLAG_TERNARY = 1;
 	final int FLAG_NUMERIC = 2;
 	double hiV, loV;
-	Polygon arrowPoly;
 
 	public LogicInputElm(int xx, int yy) {
 		super(xx, yy, false);
@@ -56,7 +54,6 @@ public class LogicInputElm extends SwitchElm {
 	public void setPoints() {
 		super.setPoints();
 		lead1 = interpPoint(point1, point2, 1 - 12 / dn);
-		arrowPoly = calcArrowReverse(point1, lead1, 8, 8);
 	}
 
 	@Override

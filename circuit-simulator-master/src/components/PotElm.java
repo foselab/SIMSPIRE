@@ -59,7 +59,6 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 
 	@Override
 	public void adjustmentValueChanged(AdjustmentEvent e) {
-		sim.setAnalyzeFlag(true);
 		setPoints();
 	}
 
@@ -72,18 +71,14 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 		super.setPoints();
 		int offset = 0;
 		if (abs(dx) > abs(dy)) {
-			dx = sim.snapGrid(dx / 2) * 2;
 			point2.x = setX2(point1.x + dx);
 			offset = (dx < 0) ? dy : -dy;
 			point2.y = point1.y;
 		} else {
-			dy = sim.snapGrid(dy / 2) * 2;
 			point2.y = setY2(point1.y + dy);
 			offset = (dy > 0) ? dx : -dx;
 			point2.x = point1.x;
 		}
-		if (offset == 0)
-			offset = sim.getGridSize();
 		dn = distance(point1, point2);
 		int bodyLen = 32;
 		calcLeads(bodyLen);

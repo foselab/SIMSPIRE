@@ -41,18 +41,6 @@ public class TransformerElm extends CircuitElm {
 	}
 
 	@Override
-	public void drag(int xx, int yy) {
-		xx = sim.snapGrid(xx);
-		yy = sim.snapGrid(yy);
-		width = max(32, abs(yy - getY()));
-		if (xx == getX())
-			yy = getY();
-		setX2(xx);
-		setY2(yy);
-		setPoints();
-	}
-
-	@Override
 	public int getDumpType() {
 		return 'T';
 	}

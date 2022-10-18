@@ -4,8 +4,6 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
 
-import scope.Scope;
-
 public class TransistorElm extends CircuitElm {
 	int pnp;
 	double beta;
@@ -103,17 +101,6 @@ public class TransistorElm extends CircuitElm {
 		// calc point where base lead contacts rectangle
 		base = new Point();
 		interpPoint(point1, point2, base, 1 - 16 / dn);
-
-		// rectangle
-		rectPoly = createPolygon(rect[0], rect[2], rect[3], rect[1]);
-
-		// arrow
-		if (pnp == 1)
-			arrowPoly = calcArrow(emit[1], emit[0], 8, 4);
-		else {
-			Point pt = interpPoint(point1, point2, 1 - 11 / dn, -5 * dsign * pnp);
-			arrowPoly = calcArrow(emit[0], pt, 8, 4);
-		}
 	}
 
 	static final double leakage = 1e-13; // 1e-6;
@@ -125,7 +112,6 @@ public class TransistorElm extends CircuitElm {
 
 	double limitStep(double vnew, double vold) {
 		double arg;
-		double oo = vnew;
 
 		if (vnew > vcrit && Math.abs(vnew - vold) > (vt + vt)) {
 			if (vold > 0) {
@@ -235,37 +221,6 @@ public class TransistorElm extends CircuitElm {
 		arr[4] = "Vbe = " + getVoltageText(vbe);
 		arr[5] = "Vbc = " + getVoltageText(vbc);
 		arr[6] = "Vce = " + getVoltageText(vce);
-	}
-
-	@Override
-	public double getScopeValue(int x) {
-		switch (x) {
-		case Scope.VAL_IB:
-			return ib;
-		case Scope.VAL_IC:
-			return ic;
-		case Scope.VAL_IE:
-			return ie;
-		case Scope.VAL_VBE:
-			return volts[0] - volts[2];
-		case Scope.VAL_VBC:
-			return volts[0] - volts[1];
-		case Scope.VAL_VCE:
-			return volts[1] - volts[2];
-		}
-		return 0;
-	}
-
-	@Override
-	public String getScopeUnits(int x) {
-		switch (x) {
-		case Scope.VAL_IB:
-		case Scope.VAL_IC:
-		case Scope.VAL_IE:
-			return "A";
-		default:
-			return "V";
-		}
 	}
 
 	@Override

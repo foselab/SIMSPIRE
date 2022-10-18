@@ -76,8 +76,6 @@ public class OpAmpElm extends CircuitElm {
 	@Override
 	public void setPoints() {
 		super.setPoints();
-		if (dn > 150 && this == sim.getDragElm())
-			setSize(2);
 		int ww = opwidth;
 		if (ww > dn / 2)
 			ww = (int) (dn / 2);
@@ -93,7 +91,6 @@ public class OpAmpElm extends CircuitElm {
 		interpPoint2(lead1, lead2, textp[0], textp[1], .2, hs);
 		Point tris[] = newPointArray(2);
 		interpPoint2(lead1, lead2, tris[0], tris[1], 0, hs * 2);
-		triangle = createPolygon(tris[0], tris[1], lead2);
 		plusFont = new Font("SansSerif", 0, opsize == 2 ? 14 : 10);
 	}
 

@@ -49,24 +49,6 @@ public class TransLineElm extends CircuitElm {
 		return super.dump() + " " + delay + " " + imped + " " + width + " " + 0.;
 	}
 
-	@Override
-	public void drag(int xx, int yy) {
-		xx = sim.snapGrid(xx);
-		yy = sim.snapGrid(yy);
-		int w1 = max(sim.getGridSize(), abs(yy - getY()));
-		int w2 = max(sim.getGridSize(), abs(xx - getX()));
-		if (w1 > w2) {
-			xx = getX();
-			width = w2;
-		} else {
-			yy = getY();
-			width = w1;
-		}
-		setX2(xx);
-		setY2(yy);
-		setPoints();
-	}
-
 	Point posts[], inner[];
 
 	@Override
@@ -91,18 +73,12 @@ public class TransLineElm extends CircuitElm {
 		int ds = (dy == 0) ? sign(dx) : -sign(dy);
 		Point p3 = interpPoint(point1, point2, 0, -width * ds);
 		Point p4 = interpPoint(point1, point2, 1, -width * ds);
-		int sep = sim.getGridSize() / 2;
-		Point p5 = interpPoint(point1, point2, 0, -(width / 2 - sep) * ds);
-		Point p6 = interpPoint(point1, point2, 1, -(width / 2 - sep) * ds);
-		Point p7 = interpPoint(point1, point2, 0, -(width / 2 + sep) * ds);
-		Point p8 = interpPoint(point1, point2, 1, -(width / 2 + sep) * ds);
 
 		// we number the posts like this because we want the lower-numbered
 		// points to be on the bottom, so that if some of them are unconnected
 		// (which is often true) then the bottom ones will get automatically
 		// attached to ground.
 		posts = new Point[] { p3, p4, point1, point2 };
-		inner = new Point[] { p7, p8, p5, p6 };
 	}
 
 	int voltSource1, voltSource2;

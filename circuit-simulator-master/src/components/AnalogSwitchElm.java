@@ -76,22 +76,6 @@ public class AnalogSwitchElm extends CircuitElm {
 	}
 
 	@Override
-	public void drag(int xx, int yy) {
-		xx = sim.snapGrid(xx);
-		yy = sim.snapGrid(yy);
-		if (abs(getX() - xx) < abs(getY() - yy))
-			xx = getX();
-		else
-			yy = getY();
-		int q1 = abs(getX() - xx) + abs(getY() - yy);
-		int q2 = (q1 / 2) % sim.getGridSize();
-		if (q2 != 0)
-			return;
-		setX2Y2(xx,yy);
-		setPoints();
-	}
-
-	@Override
 	public int getPostCount() {
 		return 3;
 	}

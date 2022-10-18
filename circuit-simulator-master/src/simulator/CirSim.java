@@ -19,7 +19,6 @@ import components.InductorElm;
 import components.RailElm;
 import components.VoltageElm;
 import components.WireElm;
-import scope.Scope;
 import utils.RowInfo;
 
 public class CirSim {
@@ -30,36 +29,14 @@ public class CirSim {
 	private Vector<CircuitNode> nodeList;
 
 	private Random random;
-
-	private int mouseMode = MODE_SELECT;
-	public static final int MODE_DRAG_ROW = 2;
-	public static final int MODE_DRAG_COLUMN = 3;
-	public static final int MODE_SELECT = 6;
-	private int gridSize;
-
-	int gridMask;
-
-	int gridRound;
-	private boolean analyzeFlag;
-	private boolean useBufferedImage;
 	private double t;
-	private int scopeSelected = -1;
-	String stopMessage;
+	private String stopMessage;
 	private double timeStep;
 
 	/**
 	 * List of circuit components
 	 */
 	private List<CircuitElm> elmList;
-
-	private CircuitElm dragElm;
-
-	CircuitElm menuElm;
-
-	private CircuitElm mouseElm;
-
-	CircuitElm stopElm;
-	private CircuitElm plotXElm;
 
 	private CircuitElm plotYElm;
 	double circuitMatrix[][], circuitRightSide[], origRightSide[], origMatrix[][];
@@ -70,7 +47,6 @@ public class CirSim {
 	int circuitMatrixSize, circuitMatrixFullSize;
 	boolean circuitNeedsMap;
 	int scopeCount;
-	Scope scopes[];
 
 	private static String muString = "u";
 	private static String ohmString = "ohm";
@@ -101,7 +77,7 @@ public class CirSim {
 	 * @param index index of element to get
 	 * @return the element required if exists
 	 */
-	public CircuitElm getElm(final int index) {
+	private CircuitElm getElm(final int index) {
 		if (index >= elmList.size()) {
 			return null;
 		}
@@ -119,46 +95,7 @@ public class CirSim {
 
 		nodeList = new Vector<>();
 
-		boolean gotGround = false;
-		boolean gotRail = false;
-		boolean voltIsAssigned = false;
-		CircuitElm volt = null;
-		CircuitElm circuitElement;
-		// look for voltage or ground element
-		for (int i = 0; i != elmList.size(); i++) {
-			circuitElement = getElm(i);
-			if (circuitElement instanceof GroundElm) {
-				gotGround = true;
-				break;
-			}
-
-			if (circuitElement instanceof RailElm) {
-				gotRail = true;
-			}
-
-			if (!voltIsAssigned && circuitElement instanceof VoltageElm) {
-				volt = circuitElement;
-				voltIsAssigned = true;
-			}
-		}
-
-		// if no ground, and no rails, then the voltage elm's first terminal
-		// is ground
-		final CircuitNode circuitNode = new CircuitNode();
-		if (!gotGround && voltIsAssigned && !gotRail) {
-			final Point point = volt.getPost(0);
-			circuitNode.setX(point.x);
-			circuitNode.setY(point.y);
-			nodeList.addElement(circuitNode);
-		} else {
-			// otherwise allocate extra node for ground
-			circuitNode.setX(circuitNode.setY(-1));
-			nodeList.addElement(circuitNode);
-		}
-
-		// TODO vedi metodo stop()
-		stopMessage = null;
-		stopElm = null;
+		acFirstStep();
 
 		int vscount = 0;
 
@@ -215,6 +152,9 @@ public class CirSim {
 			vscount += ivs;
 		}
 
+		// TODO vedi metodo stop()
+		stopMessage = null;
+		
 		voltageSources = new CircuitElm[vscount];
 		vscount = 0;
 		circuitNonLinear = false;
@@ -575,6 +515,49 @@ public class CirSim {
 		}
 	}
 
+	/**
+	 * First step of the method analyzeCircuit(): Look for voltage or ground element
+	 * and if absent set a new node for ground
+	 */
+	private void acFirstStep() {
+		boolean gotGround = false;
+		boolean gotRail = false;
+		boolean voltIsAssigned = false;
+		CircuitElm volt = null;
+		CircuitElm circuitElement;
+		// look for voltage or ground element
+		for (int i = 0; i != elmList.size(); i++) {
+			circuitElement = getElm(i);
+			if (circuitElement instanceof GroundElm) {
+				gotGround = true;
+				break;
+			}
+
+			if (circuitElement instanceof RailElm) {
+				gotRail = true;
+			}
+
+			if (!voltIsAssigned && circuitElement instanceof VoltageElm) {
+				volt = circuitElement;
+				voltIsAssigned = true;
+			}
+		}
+
+		// if no ground, and no rails, then the voltage elm's first terminal
+		// is ground
+		final CircuitNode circuitNode = new CircuitNode();
+		if (!gotGround && voltIsAssigned && !gotRail) {
+			final Point point = volt.getPost(0);
+			circuitNode.setX(point.x);
+			circuitNode.setY(point.y);
+			nodeList.addElement(circuitNode);
+		} else {
+			// otherwise allocate extra node for ground
+			circuitNode.setX(circuitNode.setY(-1));
+			nodeList.addElement(circuitNode);
+		}
+	}
+
 	class FindPathInfo {
 		static final int INDUCT = 1;
 		static final int VOLTAGE = 2;
@@ -679,8 +662,6 @@ public class CirSim {
 	public void stop(String s, CircuitElm ce) {
 		stopMessage = s;
 		circuitMatrix = null;
-		stopElm = ce;
-		setAnalyzeFlag(false);
 	}
 
 	// control voltage source vs with voltage from n1 to n2 (must
@@ -960,37 +941,14 @@ public class CirSim {
 		setT(getT() + getTimeStep());
 		System.out.println("t = " + getT() + ", timeStep = " + getTimeStep());
 
-		for (i = 0; i != scopeCount; i++)
-			scopes[i].timeStep();
-		// continue
 		return true;
 	}
-
-	public int snapGrid(int x) {
-		return (x + gridRound) & gridMask;
-	}
-
-	public int locateElm(CircuitElm elm) {
-		int i;
-		for (i = 0; i != getElmList().size(); i++)
-			if (elm == getElmList().get(i))
-				return i;
-		return -1;
-	}
-
-	void clearSelection() {
-		int i;
-		for (i = 0; i != getElmList().size(); i++) {
-			CircuitElm ce = getElm(i);
-			ce.setSelected(false);
-		}
-	}
-
+	
 	// factors a matrix into upper and lower triangular matrices by
 	// gaussian elimination. On entry, a[0..n-1][0..n-1] is the
 	// matrix to be factored. ipvt[] returns an integer vector of pivot
 	// indices, used in the lu_solve() routine.
-	boolean lu_factor(double a[][], int n, int ipvt[]) {
+	private boolean lu_factor(double a[][], int n, int ipvt[]) {
 		double scaleFactors[];
 		int i, j, k;
 
@@ -1122,22 +1080,6 @@ public class CirSim {
 		this.timeStep = timeStep;
 	}
 
-	public int getScopeSelected() {
-		return scopeSelected;
-	}
-
-	public void setScopeSelected(int scopeSelected) {
-		this.scopeSelected = scopeSelected;
-	}
-
-	public CircuitElm getMouseElm() {
-		return mouseElm;
-	}
-
-	public void setMouseElm(CircuitElm mouseElm) {
-		this.mouseElm = mouseElm;
-	}
-
 	public double getT() {
 		return t;
 	}
@@ -1146,30 +1088,8 @@ public class CirSim {
 		this.t = t;
 	}
 
-	public CircuitElm getPlotXElm() {
-		return plotXElm;
-	}
-
-	public CircuitElm setPlotXElm(CircuitElm plotXElm) {
-		this.plotXElm = plotXElm;
-		return plotXElm;
-	}
-
 	public CircuitElm getPlotYElm() {
 		return plotYElm;
-	}
-
-	public CircuitElm setPlotYElm(CircuitElm plotYElm) {
-		this.plotYElm = plotYElm;
-		return plotYElm;
-	}
-
-	public boolean isUseBufferedImage() {
-		return useBufferedImage;
-	}
-
-	public void setUseBufferedImage(boolean useBufferedImage) {
-		this.useBufferedImage = useBufferedImage;
 	}
 
 	public List<CircuitElm> getElmList() {
@@ -1180,28 +1100,8 @@ public class CirSim {
 		this.elmList = elmList;
 	}
 
-	public CircuitElm getDragElm() {
-		return dragElm;
-	}
-
-	public void setDragElm(CircuitElm dragElm) {
-		this.dragElm = dragElm;
-	}
-
-	public int getMouseMode() {
-		return mouseMode;
-	}
-
 	public static String getMuString() {
 		return muString;
-	}
-
-	public int getGridSize() {
-		return gridSize;
-	}
-
-	public void setGridSize(int gridSize) {
-		this.gridSize = gridSize;
 	}
 
 	public boolean isConverged() {
@@ -1230,14 +1130,6 @@ public class CirSim {
 
 	public void setSubIterations(int subIterations) {
 		this.subIterations = subIterations;
-	}
-
-	public boolean isAnalyzeFlag() {
-		return analyzeFlag;
-	}
-
-	public void setAnalyzeFlag(boolean analyzeFlag) {
-		this.analyzeFlag = analyzeFlag;
 	}
 
 	public String toString() {

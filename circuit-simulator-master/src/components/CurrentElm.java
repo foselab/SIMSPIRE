@@ -1,7 +1,6 @@
 package components;
 
 import java.awt.Point;
-import java.awt.Polygon;
 import java.util.StringTokenizer;
 
 
@@ -32,7 +31,6 @@ public class CurrentElm extends CircuitElm {
 		return 'i';
 	}
 
-	Polygon arrow;
 	Point ashaft1, ashaft2, center;
 
 	@Override
@@ -43,7 +41,6 @@ public class CurrentElm extends CircuitElm {
 		ashaft2 = interpPoint(lead1, lead2, .6);
 		center = interpPoint(lead1, lead2, .5);
 		Point p2 = interpPoint(lead1, lead2, .75);
-		arrow = calcArrow(center, p2, 4, 4);
 	}
 
 	@Override

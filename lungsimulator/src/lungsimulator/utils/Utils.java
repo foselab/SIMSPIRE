@@ -43,10 +43,10 @@ public class Utils {
 	 */
 	public static void initVectors(final int maxData, double[][] initdataPressure,
 			double[][] initdataVentilatorPressure, double[][] initdataFlow) {
-		int flowSize = initdataFlow.length;
-		int pressureSize = initdataPressure.length;
+		final int flowSize = initdataFlow.length;
+		final int pressureSize = initdataPressure.length;
 
-		int maxLength = flowSize > pressureSize ? flowSize : pressureSize;
+		final int maxLength = flowSize > pressureSize ? flowSize : pressureSize;
 
 		for (int i = 0; i < maxLength; i++) {
 			for (int j = 0; j < maxData; j++) {

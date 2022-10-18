@@ -106,10 +106,6 @@ public class MosfetElm extends CircuitElm {
 		interpPoint(gate[0], gate[2], gate[1], .5);
 
 		if (!drawDigital()) {
-			if (pnp == 1)
-				arrowPoly = calcArrow(src[1], src[0], 10, 4);
-			else
-				arrowPoly = calcArrow(drn[0], drn[1], 12, 5);
 		} else if (pnp == -1) {
 			interpPoint(point1, point2, gate[1], 1 - 36 / dn);
 			int dist = (dsign < 0) ? 32 : 31;

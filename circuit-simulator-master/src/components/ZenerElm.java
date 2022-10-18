@@ -1,7 +1,6 @@
 package components;
 
 import java.awt.Point;
-import java.awt.Polygon;
 import java.util.StringTokenizer;
 
 // Zener code contributed by J. Mike Rollins
@@ -36,7 +35,6 @@ public class ZenerElm extends DiodeElm {
 	}
 
 	final int hs = 8;
-	Polygon poly;
 	Point cathode[];
 	Point wing[];
 
@@ -51,7 +49,6 @@ public class ZenerElm extends DiodeElm {
 		interpPoint2(lead1, lead2, cathode[0], cathode[1], 1, hs);
 		interpPoint(cathode[0], cathode[1], wing[0], -0.2, -hs);
 		interpPoint(cathode[1], cathode[0], wing[1], -0.2, -hs);
-		poly = createPolygon(pa[0], pa[1], lead2);
 	}
 
 	final double default_zvoltage = 5.6;

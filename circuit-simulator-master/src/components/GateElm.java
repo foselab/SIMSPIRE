@@ -1,7 +1,6 @@
 package components;
 
 import java.awt.Point;
-import java.awt.Polygon;
 import java.util.StringTokenizer;
 
 public abstract class GateElm extends CircuitElm {
@@ -48,8 +47,6 @@ public abstract class GateElm extends CircuitElm {
 	@Override
 	public void setPoints() {
 		super.setPoints();
-		if (dn > 150 && this == sim.getDragElm())
-			setSize(2);
 		int hs = gheight;
 		int i;
 		ww = gwidth2; // was 24
@@ -70,10 +67,8 @@ public abstract class GateElm extends CircuitElm {
 			volts[i] = (lastOutput ^ isInverting()) ? 5 : 0;
 		}
 		hs2 = gwidth * (inputCount / 2 + 1);
-		setBbox(point1, point2, hs2);
 	}
-
-	Polygon gatePoly;
+	
 	Point pcircle, linePoints[];
 
 	@Override

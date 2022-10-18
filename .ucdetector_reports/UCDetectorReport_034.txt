@@ -1,0 +1,45 @@
+Created with UCDetector 2.0.0	2022-10-17 16:36:52	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+simulator.CirSim.getCircuitNode(CirSim.java:90)	Change visibility of Method "CirSim.getCircuitNode(int)" to private	CirSim.getCircuitNode(int)	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.getElm(CirSim.java:102)	Change visibility of Method "CirSim.getElm(int)" to private	CirSim.getElm(int)	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.MODE_DRAG_ROW(CirSim.java:34)	Constant "CirSim.MODE_DRAG_ROW" has 0 references	CirSim.MODE_DRAG_ROW	org.ucdetector.analyzeMarkerReference	
+simulator.CirSim.MODE_DRAG_COLUMN(CirSim.java:35)	Constant "CirSim.MODE_DRAG_COLUMN" has 0 references	CirSim.MODE_DRAG_COLUMN	org.ucdetector.analyzeMarkerReference	
+simulator.CirSim.MODE_SELECT(CirSim.java:36)	Change visibility of Constant "CirSim.MODE_SELECT" to private	CirSim.MODE_SELECT	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.gridMask(CirSim.java:39)	Change visibility of Field "CirSim.gridMask" to private	CirSim.gridMask	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.gridRound(CirSim.java:41)	Change visibility of Field "CirSim.gridRound" to private	CirSim.gridRound	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.stopMessage(CirSim.java:46)	Change visibility of Field "CirSim.stopMessage" to private	CirSim.stopMessage	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.menuElm(CirSim.java:56)	Field "CirSim.menuElm" has 0 references	CirSim.menuElm	org.ucdetector.analyzeMarkerReference	
+simulator.CirSim.stopElm(CirSim.java:60)	Change visibility of Field "CirSim.stopElm" to private	CirSim.stopElm	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.stopElm(CirSim.java:60)	Field "CirSim.stopElm" is never read	CirSim.stopElm	org.ucdetector.analyzeMarkerReference	
+simulator.CirSim.circuitMatrix(CirSim.java:64)	Change visibility of Field "CirSim.circuitMatrix" to private	CirSim.circuitMatrix	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.circuitRightSide(CirSim.java:64)	Change visibility of Field "CirSim.circuitRightSide" to private	CirSim.circuitRightSide	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.origRightSide(CirSim.java:64)	Change visibility of Field "CirSim.origRightSide" to private	CirSim.origRightSide	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.origMatrix(CirSim.java:64)	Change visibility of Field "CirSim.origMatrix" to private	CirSim.origMatrix	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.circuitRowInfo(CirSim.java:65)	Change visibility of Field "CirSim.circuitRowInfo" to private	CirSim.circuitRowInfo	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.circuitPermute(CirSim.java:66)	Change visibility of Field "CirSim.circuitPermute" to private	CirSim.circuitPermute	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.circuitNonLinear(CirSim.java:67)	Change visibility of Field "CirSim.circuitNonLinear" to private	CirSim.circuitNonLinear	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.voltageSourceCount(CirSim.java:68)	Change visibility of Field "CirSim.voltageSourceCount" to private	CirSim.voltageSourceCount	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.voltageSourceCount(CirSim.java:68)	Field "CirSim.voltageSourceCount" is never read	CirSim.voltageSourceCount	org.ucdetector.analyzeMarkerReference	
+simulator.CirSim.circuitMatrixSize(CirSim.java:69)	Change visibility of Field "CirSim.circuitMatrixSize" to private	CirSim.circuitMatrixSize	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.circuitMatrixFullSize(CirSim.java:69)	Change visibility of Field "CirSim.circuitMatrixFullSize" to private	CirSim.circuitMatrixFullSize	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.circuitNeedsMap(CirSim.java:70)	Change visibility of Field "CirSim.circuitNeedsMap" to private	CirSim.circuitNeedsMap	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.scopeCount(CirSim.java:71)	Field "CirSim.scopeCount" has 0 references	CirSim.scopeCount	org.ucdetector.analyzeMarkerReference	
+simulator.CirSim.steps(CirSim.java:83)	Change visibility of Field "CirSim.steps" to private	CirSim.steps	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.voltageSources(CirSim.java:85)	Change visibility of Field "CirSim.voltageSources" to private	CirSim.voltageSources	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.<init>(CirSim.java:584)	Change visibility of ClassMember "CirSim.FindPathInfo" to private - May cause compile errors!	CirSim.FindPathInfo	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.FindPathInfo(CirSim.java:594)	Change visibility of Constructor "CirSim.FindPathInfo.FindPathInfo(int,CircuitElm,int)" to private	CirSim.FindPathInfo.FindPathInfo(int,CircuitElm,int)	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.findPath(CirSim.java:601)	Change visibility of Method "CirSim.FindPathInfo.findPath(int)" to private	CirSim.FindPathInfo.findPath(int)	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.findPath(CirSim.java:605)	Change visibility of Method "CirSim.FindPathInfo.findPath(int,int)" to private	CirSim.FindPathInfo.findPath(int,int)	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.locateElm(CirSim.java:976)	Method "CirSim.locateElm(CircuitElm)" has 0 references	CirSim.locateElm(CircuitElm)	org.ucdetector.analyzeMarkerReference	
+simulator.CirSim.clearSelection(CirSim.java:984)	Method "CirSim.clearSelection()" has 0 references	CirSim.clearSelection()	org.ucdetector.analyzeMarkerReference	
+simulator.CirSim.lu_factor(CirSim.java:996)	Change visibility of Method "CirSim.lu_factor(double[][],int,int[])" to private	CirSim.lu_factor(double[][],int,int[])	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.setPlotXElm(CirSim.java:1156)	Method "CirSim.setPlotXElm(CircuitElm)" has 0 references	CirSim.setPlotXElm(CircuitElm)	org.ucdetector.analyzeMarkerReference	
+simulator.CirSim.setPlotYElm(CirSim.java:1165)	Method "CirSim.setPlotYElm(CircuitElm)" has 0 references	CirSim.setPlotYElm(CircuitElm)	org.ucdetector.analyzeMarkerReference	
+simulator.CirSim.INDUCT(CirSim.java:585)	Change visibility of Constant "CirSim.FindPathInfo.INDUCT" to private	CirSim.FindPathInfo.INDUCT	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.VOLTAGE(CirSim.java:586)	Change visibility of Constant "CirSim.FindPathInfo.VOLTAGE" to private	CirSim.FindPathInfo.VOLTAGE	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.SHORT(CirSim.java:587)	Change visibility of Constant "CirSim.FindPathInfo.SHORT" to private	CirSim.FindPathInfo.SHORT	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.CAP_V(CirSim.java:588)	Change visibility of Constant "CirSim.FindPathInfo.CAP_V" to private	CirSim.FindPathInfo.CAP_V	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.used(CirSim.java:589)	Change visibility of Field "CirSim.FindPathInfo.used" to private	CirSim.FindPathInfo.used	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.dest(CirSim.java:590)	Change visibility of Field "CirSim.FindPathInfo.dest" to private	CirSim.FindPathInfo.dest	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.firstElm(CirSim.java:591)	Change visibility of Field "CirSim.FindPathInfo.firstElm" to private	CirSim.FindPathInfo.firstElm	org.ucdetector.analyzeMarkerVisibilityPrivate	
+simulator.CirSim.type(CirSim.java:592)	Change visibility of Field "CirSim.FindPathInfo.type" to private	CirSim.FindPathInfo.type	org.ucdetector.analyzeMarkerVisibilityPrivate	

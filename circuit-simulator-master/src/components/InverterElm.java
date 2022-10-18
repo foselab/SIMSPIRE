@@ -50,8 +50,6 @@ public class InverterElm extends CircuitElm {
 		Point triPoints[] = newPointArray(3);
 		interpPoint2(lead1, lead2, triPoints[0], triPoints[1], 0, hs);
 		triPoints[2] = interpPoint(point1, point2, .5 + (ww - 5) / dn);
-		gatePoly = createPolygon(triPoints);
-		setBbox(point1, point2, hs);
 	}
 
 	@Override
