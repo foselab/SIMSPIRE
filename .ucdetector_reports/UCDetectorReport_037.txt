@@ -1,0 +1,3 @@
+Created with UCDetector 2.0.0	2022-10-18 11:52:52	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+lungsimulator.LungSimulator.<init>(LungSimulator.java:16)	Class "LungSimulator" has 0 references	LungSimulator	org.ucdetector.analyzeMarkerReference	

@@ -19,21 +19,49 @@ import lungsimulator.components.Formula;
 import lungsimulator.components.Patient;
 import simulator.CirSim;
 
+/**
+ * Converts elements in patient model to their equivalent circuit elements
+ */
 public class CircuitBuilder {
 
-	private boolean timeDependentCir = false;
-	private CirSim cirSim = new CirSim();
-	private Map<String, Formula> timeDependentElm = new HashMap<>();
-	private List<CircuitElm> elements = new ArrayList<>();
+	/**
+	 * True if the model has at least one time dependent component
+	 */
+	private boolean timeDependentCir;
+	
+	/**
+	 * The circuit
+	 */
+	private final transient CirSim cirSim;
+	
+	/**
+	 * Contains every time dependent component and its formula
+	 */
+	private final transient Map<String, Formula> timeDependentElm;
+	
+	/**
+	 * The elements of the circuit
+	 */
+	private final transient List<CircuitElm> elements;
 
+	/**
+	 * Init class fields
+	 */
 	public CircuitBuilder() {
+		timeDependentCir = false;
+		cirSim = new CirSim();
+		timeDependentElm = new HashMap<>();
+		elements = new ArrayList<>();
 	}
 
 	/**
 	 * The method builds a circuit according to the patient's components and
 	 * archetype
+	 * @param patient patient model
+	 * @param archetype archetype parameters
+	 * @return the circuit
 	 */
-	public CirSim buildCircuitSimulator(Patient patient, Archetype archetype) {
+	public CirSim buildCircuitSimulator(final Patient patient, final Archetype archetype) {
 		cirSim.setTimeStep(0.1);
 		ResistorElm resistance;
 		CapacitorElm capacitance;
@@ -41,52 +69,48 @@ public class CircuitBuilder {
 		DCVoltageElm dcVoltage;
 		ExternalVoltageElm externalVoltage;
 
-		assert patient.getSchema() == archetype.getSchema();
-
-		for (Element element : patient.getElementsList()) {
-			String value = resolveFormula(element.getAssociatedFormula(), archetype.getParameters(), "0");
+		for (final Element element : patient.getElementsList()) {
+			final String value = resolveFormula(element.getAssociatedFormula(), archetype.getParameters(), "0");
 
 			if (!value.isEmpty()) {
 				// resistance
-				if (element.getType().equals("ResistorElm")) {
+				if ("ResistorElm".equals(element.getType())) {
 					resistance = new ResistorElm(1, 1);
 					resistance.setResistance(Double.parseDouble(value));
 					circuitElmSetUp(element, resistance);
 				}
 
 				// capacitor
-				if (element.getType().equals("CapacitorElm")) {
+				if ("CapacitorElm".equals(element.getType())) {
 					capacitance = new CapacitorElm(0, 0);
 					capacitance.setCapacitance(Double.parseDouble(value));
 					circuitElmSetUp(element, capacitance);
 				}
-				
-				//acVoltage
-				if (element.getType().equals("ACVoltageElm")) {
+
+				// acVoltage
+				if ("ACVoltageElm".equals(element.getType())) {
 					acVoltage = new ACVoltageElm(1, 1);
 					acVoltage.setMaxVoltage(Double.parseDouble(value));
 					circuitElmSetUp(element, acVoltage);
 				}
-				
-				//dcVoltage
-				if (element.getType().equals("DCVoltageElm")) {
+
+				// dcVoltage
+				if ("DCVoltageElm".equals(element.getType())) {
 					dcVoltage = new DCVoltageElm(1, 1);
 					dcVoltage.setMaxVoltage(Double.parseDouble(value));
 					circuitElmSetUp(element, dcVoltage);
 				}
 			}
-			
-			//externalVoltage doesn't have a formula
-			if (element.getType().equals("ExternalVoltageElm")) {
+
+			// externalVoltage doesn't have a formula
+			if ("ExternalVoltageElm".equals(element.getType())) {
 				externalVoltage = new ExternalVoltageElm(1, 1, 28);
 				circuitElmSetUp(element, externalVoltage);
 			}
 		}
 
-		assert patient.getElementsList().size() == elements.size();
-
-		for (CircuitElm c : elements) {
-			c.setPoints();
+		for (final CircuitElm circuitElm : elements) {
+			circuitElm.setPoints();
 		}
 
 		cirSim.setElmList(elements);
@@ -95,7 +119,7 @@ public class CircuitBuilder {
 		return cirSim;
 	}
 
-	private void circuitElmSetUp(Element element, CircuitElm circuitElm) {
+	private void circuitElmSetUp(final Element element, final CircuitElm circuitElm) {
 		circuitElm.setId(element.getElementName());
 		circuitElm.setX(element.getX());
 		circuitElm.setY(element.getY());
@@ -145,33 +169,40 @@ public class CircuitBuilder {
 		return value;
 	}
 
-	public CirSim updateCircuitSimulator(Archetype archetype, double time) {
-	
-		for (CircuitElm circuitElement : cirSim.getElmList()) {
-			if(timeDependentElm.containsKey(circuitElement.getId())) {
-				String value = resolveFormula(timeDependentElm.get(circuitElement.getId()), archetype.getParameters(), String.valueOf(time));
-				
+	/**
+	 * Update components values 
+	 * @param archetype chosen archetype
+	 * @param time new time for variable TIME
+	 * @return the updated circuit
+	 */
+	public CirSim updateCircuitSimulator(final Archetype archetype, final double time) {
+
+		for (final CircuitElm circuitElement : cirSim.getElmList()) {
+			if (timeDependentElm.containsKey(circuitElement.getId())) {
+				String value = resolveFormula(timeDependentElm.get(circuitElement.getId()), archetype.getParameters(),
+						String.valueOf(time));
+
 				// resistance
 				if (circuitElement instanceof ResistorElm) {
-					ResistorElm resistance = (ResistorElm) circuitElement;
+					final ResistorElm resistance = (ResistorElm) circuitElement;
 					resistance.setResistance(Double.parseDouble(value));
 				}
 
 				// capacitor
 				if (circuitElement instanceof CapacitorElm) {
-					CapacitorElm capacitance = (CapacitorElm) circuitElement;
+					final CapacitorElm capacitance = (CapacitorElm) circuitElement;
 					capacitance.setCapacitance(Double.parseDouble(value));
 				}
-				
-				//acVoltage
+
+				// acVoltage
 				if (circuitElement instanceof ACVoltageElm) {
-					ACVoltageElm acVoltage = (ACVoltageElm) circuitElement;
+					final ACVoltageElm acVoltage = (ACVoltageElm) circuitElement;
 					acVoltage.setMaxVoltage(Double.parseDouble(value));
 				}
-				
-				//dcVoltage
+
+				// dcVoltage
 				if (circuitElement instanceof DCVoltageElm) {
-					DCVoltageElm dcVoltage = (DCVoltageElm) circuitElement;
+					final DCVoltageElm dcVoltage = (DCVoltageElm) circuitElement;
 					dcVoltage.setMaxVoltage(Double.parseDouble(value));
 				}
 			}
@@ -183,7 +214,7 @@ public class CircuitBuilder {
 		return timeDependentCir;
 	}
 
-	public void setTimeDependentCir(boolean hasTimeDependency) {
+	public void setTimeDependentCir(final boolean hasTimeDependency) {
 		this.timeDependentCir = hasTimeDependency;
 	}
 

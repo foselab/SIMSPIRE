@@ -17,7 +17,7 @@ public class LungSimulator {
 	/**
 	 * Reference used to call methods for circuit construction
 	 */
-	private final transient CircuitBuilder rtp = new CircuitBuilder();
+	private final transient CircuitBuilder circuitBuilder = new CircuitBuilder();
 
 	/**
 	 * Patient model description
@@ -81,7 +81,7 @@ public class LungSimulator {
 	 */
 	public void simulateCircuit() throws InterruptedException {
 		// Create the circuit equivalent to the lung
-		CirSim myCircSim = rtp.buildCircuitSimulator(patient, archetype);
+		CirSim myCircSim = circuitBuilder.buildCircuitSimulator(patient, archetype);
 
 		double time = 0;
 
@@ -90,8 +90,8 @@ public class LungSimulator {
 				time += 0.1;
 
 				//update values for time dependent components
-				if(rtp.isTimeDependentCir()) {
-					myCircSim = rtp.updateCircuitSimulator(archetype, time);
+				if(circuitBuilder.isTimeDependentCir()) {
+					myCircSim = circuitBuilder.updateCircuitSimulator(archetype, time);
 				}
 
 				// Analyze the circuit and simulate a step

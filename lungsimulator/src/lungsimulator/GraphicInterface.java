@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,11 @@ import org.knowm.xchart.style.Styler.LegendPosition;
 import org.knowm.xchart.style.markers.Marker;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
+import components.ACVoltageElm;
+import components.CapacitorElm;
 import components.CircuitElm;
+import components.DCVoltageElm;
+import components.ResistorElm;
 import lungsimulator.components.Archetype;
 import lungsimulator.components.Element;
 import lungsimulator.components.Patient;
@@ -70,6 +75,7 @@ public class GraphicInterface {
 	private List<String> flowIds = new ArrayList<>();
 	private List<String> pressureIds = new ArrayList<>();
 	private Map<String, String> pressureCoord = new LinkedHashMap<>();
+	private Map<String, JSpinner> spinnersTime = new HashMap<>();
 
 	private int flowIndexElm = 1;
 	private int pressureIndexElm = 1;
@@ -229,6 +235,7 @@ public class GraphicInterface {
 		for (final Element e : patient.getElementsList()) {
 			String elmValue;
 			String elmId = e.getElementName();
+			boolean isTimeDependent = e.getAssociatedFormula().getIsTimeDependent();
 
 			if (e.isShowLeft()) {
 				pressureCoord.put(e.getIdLeft(), "left");
@@ -241,26 +248,26 @@ public class GraphicInterface {
 			// resistance
 			if (e.getType().equals("ResistorElm")) {
 				elmValue = archetype.getParameters().get(e.getAssociatedFormula().getVariables().get(0));
-				graphicDesignForElement(elmId, UMRES, yInit, Double.parseDouble(elmValue), false);
+				graphicDesignForElement(elmId, UMRES, yInit, Double.parseDouble(elmValue), false, isTimeDependent);
 				flowIds.add(elmId);
 			}
 
 			// capacitor
 			if (e.getType().equals("CapacitorElm")) {
 				elmValue = archetype.getParameters().get(e.getAssociatedFormula().getVariables().get(0));
-				graphicDesignForElement(elmId, UMCAP, yInit, Double.parseDouble(elmValue), false);
+				graphicDesignForElement(elmId, UMCAP, yInit, Double.parseDouble(elmValue), false, isTimeDependent);
 				flowIds.add(elmId);
 			}
 
 			if (e.getType().equals("ExternalVoltageElm")) {
-				graphicDesignForElement(elmId, UMGEN, yInit, 0, true);
+				graphicDesignForElement(elmId, UMGEN, yInit, 0, true, isTimeDependent);
 			}
 
 			yInit += 28;
 		}
 
 		pressureIds = new ArrayList<>(pressureCoord.keySet());
-		
+
 		int yButton = yInit + 28;
 		stop = new JButton("Stop");
 		stop.setFont(new Font("Arial", Font.BOLD, 16));
@@ -307,77 +314,69 @@ public class GraphicInterface {
 	}
 
 	private void demographicDataSetUp(SimulatorParams demographicData, int yLast) {
-		yLast+=102;
+		yLast += 102;
 		final JLabel elementId = new JLabel("Patient demographic data");
 		elementId.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
 		patientPanel.add(elementId);
-		
-		yLast+=28;
-		
+
+		yLast += 28;
+
 		final JLabel gender = new JLabel("Gender ");
 		gender.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
 		patientPanel.add(gender);
-		
-		String[] genders = {"Male", "Female"};
+
+		String[] genders = { "Male", "Female" };
 		JComboBox<String> gendersBox = new JComboBox<String>(genders);
 		gendersBox.setBounds(IDELEMENTX + 80, yLast, 100, 20);
-		if("MALE".equalsIgnoreCase(demographicData.getGender())) {
+		if ("MALE".equalsIgnoreCase(demographicData.getGender())) {
 			gendersBox.setSelectedItem("Male");
-		}else {
+		} else {
 			gendersBox.setSelectedItem("Female");
 		}
 		patientPanel.add(gendersBox);
-		
-		yLast+=28;
-		
+
+		yLast += 28;
+
 		final JLabel age = new JLabel("Age (years)");
 		age.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
 		patientPanel.add(age);
-		
+
 		final SpinnerNumberModel ageModel = new SpinnerNumberModel(demographicData.getAge(), 18, 126, 1);
 		JSpinner ageElm = new JSpinner(ageModel);
 		ageElm.setBounds(IDELEMENTX + 80, yLast, VALELEMENTWIDTH, VALELEMENTHEIGHT);
 		patientPanel.add(ageElm);
-		
-		yLast+=28;
-		
+
+		yLast += 28;
+
 		final JLabel height = new JLabel("Height (m)");
 		height.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
 		patientPanel.add(height);
-		
+
 		final SpinnerNumberModel heightModel = new SpinnerNumberModel(demographicData.getHeight(), 0.55, 2.60, 0.01);
 		JSpinner heightElm = new JSpinner(heightModel);
 		heightElm.setBounds(IDELEMENTX + 80, yLast, VALELEMENTWIDTH, VALELEMENTHEIGHT);
 		patientPanel.add(heightElm);
-		
-		yLast+=28;
-		
+
+		yLast += 28;
+
 		final JLabel weight = new JLabel("Weigth (kg)");
 		weight.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
 		patientPanel.add(weight);
-		
+
 		final SpinnerNumberModel weightModel = new SpinnerNumberModel(demographicData.getWeight(), 25, 600, 0.1);
 		JSpinner weightElm = new JSpinner(weightModel);
 		weightElm.setBounds(IDELEMENTX + 80, yLast, VALELEMENTWIDTH, VALELEMENTHEIGHT);
 		patientPanel.add(weightElm);
-		
-		yLast+=28;
-		
+
+		yLast += 28;
+
 		final JLabel ibw = new JLabel("Ibw (kg)");
 		ibw.setBounds(IDELEMENTX, yLast, 200, IDELEMENTHEIGHT);
 		patientPanel.add(ibw);
-		
+
 		final JLabel ibwValue = new JLabel(String.valueOf(demographicData.getIbw()));
 		ibwValue.setBounds(IDELEMENTX + 80, yLast, VALELEMENTWIDTH, VALELEMENTHEIGHT);
 		patientPanel.add(ibwValue);
-
-
-		/* Element value
-		final SpinnerNumberModel elementModel = new SpinnerNumberModel(0.0, 0.000, 100.0, 0.001);
-		element.setModel(elementModel);
-		element.setBounds(VALELEMENTX, elementY, VALELEMENTWIDTH, VALELEMENTHEIGHT);
-		element.setValue(value);
-		patientPanel.add(element);*/
 	}
 
 	/**
@@ -399,6 +398,10 @@ public class GraphicInterface {
 		int countPressure = 1;
 
 		for (final CircuitElm cir : myCircSim.getElmList()) {
+			if (spinnersTime.containsKey(cir.getId())) {
+				updateSpinners(cir);
+			}
+
 			if (cir.getIdLeft() != null && pressureCoord.containsKey(cir.getIdLeft())
 					&& pressureCoord.get(cir.getIdLeft()).equals("left")) {
 				initdataPressure[countPressure][MAXDATA - 1] = cir.getVoltZero();
@@ -461,6 +464,34 @@ public class GraphicInterface {
 
 	}
 
+	private void updateSpinners(CircuitElm cir) {
+
+		// resistance
+		if (cir instanceof ResistorElm) {
+			final ResistorElm resistance = (ResistorElm) cir;
+			spinnersTime.get(cir.getId()).setValue(resistance.getResistance());
+		}
+
+		// capacitor
+		if (cir instanceof CapacitorElm) {
+			final CapacitorElm capacitance = (CapacitorElm) cir;
+			spinnersTime.get(cir.getId()).setValue(capacitance.getCapacitance());
+		}
+
+		// acVoltage
+		if (cir instanceof ACVoltageElm) {
+			final ACVoltageElm acVoltage = (ACVoltageElm) cir;
+			spinnersTime.get(cir.getId()).setValue(acVoltage.getMaxVoltage());
+		}
+
+		// dcVoltage
+		if (cir instanceof DCVoltageElm) {
+			final DCVoltageElm dcVoltage = (DCVoltageElm) cir;
+			spinnersTime.get(cir.getId()).setValue(dcVoltage.getMaxVoltage());
+		}
+
+	}
+
 	/**
 	 * Create graphic design for circuit element
 	 * 
@@ -471,7 +502,7 @@ public class GraphicInterface {
 	 * @param isVentilator true if the element is the ventilator
 	 */
 	private void graphicDesignForElement(final String elementDescr, final String elementUnit, final int elementY,
-			final double value, final boolean isVentilator) {
+			final double value, final boolean isVentilator, final boolean isTimeDependent) {
 		element = new JSpinner();
 
 		// Element description
@@ -485,6 +516,10 @@ public class GraphicInterface {
 		element.setBounds(VALELEMENTX, elementY, VALELEMENTWIDTH, VALELEMENTHEIGHT);
 		element.setValue(value);
 		patientPanel.add(element);
+
+		if (isTimeDependent) {
+			spinnersTime.put(elementDescr, element);
+		}
 
 		if (isVentilator) {
 			ventilator = element;
