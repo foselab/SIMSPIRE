@@ -3,6 +3,8 @@ package components;
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.junit.Test;
 
@@ -18,6 +20,7 @@ public class TestResistor {
 
 	@Test
 	public void test1() {
+	
 		
 		// R
 		ResistorElm R = new ResistorElm(1,1);

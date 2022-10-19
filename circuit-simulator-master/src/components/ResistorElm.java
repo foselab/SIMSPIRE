@@ -2,9 +2,14 @@ package components;
 
 import java.awt.Point;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import simulator.CirSim;
 public class ResistorElm extends CircuitElm {
+	
+	static private Logger LOGGER = Logger.getLogger(ResistorElm.class.getName());
+	
 	private double resistance;
 
 	public ResistorElm(int xx, int yy) {
@@ -44,9 +49,9 @@ public class ResistorElm extends CircuitElm {
 
 	@Override
 	void calculateCurrent() {
-		System.out.println(this.getClass().getSimpleName() + " - volts[0] = " + volts[0] + ", volts[1] = " + volts[1]);
+		LOGGER.log(Level.FINE,this.getClass().getSimpleName() + " - volts[0] = " + volts[0] + ", volts[1] = " + volts[1]);
 		current = (volts[0] - volts[1]) / getResistance();
-		System.out.println(this.getClass().getSimpleName() + " - current set to " + current);
+		LOGGER.log(Level.FINE,this.getClass().getSimpleName() + " - current set to " + current);
 	}
 
 	@Override

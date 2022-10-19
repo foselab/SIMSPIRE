@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -22,6 +24,9 @@ import components.WireElm;
 import utils.RowInfo;
 
 public class CirSim {
+	
+	
+	static private Logger LOGGER = Logger.getLogger(CirSim.class.getName());
 
 	/**
 	 * How circuit components are interconnected
@@ -158,7 +163,7 @@ public class CirSim {
 		voltageSources = new CircuitElm[vscount];
 		vscount = 0;
 		circuitNonLinear = false;
-		// System.out.println("analyzeCircuit - 3rd step: determine if circuit is
+		// LOGGER.log(Level.FINE,"analyzeCircuit - 3rd step: determine if circuit is
 		// nonlinear");
 		for (int i = 0; i != getElmList().size(); i++) {
 			CircuitElm ce = getElm(i);
@@ -170,11 +175,11 @@ public class CirSim {
 				ce.setVoltageSource(j, vscount++);
 			}
 		}
-		// System.out.println("vscount: " + vscount);
+		// LOGGER.log(Level.FINE,"vscount: " + vscount);
 		voltageSourceCount = vscount;
 
 		int matrixSize = getNodeList().size() - 1 + vscount;
-		// System.out.println("matrixSize: " + matrixSize);
+		// LOGGER.log(Level.FINE,"matrixSize: " + matrixSize);
 		circuitMatrix = new double[matrixSize][matrixSize];
 		circuitRightSide = new double[matrixSize];
 		origMatrix = new double[matrixSize][matrixSize];
@@ -186,23 +191,23 @@ public class CirSim {
 			circuitRowInfo[i] = new RowInfo();
 		circuitNeedsMap = false;
 
-		System.out.println("circuitMatrix: " + Arrays.deepToString(circuitMatrix));
-		System.out.println("circuitRightSide: " + Arrays.toString(circuitRightSide));
+		LOGGER.log(Level.FINE,"circuitMatrix: " + Arrays.deepToString(circuitMatrix));
+		LOGGER.log(Level.FINE,"circuitRightSide: " + Arrays.toString(circuitRightSide));
 
-		System.out.println("analyzeCircuit - 3rd step: init circuitMatrix and circuitRightSide");
+		LOGGER.log(Level.FINE,"analyzeCircuit - 3rd step: init circuitMatrix and circuitRightSide");
 
 		// stamp linear circuit elements
 		for (int i = 0; i != getElmList().size(); i++) {
 			CircuitElm ce = getElm(i);
-			System.out.println("\nanalyzeCircuit - 3rd step: " + ce.getClass().getSimpleName() + " component");
+			LOGGER.log(Level.FINE,"\nanalyzeCircuit - 3rd step: " + ce.getClass().getSimpleName() + " component");
 			ce.stamp();
 		}
 
-		System.out.println("\ncircuitMatrix: " + Arrays.deepToString(circuitMatrix));
-		System.out.println("circuitRightSide: " + Arrays.toString(circuitRightSide));
+		LOGGER.log(Level.FINE,"\ncircuitMatrix: " + Arrays.deepToString(circuitMatrix));
+		LOGGER.log(Level.FINE,"circuitRightSide: " + Arrays.toString(circuitRightSide));
 
-		// System.out.println("ac4");
-		System.out.println("analyzeCircuit - 4th step: determine nodes that are unconnected");
+		// LOGGER.log(Level.FINE,"ac4");
+		LOGGER.log(Level.FINE,"analyzeCircuit - 4th step: determine nodes that are unconnected");
 		// determine nodes that are unconnected
 		boolean closure[] = new boolean[getNodeList().size()];
 		boolean changed = true;
@@ -237,8 +242,8 @@ public class CirSim {
 			// connect unconnected nodes
 			for (int i = 0; i != getNodeList().size(); i++)
 				if (!closure[i] && !getCircuitNode(i).isInternal()) {
-					System.out.println("node " + i + " unconnected");
-					System.out.println("analyzeCircuit - 4th step: Node{" + getCircuitNode(i).getX() + "; "
+					LOGGER.log(Level.FINE,"node " + i + " unconnected");
+					LOGGER.log(Level.FINE,"analyzeCircuit - 4th step: Node{" + getCircuitNode(i).getX() + "; "
 							+ getCircuitNode(i).getY() + "}");
 					stampResistor(0, i, 1e8);
 					closure[i] = true;
@@ -246,8 +251,8 @@ public class CirSim {
 					break;
 				}
 		}
-		// System.out.println("ac5");
-		System.out.println("analyzeCircuit - 5th step: check for circuit integrity");
+		// LOGGER.log(Level.FINE,"ac5");
+		LOGGER.log(Level.FINE,"analyzeCircuit - 5th step: check for circuit integrity");
 		for (int i = 0; i != getElmList().size(); i++) {
 			CircuitElm ce = getElm(i);
 			// look for inductors with no current path
@@ -255,7 +260,7 @@ public class CirSim {
 				FindPathInfo fpi = new FindPathInfo(FindPathInfo.INDUCT, ce, ce.getNode(1));
 				// first try findPath with maximum depth of 5, to avoid slowdowns
 				if (!fpi.findPath(ce.getNode(0), 5) && !fpi.findPath(ce.getNode(0))) {
-					System.out.println(ce + " no path");
+					LOGGER.log(Level.FINE,ce + " no path");
 					ce.reset();
 				}
 			}
@@ -279,7 +284,7 @@ public class CirSim {
 			if (ce instanceof CapacitorElm) {
 				FindPathInfo fpi = new FindPathInfo(FindPathInfo.SHORT, ce, ce.getNode(1));
 				if (fpi.findPath(ce.getNode(0))) {
-					System.out.println(ce + " shorted");
+					LOGGER.log(Level.FINE,ce + " shorted");
 					ce.reset();
 				} else {
 					fpi = new FindPathInfo(FindPathInfo.CAP_V, ce, ce.getNode(1));
@@ -291,15 +296,15 @@ public class CirSim {
 			}
 		}
 
-		System.out.println("circuitRowInfo: ");
+		LOGGER.log(Level.FINE,"circuitRowInfo: ");
 		for (RowInfo ri : circuitRowInfo) {
-			System.out.println(ri.toString());
+			LOGGER.log(Level.FINE,ri.toString());
 		}
 
-		// System.out.println("ac6");
-		System.out.println("analyzeCircuit - 6th step: simplify the matrix");
-		System.out.println("circuitMatrix: " + Arrays.deepToString(circuitMatrix));
-		System.out.println("circuitRightSide: " + Arrays.toString(circuitRightSide));
+		// LOGGER.log(Level.FINE,"ac6");
+		LOGGER.log(Level.FINE,"analyzeCircuit - 6th step: simplify the matrix");
+		LOGGER.log(Level.FINE,"circuitMatrix: " + Arrays.deepToString(circuitMatrix));
+		LOGGER.log(Level.FINE,"circuitRightSide: " + Arrays.toString(circuitRightSide));
 
 		// simplify the matrix; this speeds things up quite a bit
 		for (int i = 0; i != matrixSize; i++) {
@@ -307,7 +312,7 @@ public class CirSim {
 			double qv = 0;
 			RowInfo re = circuitRowInfo[i];
 			/*
-			 * System.out.println("row " + i + " " + re.lsChanges + " " + re.rsChanges + " "
+			 * LOGGER.log(Level.FINE,"row " + i + " " + re.lsChanges + " " + re.rsChanges + " "
 			 * + re.dropRow);
 			 */
 			if (re.isLsChanges() || re.isDropRow() || re.isRsChanges())
@@ -338,11 +343,11 @@ public class CirSim {
 				break;
 			}
 
-			// System.out.println("line " + i + " " + qp + " " + qm + " " + j);
+			// LOGGER.log(Level.FINE,"line " + i + " " + qp + " " + qm + " " + j);
 			/*
 			 * if (qp != -1 && circuitRowInfo[qp].lsChanges) {
-			 * System.out.println("lschanges"); continue; } if (qm != -1 &&
-			 * circuitRowInfo[qm].lsChanges) { System.out.println("lschanges"); continue; }
+			 * LOGGER.log(Level.FINE,"lschanges"); continue; } if (qm != -1 &&
+			 * circuitRowInfo[qm].lsChanges) { LOGGER.log(Level.FINE,"lschanges"); continue; }
 			 */
 			if (maxJ == matrixSize) {
 				if (qp == -1) {
@@ -357,7 +362,7 @@ public class CirSim {
 					for (k = 0; elt.getType() == RowInfo.ROW_EQUAL && k < 100; k++) {
 						// follow the chain
 						/*
-						 * System.out.println("following equal chain from " + i + " " + qp + " to " +
+						 * LOGGER.log(Level.FINE,"following equal chain from " + i + " " + qp + " to " +
 						 * elt.nodeEq);
 						 */
 						qp = elt.getNodeEq();
@@ -365,24 +370,24 @@ public class CirSim {
 					}
 					if (elt.getType() == RowInfo.ROW_EQUAL) {
 						// break equal chains
-						// System.out.println("Break equal chain");
+						// LOGGER.log(Level.FINE,"Break equal chain");
 						elt.setType(RowInfo.ROW_NORMAL);
 						continue;
 					}
 					if (elt.getType() != RowInfo.ROW_NORMAL) {
-						System.out.println("type already " + elt.getType() + " for " + qp + "!");
+						LOGGER.log(Level.FINE,"type already " + elt.getType() + " for " + qp + "!");
 						continue;
 					}
 					elt.setType(RowInfo.ROW_CONST);
 					elt.setValue((circuitRightSide[i] + rsadd) / qv);
 					circuitRowInfo[i].setDropRow(true);
-					// System.out.println(qp + " * " + qv + " = const " + elt.value);
+					// LOGGER.log(Level.FINE,qp + " * " + qv + " = const " + elt.value);
 					i = -1; // start over from scratch
 				} else if (circuitRightSide[i] + rsadd == 0) {
 					// we found a row with only two nonzero entries, and one
 					// is the negative of the other; the values are equal
 					if (elt.getType() != RowInfo.ROW_NORMAL) {
-						// System.out.println("swapping");
+						// LOGGER.log(Level.FINE,"swapping");
 						int qq = qm;
 						qm = qp;
 						qp = qq;
@@ -391,29 +396,29 @@ public class CirSim {
 							// we should follow the chain here, but this
 							// hardly ever happens so it's not worth worrying
 							// about
-							System.out.println("swap failed");
+							LOGGER.log(Level.FINE,"swap failed");
 							continue;
 						}
 					}
 					elt.setType(RowInfo.ROW_EQUAL);
 					elt.setNodeEq(qm);
 					circuitRowInfo[i].setDropRow(true);
-					// System.out.println(qp + " = " + qm);
+					// LOGGER.log(Level.FINE,qp + " = " + qm);
 				}
 			}
 		}
 
-		System.out.println("circuitMatrix: " + Arrays.deepToString(circuitMatrix));
-		System.out.println("circuitRightSide: " + Arrays.toString(circuitRightSide));
-		// System.out.println("ac7");
-		System.out.println("analyzeCircuit - 7th step: find size of new matrix");
+		LOGGER.log(Level.FINE,"circuitMatrix: " + Arrays.deepToString(circuitMatrix));
+		LOGGER.log(Level.FINE,"circuitRightSide: " + Arrays.toString(circuitRightSide));
+		// LOGGER.log(Level.FINE,"ac7");
+		LOGGER.log(Level.FINE,"analyzeCircuit - 7th step: find size of new matrix");
 		// find size of new matrix
 		int nn = 0;
 		for (int i = 0; i != matrixSize; i++) {
 			RowInfo elt = circuitRowInfo[i];
 			if (elt.getType() == RowInfo.ROW_NORMAL) {
 				elt.setMapCol(nn++);
-				// System.out.println("col " + i + " maps to " + elt.mapCol);
+				// LOGGER.log(Level.FINE,"col " + i + " maps to " + elt.mapCol);
 				continue;
 			}
 			if (elt.getType() == RowInfo.ROW_EQUAL) {
@@ -440,24 +445,24 @@ public class CirSim {
 					elt.setType(e2.getType());
 					elt.setValue(e2.getValue());
 					elt.setMapCol(-1);
-					// System.out.println(i + " = [late]const " + elt.value);
+					// LOGGER.log(Level.FINE,i + " = [late]const " + elt.value);
 				} else {
 					elt.setMapCol(e2.getMapCol());
-					// System.out.println(i + " maps to: " + e2.mapCol);
+					// LOGGER.log(Level.FINE,i + " maps to: " + e2.mapCol);
 				}
 			}
 		}
-		// System.out.println("ac8");
-		System.out.println("analyzeCircuit - 8th step: creation of new matrix");
-		System.out.println("circuitMatrix: " + Arrays.deepToString(circuitMatrix));
-		System.out.println("circuitRightSide: " + Arrays.toString(circuitRightSide));
+		// LOGGER.log(Level.FINE,"ac8");
+		LOGGER.log(Level.FINE,"analyzeCircuit - 8th step: creation of new matrix");
+		LOGGER.log(Level.FINE,"circuitMatrix: " + Arrays.deepToString(circuitMatrix));
+		LOGGER.log(Level.FINE,"circuitRightSide: " + Arrays.toString(circuitRightSide));
 		/*
-		 * System.out.println("matrixSize = " + matrixSize);
+		 * LOGGER.log(Level.FINE,"matrixSize = " + matrixSize);
 		 * 
-		 * for (j = 0; j != circuitMatrixSize; j++) { System.out.println(j + ": "); for
-		 * (i = 0; i != circuitMatrixSize; i++) System.out.print(circuitMatrix[j][i] +
-		 * " "); System.out.print("  " + circuitRightSide[j] + "\n"); }
-		 * System.out.print("\n");
+		 * for (j = 0; j != circuitMatrixSize; j++) { LOGGER.log(Level.FINE,j + ": "); for
+		 * (i = 0; i != circuitMatrixSize; i++) LOGGER.log(Level.FINE,circuitMatrix[j][i] +
+		 * " "); LOGGER.log(Level.FINE,"  " + circuitRightSide[j] + "\n"); }
+		 * LOGGER.log(Level.FINE,"\n");
 		 */
 
 		// make the new, simplified matrix
@@ -473,7 +478,7 @@ public class CirSim {
 			}
 			newrs[ii] = circuitRightSide[i];
 			rri.setMapRow(ii);
-			// System.out.println("Row " + i + " maps to " + ii);
+			// LOGGER.log(Level.FINE,"Row " + i + " maps to " + ii);
 			for (int j = 0; j != matrixSize; j++) {
 				RowInfo ri = circuitRowInfo[j];
 				if (ri.getType() == RowInfo.ROW_CONST)
@@ -494,15 +499,15 @@ public class CirSim {
 				origMatrix[i][j] = circuitMatrix[i][j];
 		circuitNeedsMap = true;
 
-		System.out.println("circuitMatrix: " + Arrays.deepToString(circuitMatrix));
-		System.out.println("circuitRightSide: " + Arrays.toString(circuitRightSide));
+		LOGGER.log(Level.FINE,"circuitMatrix: " + Arrays.deepToString(circuitMatrix));
+		LOGGER.log(Level.FINE,"circuitRightSide: " + Arrays.toString(circuitRightSide));
 
 		/*
-		 * System.out.println("matrixSize = " + matrixSize + " " + circuitNonLinear);
+		 * LOGGER.log(Level.FINE,"matrixSize = " + matrixSize + " " + circuitNonLinear);
 		 * for (j = 0; j != circuitMatrixSize; j++) { for (i = 0; i !=
-		 * circuitMatrixSize; i++) System.out.print(circuitMatrix[j][i] + " ");
-		 * System.out.print("  " + circuitRightSide[j] + "\n"); }
-		 * System.out.print("\n");
+		 * circuitMatrixSize; i++) LOGGER.log(Level.FINE,circuitMatrix[j][i] + " ");
+		 * LOGGER.log(Level.FINE,"  " + circuitRightSide[j] + "\n"); }
+		 * LOGGER.log(Level.FINE,"\n");
 		 */
 
 		// if a matrix is linear, we can do the lu_factor here instead of
@@ -585,7 +590,7 @@ public class CirSim {
 			if (depth-- == 0)
 				return false;
 			if (used[n1]) {
-				// System.out.println("used " + n1);
+				// LOGGER.log(Level.FINE,"used " + n1);
 				return false;
 			}
 			used[n1] = true;
@@ -620,14 +625,14 @@ public class CirSim {
 				}
 				int j;
 				for (j = 0; j != ce.getPostCount(); j++) {
-					// System.out.println(ce + " " + ce.getNode(j));
+					// LOGGER.log(Level.FINE,ce + " " + ce.getNode(j));
 					if (ce.getNode(j) == n1)
 						break;
 				}
 				if (j == ce.getPostCount())
 					continue;
 				if (ce.hasGroundConnection(j) && findPath(0, depth)) {
-					// System.out.println(ce + " has ground");
+					// LOGGER.log(Level.FINE,ce + " has ground");
 					used[n1] = false;
 					return true;
 				}
@@ -635,8 +640,8 @@ public class CirSim {
 					double c = ce.getCurrent();
 					if (j == 0)
 						c = -c;
-					// System.out.println("matching " + c + " to " + firstElm.getCurrent());
-					// System.out.println(ce + " " + firstElm);
+					// LOGGER.log(Level.FINE,"matching " + c + " to " + firstElm.getCurrent());
+					// LOGGER.log(Level.FINE,ce + " " + firstElm);
 					if (Math.abs(c - firstElm.getCurrent()) > 1e-10)
 						continue;
 				}
@@ -644,17 +649,17 @@ public class CirSim {
 				for (k = 0; k != ce.getPostCount(); k++) {
 					if (j == k)
 						continue;
-					// System.out.println(ce + " " + ce.getNode(j) + "-" + ce.getNode(k));
+					// LOGGER.log(Level.FINE,ce + " " + ce.getNode(j) + "-" + ce.getNode(k));
 					if (ce.getConnection(j, k) && findPath(ce.getNode(k), depth)) {
-						// System.out.println("got findpath " + n1);
+						// LOGGER.log(Level.FINE,"got findpath " + n1);
 						used[n1] = false;
 						return true;
 					}
-					// System.out.println("back on findpath " + n1);
+					// LOGGER.log(Level.FINE,"back on findpath " + n1);
 				}
 			}
 			used[n1] = false;
-			// System.out.println(n1 + " failed");
+			// LOGGER.log(Level.FINE,n1 + " failed");
 			return false;
 		}
 	}
@@ -708,12 +713,11 @@ public class CirSim {
 		assert r != 0;
 		double r0 = 1 / r;
 		if (Double.isNaN(r0) || Double.isInfinite(r0)) {
-			System.out.print("bad resistance " + r + " " + r0 + "\n");
 			int a = 0;
 			a /= a;
 		}
 
-		System.out.println("nodes[0]: " + n1 + " nodes[1]: " + n2 + " r0: " + r0);
+		LOGGER.log(Level.FINE,"nodes[0]: " + n1 + " nodes[1]: " + n2 + " r0: " + r0);
 		stampMatrix(n1, n1, r0);
 		stampMatrix(n2, n2, r0);
 		stampMatrix(n1, n2, -r0);
@@ -756,21 +760,21 @@ public class CirSim {
 				i = circuitRowInfo[i - 1].getMapRow();
 				RowInfo ri = circuitRowInfo[j - 1];
 				if (ri.getType() == RowInfo.ROW_CONST) {
-					// System.out.println("Stamping constant " + i + " " + j + " " + x);
+					// LOGGER.log(Level.FINE,"Stamping constant " + i + " " + j + " " + x);
 					circuitRightSide[i] -= x * ri.getValue();
 					return;
 				}
 				j = ri.getMapCol();
-				// System.out.println("stamping " + i + " " + j + " " + x);
+				// LOGGER.log(Level.FINE,"stamping " + i + " " + j + " " + x);
 			} else {
 				i--;
 				j--;
 			}
-			System.out.print("circuitMatrix[" + i + "][" + j + "]: " + circuitMatrix[i][j] + " + x = " + x + " --> ");
+			LOGGER.log(Level.FINE,"circuitMatrix[" + i + "][" + j + "]: " + circuitMatrix[i][j] + " + x = " + x + " --> ");
 
 			circuitMatrix[i][j] += x;
 
-			System.out.println("circuitMatrix[" + i + "][" + j + "]: " + circuitMatrix[i][j]);
+			LOGGER.log(Level.FINE,"circuitMatrix[" + i + "][" + j + "]: " + circuitMatrix[i][j]);
 		}
 	}
 
@@ -782,15 +786,15 @@ public class CirSim {
 		if (i > 0) {
 			if (circuitNeedsMap) {
 				i = circuitRowInfo[i - 1].getMapRow();
-				// System.out.println("stamping " + i + " " + x);
+				// LOGGER.log(Level.FINE,"stamping " + i + " " + x);
 			} else
 				i--;
 
-			System.out.print("circuitRightSide[" + i + "]: " + circuitRightSide[i] + " + x = " + x + " --> ");
+			LOGGER.log(Level.FINE,"circuitRightSide[" + i + "]: " + circuitRightSide[i] + " + x = " + x + " --> ");
 
 			circuitRightSide[i] += x;
 
-			System.out.println("circuitRightSide[" + i + "]: " + circuitRightSide[i]);
+			LOGGER.log(Level.FINE,"circuitRightSide[" + i + "]: " + circuitRightSide[i]);
 		}
 	}
 
@@ -800,12 +804,12 @@ public class CirSim {
 	 * @param i
 	 */
 	public void stampRightSide(int i) {
-		// System.out.println("rschanges true " + (i-1));
+		// LOGGER.log(Level.FINE,"rschanges true " + (i-1));
 
 		if (i > 0) {
-			System.out.print("circuitRowInfo[" + (i - 1) + "]: " + circuitRowInfo[i - 1] + " --> ");
+			LOGGER.log(Level.FINE,"circuitRowInfo[" + (i - 1) + "]: " + circuitRowInfo[i - 1] + " --> ");
 			circuitRowInfo[i - 1].setRsChanges(true);
-			System.out.println("circuitRowInfo[" + (i - 1) + "]: " + circuitRowInfo[i - 1]);
+			LOGGER.log(Level.FINE,"circuitRowInfo[" + (i - 1) + "]: " + circuitRowInfo[i - 1]);
 		}
 
 	}
@@ -823,7 +827,7 @@ public class CirSim {
 	public boolean loopAndContinue(boolean debugprint) {
 		int i, j, k, subiter;
 
-		System.out.println("loopAndContinue - 1st step: start iteration");
+		LOGGER.log(Level.FINE,"loopAndContinue - 1st step: start iteration");
 		for (i = 0; i != getElmList().size(); i++) {
 			CircuitElm ce = getElm(i);
 			ce.startIteration();
@@ -831,7 +835,7 @@ public class CirSim {
 
 		steps++;
 		final int subiterCount = 5000;
-		System.out.println("loopAndContinue - 2nd step: doStep");
+		LOGGER.log(Level.FINE,"loopAndContinue - 2nd step: doStep");
 		for (subiter = 0; subiter != subiterCount; subiter++) {
 			setConverged(true);
 			setSubIterations(subiter);
@@ -871,10 +875,10 @@ public class CirSim {
 			if (printit) {
 				for (j = 0; j != circuitMatrixSize; j++) {
 					for (i = 0; i != circuitMatrixSize; i++)
-						System.out.print(circuitMatrix[j][i] + ",");
-					System.out.print("  " + circuitRightSide[j] + "\n");
+						LOGGER.log(Level.FINE,circuitMatrix[j][i] + ",");
+					LOGGER.log(Level.FINE,"  " + circuitRightSide[j] + "\n");
 				}
-				System.out.print("\n");
+				LOGGER.log(Level.FINE,"\n");
 			}
 
 			if (circuitNonLinear) {
@@ -886,14 +890,14 @@ public class CirSim {
 				}
 			}
 
-			System.out.println("loopAndContinue - 3rd step: lu_solve");
-			System.out.println("circuitMatrix: " + Arrays.deepToString(circuitMatrix));
-			System.out.println("circuitRightSide: " + Arrays.toString(circuitRightSide));
+			LOGGER.log(Level.FINE,"loopAndContinue - 3rd step: lu_solve");
+			LOGGER.log(Level.FINE,"circuitMatrix: " + Arrays.deepToString(circuitMatrix));
+			LOGGER.log(Level.FINE,"circuitRightSide: " + Arrays.toString(circuitRightSide));
 
 			lu_solve(circuitMatrix, circuitMatrixSize, circuitPermute, circuitRightSide);
 
-			System.out.println("circuitMatrix: " + Arrays.deepToString(circuitMatrix));
-			System.out.println("circuitRightSide: " + Arrays.toString(circuitRightSide));
+			LOGGER.log(Level.FINE,"circuitMatrix: " + Arrays.deepToString(circuitMatrix));
+			LOGGER.log(Level.FINE,"circuitRightSide: " + Arrays.toString(circuitRightSide));
 
 			for (j = 0; j != circuitMatrixFullSize; j++) {
 				RowInfo ri = circuitRowInfo[j];
@@ -903,7 +907,7 @@ public class CirSim {
 				else
 					res = circuitRightSide[ri.getMapCol()];
 
-				System.out.println(
+				LOGGER.log(Level.FINE,
 						"\nj = " + j + ", res = " + res + ", type = " + ri.getType() + ", mapCol = " + ri.getMapCol());
 
 				if (Double.isNaN(res)) {
@@ -920,7 +924,7 @@ public class CirSim {
 					}
 				} else {
 					int ji = j - (getNodeList().size() - 1);
-					// System.out.println("setting vsrc " + ji + " to " + res);
+					// LOGGER.log(Level.FINE,"setting vsrc " + ji + " to " + res);
 					voltageSources[ji].setCurrent(ji, res);
 				}
 			}
@@ -930,16 +934,16 @@ public class CirSim {
 		}
 
 		if (subiter > 5)
-			System.out.print("converged after " + subiter + " iterations\n");
+			LOGGER.log(Level.FINE,"converged after " + subiter + " iterations\n");
 		if (subiter == subiterCount) {
 			stop("Convergence failed!", null);
 			// break;
 			return false;
 		}
 
-		System.out.println("\nt = " + getT() + ", timeStep = " + getTimeStep());
+		LOGGER.log(Level.FINE,"\nt = " + getT() + ", timeStep = " + getTimeStep());
 		setT(getT() + getTimeStep());
-		System.out.println("t = " + getT() + ", timeStep = " + getTimeStep());
+		LOGGER.log(Level.FINE,"t = " + getT() + ", timeStep = " + getTimeStep());
 
 		return true;
 	}
@@ -1011,7 +1015,7 @@ public class CirSim {
 
 			// avoid zeros
 			if (a[j][j] == 0.0) {
-				System.out.println("avoided zero");
+				LOGGER.log(Level.FINE,"avoided zero");
 				a[j][j] = 1e-18;
 			}
 

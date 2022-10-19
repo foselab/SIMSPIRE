@@ -98,8 +98,13 @@ public class LungSimulator {
 		double ventilatorValue;
 		String replyMessage;
 
+		// in secondi dall'inzio della simulazione
 		double time = 0;
+		final long init_millisec = System.currentTimeMillis(); 
 
+		final long delta_ms = 100;
+		long last_time_ms = init_millisec; 
+		
 		while (userInterface.isWindowOpen()) {
 			if (userInterface.getStateOfExecution()) {				
 				//Update ventilator value
@@ -120,12 +125,13 @@ public class LungSimulator {
 				myCircSim.analyzeCircuit();
 				myCircSim.loopAndContinue(true);
 
-				Thread.sleep(100);
-
-				userInterface.updateShownDataValues(time, myCircSim);
-				
+				//Thread.sleep(100);
 				//increment time
-				time += 0.1;
+				long lasted_ms = System.currentTimeMillis() - init_millisec;
+				// fino a quando non è passato 100 sto fermo
+				while(System.currentTimeMillis() - last_time_ms < delta_ms);
+				userInterface.updateShownDataValues(lasted_ms/1000.0, myCircSim);
+				last_time_ms = System.currentTimeMillis(); 
 			} else {
 				Thread.sleep(100);
 			}

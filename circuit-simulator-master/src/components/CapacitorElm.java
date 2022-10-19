@@ -2,8 +2,13 @@ package components;
 
 import java.awt.Point;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CapacitorElm extends CircuitElm {
+	
+	static private Logger LOGGER = Logger.getLogger(CapacitorElm.class.getName());
+	
 	private double capacitance;
 	double compResistance, voltdiff;
 	Point plate1[], plate2[];
@@ -88,13 +93,13 @@ public class CapacitorElm extends CircuitElm {
 		else
 			curSourceValue = -voltdiff / compResistance;
 
-		System.out.println("CapacitorElm: compResistance = " + compResistance + ", curSourceValue = " + curSourceValue
+		LOGGER.log(Level.FINE,"CapacitorElm: compResistance = " + compResistance + ", curSourceValue = " + curSourceValue
 				+ ", current = " + current + ", voltdiff =" + voltdiff);
 	}
 
 	@Override
 	void calculateCurrent() {
-		System.out.println(this.getClass().getSimpleName() + " - volts[0] = " + volts[0] + ", volts[1] = " + volts[1]);
+		LOGGER.log(Level.FINE,this.getClass().getSimpleName() + " - volts[0] = " + volts[0] + ", volts[1] = " + volts[1]);
 		double voltdiff = volts[0] - volts[1];
 		/*
 		 * we check compResistance because this might get called before stamp(), which
@@ -103,14 +108,14 @@ public class CapacitorElm extends CircuitElm {
 		if (compResistance > 0)
 			current = voltdiff / compResistance + curSourceValue;
 
-		System.out.println(this.getClass().getSimpleName() + " - current set to " + current);
+		LOGGER.log(Level.FINE,this.getClass().getSimpleName() + " - current set to " + current);
 	}
 
 	double curSourceValue;
 
 	@Override
 	public void doStep() {
-		System.out.println("CapacitorElm: nodes[0] = " + nodes[0] + ", nodes[1] = " + nodes[1] + ", curSourceValue = "
+		LOGGER.log(Level.FINE,"CapacitorElm: nodes[0] = " + nodes[0] + ", nodes[1] = " + nodes[1] + ", curSourceValue = "
 				+ curSourceValue);
 		sim.stampCurrentSource(nodes[0], nodes[1], curSourceValue);
 	}
