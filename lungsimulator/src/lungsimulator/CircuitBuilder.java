@@ -43,6 +43,11 @@ public class CircuitBuilder {
 	 * The elements of the circuit
 	 */
 	private final transient List<CircuitElm> elements;
+	
+	/**
+	 * Index of ventilator in cirSim elements list
+	 */
+	private transient int ventilatorIndex;
 
 	/**
 	 * Init class fields
@@ -106,6 +111,7 @@ public class CircuitBuilder {
 			if ("ExternalVoltageElm".equals(element.getType())) {
 				externalVoltage = new ExternalVoltageElm(1, 1, 28);
 				circuitElmSetUp(element, externalVoltage);
+				ventilatorIndex = elements.size()-1;
 			}
 		}
 
@@ -179,7 +185,7 @@ public class CircuitBuilder {
 
 		for (final CircuitElm circuitElement : cirSim.getElmList()) {
 			if (timeDependentElm.containsKey(circuitElement.getId())) {
-				String value = resolveFormula(timeDependentElm.get(circuitElement.getId()), archetype.getParameters(),
+				final String value = resolveFormula(timeDependentElm.get(circuitElement.getId()), archetype.getParameters(),
 						String.valueOf(time));
 
 				// resistance
@@ -210,6 +216,17 @@ public class CircuitBuilder {
 		return cirSim;
 	}
 
+	/**
+	 * update the value of ventilator element
+	 * @param ventilatorValue new ventilator value
+	 * @return the circuit
+	 */
+	public CirSim updateVentilatorValue(final double ventilatorValue) {
+		final ExternalVoltageElm ventilator = (ExternalVoltageElm) cirSim.getElmList().get(ventilatorIndex);
+		ventilator.setVentVoltage(ventilatorValue);
+		return cirSim;
+	}
+	
 	public boolean isTimeDependentCir() {
 		return timeDependentCir;
 	}

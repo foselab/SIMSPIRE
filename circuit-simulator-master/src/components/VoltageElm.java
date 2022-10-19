@@ -1,16 +1,7 @@
 package components;
 
-import java.awt.Choice;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import org.zeromq.SocketType;
-import org.zeromq.ZContext;
-import org.zeromq.ZMQ;
-import org.zeromq.ZMQ.Socket;
 
 public class VoltageElm extends CircuitElm {
 	static final int FLAG_COS = 2;
@@ -23,15 +14,11 @@ public class VoltageElm extends CircuitElm {
 	static final int WF_PULSE = 5;
 	static final int WF_VAR = 6;
 	
-	//TODO nuove waveform
-	static final int WF_FORMULA = 23;
 	static final int WF_ZMQ = 28;
-	
-	ZContext context;
-	Socket socket;
 	
 	double frequency;
 	private double maxVoltage;
+	private double ventVoltage;
 	double freqTimeZero;
 	double bias;
 	double phaseShift;
@@ -42,13 +29,6 @@ public class VoltageElm extends CircuitElm {
 	VoltageElm(int xx, int yy, int wf) {
 		super(xx, yy);
 		waveform = wf;
-		
-		//Aggiungo inizializzazione ZMQ se necessario
-		if(wf == WF_ZMQ) {
-			context = new ZContext();
-			socket = context.createSocket(SocketType.REQ);
-			socket.connect("tcp://localhost:5555");
-		}
 		setMaxVoltage(5);
 		frequency = 40;
 		dutyCycle = .5;
@@ -134,18 +114,8 @@ public class VoltageElm extends CircuitElm {
 			return bias + (w % (2 * pi)) * (getMaxVoltage() / pi) - getMaxVoltage();
 		case WF_PULSE:
 			return ((w % (2 * pi)) < 1) ? getMaxVoltage() + bias : bias;
-		case WF_FORMULA:
-			return -1; //TODO calcolo della formula all'istante t
 		case WF_ZMQ:
-			// chiamo zmq
-			String message = "getPressure";
-			socket.send(message.getBytes(), 0);
-			byte[] reply = socket.recv(0);
-			if (reply != null) {
-				String msg = new String(reply, ZMQ.CHARSET);
-				System.out.println("[ZMQ Received]: " + msg);
-				return Double.parseDouble(msg);
-			}
+			return ventVoltage;
 		default:
 			return 0;
 		}
@@ -213,6 +183,14 @@ public class VoltageElm extends CircuitElm {
 
 	public double getMaxVoltage() {
 		return maxVoltage;
+	}
+
+	public double getVentVoltage() {
+		return ventVoltage;
+	}
+
+	public void setVentVoltage(double ventVoltage) {
+		this.ventVoltage = ventVoltage;
 	}
 
 	public void setMaxVoltage(double maxVoltage) {

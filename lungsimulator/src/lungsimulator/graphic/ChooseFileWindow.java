@@ -9,7 +9,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class ChooseFileWindow extends JComponent {
-	JTextField patientPath;
+	/**
+	 * Text field for custom patient model path
+	 */
+	private final transient JTextField patientPath;
 	JTextField archetypePath;
 	JTextField demographicPath;
 

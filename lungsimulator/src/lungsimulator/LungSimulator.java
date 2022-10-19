@@ -3,6 +3,11 @@ package lungsimulator;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.zeromq.SocketType;
+import org.zeromq.ZContext;
+import org.zeromq.ZMQ;
+import org.zeromq.ZMQ.Socket;
+
 import lungsimulator.components.Archetype;
 import lungsimulator.components.Patient;
 import lungsimulator.components.SimulatorParams;
@@ -83,12 +88,30 @@ public class LungSimulator {
 	public void simulateCircuit() throws InterruptedException {
 		// Create the circuit equivalent to the lung
 		CirSim myCircSim = circuitBuilder.buildCircuitSimulator(patient, archetype);
+		
+		// ZMQ settings
+		ZContext context = new ZContext();
+		final Socket socket = context.createSocket(SocketType.REQ);
+		socket.connect("tcp://localhost:5555");
+		
+		final String message = "getPressure";
+		double ventilatorValue;
+		String replyMessage;
 
 		double time = 0;
 
 		while (true) {
 			if (userInterface.getStateOfExecution()) {
 				time += 0.1;
+				
+				//Update ventilator value
+				socket.send(message.getBytes(), 0);
+				final byte[] reply = socket.recv(0);
+				if (reply != null) {
+					replyMessage = new String(reply, ZMQ.CHARSET);
+					ventilatorValue = Double.parseDouble(replyMessage);
+					myCircSim = circuitBuilder.updateVentilatorValue(ventilatorValue);
+				}
 
 				//update values for time dependent components
 				if(circuitBuilder.isTimeDependentCir()) {

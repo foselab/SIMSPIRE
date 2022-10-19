@@ -74,16 +74,20 @@ public class GraphicInterface {
 	private int imageCounter = 1;
 	private String modelChoice;
 
+	/**
+	 * Open window for model selection
+	 * @return the selected model
+	 */
 	public String selectSchema() {
 		// options configuration
-		String[] models = { "Model of Albanese", "Model of Al-Naggar", "Model of Baker", "Model of Jain",
+		final String[] models = { "Model of Albanese", "Model of Al-Naggar", "Model of Baker", "Model of Jain",
 				"Model of Campbell-Brown", "Your own model..." };
-		Object choice = JOptionPane.showInputDialog(null, "Select model", "ChooseModel", JOptionPane.PLAIN_MESSAGE,
+		final Object choice = JOptionPane.showInputDialog(null, "Select model", "ChooseModel", JOptionPane.PLAIN_MESSAGE,
 				null, models, models[0]);
-		String var = String.valueOf(choice);
+		final String var = String.valueOf(choice);
 
 		if (var.equals("Your own model...")) {
-			ChooseFileWindow chooseFileWindow = new ChooseFileWindow();
+			final ChooseFileWindow chooseFileWindow = new ChooseFileWindow();
 			modelChoice = chooseFileWindow.getResult();
 		} else {
 			modelChoice = var.replace("Model of ", "");
