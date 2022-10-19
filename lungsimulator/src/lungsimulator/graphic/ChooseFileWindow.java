@@ -8,24 +8,45 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * Custom window for file choice
+ */
 public class ChooseFileWindow extends JComponent {
+	/**
+	 * Serial version UID constant
+	 */
+	private static final long serialVersionUID = -8783191093656773534L;
+
 	/**
 	 * Text field for custom patient model path
 	 */
 	private final transient JTextField patientPath;
-	JTextField archetypePath;
-	JTextField demographicPath;
+	
+	/**
+	 * Text field for custom archetype file path
+	 */
+	private final transient JTextField archetypePath;
+	
+	/**
+	 * Text field for custom demographic data path
+	 */
+	private final transient JTextField demographicPath;
 
-	JPanel initPanel;
+	/**
+	 * User choice (OK button or cancel button)
+	 */
+	private final transient int output;
 
-	int output;
-
+	/**
+	 * Choose file window layout set up
+	 */
 	public ChooseFileWindow() {
+		super();
 		patientPath = new JTextField(35);
 		archetypePath = new JTextField(35);
 		demographicPath = new JTextField(35);
 
-		initPanel = new JPanel();
+		final JPanel initPanel = new JPanel();
 		initPanel.setLayout(new BoxLayout(initPanel, BoxLayout.Y_AXIS));
 		initPanel.add(new JLabel("NOTE: All files must be in config folder!"));
 		initPanel.add(Box.createVerticalStrut(15));
@@ -45,23 +66,33 @@ public class ChooseFileWindow extends JComponent {
 				JOptionPane.OK_CANCEL_OPTION);
 	}
 
+	/**
+	 * Checks input and return the result
+	 * @return a string with all file names separated by comma
+	 */
 	public String getResult() {
-		String result = "";
+		String result;
 		if (output == JOptionPane.OK_OPTION) {
 			result = checkField(patientPath.getText()) + "," + checkField(archetypePath.getText()) + ","
 					+ checkField(demographicPath.getText());
+		}else {
+			result = "";
 		}
+		
 		return result;
 	}
 
-	private String checkField(String text) {
+	private String checkField(final String text) {
+		String correctText = text;
+		
 		if(!text.contains("config/")) {
-			text = "config/" + text;
+			correctText = "config/" + text;
 		}
 		
 		if(!text.contains(".yaml")) {
-			text = text + ".yaml";
+			correctText += ".yaml";
 		}
-		return text;
+		
+		return correctText;
 	}
 }

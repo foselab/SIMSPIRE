@@ -179,9 +179,8 @@ public class CircuitBuilder {
 	 * Update components values 
 	 * @param archetype chosen archetype
 	 * @param time new time for variable TIME
-	 * @return the updated circuit
 	 */
-	public CirSim updateCircuitSimulator(final Archetype archetype, final double time) {
+	public void updateCircuitSimulator(final Archetype archetype, final double time) {
 
 		for (final CircuitElm circuitElement : cirSim.getElmList()) {
 			if (timeDependentElm.containsKey(circuitElement.getId())) {
@@ -213,18 +212,15 @@ public class CircuitBuilder {
 				}
 			}
 		}
-		return cirSim;
 	}
 
 	/**
 	 * update the value of ventilator element
 	 * @param ventilatorValue new ventilator value
-	 * @return the circuit
 	 */
-	public CirSim updateVentilatorValue(final double ventilatorValue) {
+	public void updateVentilatorValue(final double ventilatorValue) {
 		final ExternalVoltageElm ventilator = (ExternalVoltageElm) cirSim.getElmList().get(ventilatorIndex);
 		ventilator.setVentVoltage(ventilatorValue);
-		return cirSim;
 	}
 	
 	public boolean isTimeDependentCir() {

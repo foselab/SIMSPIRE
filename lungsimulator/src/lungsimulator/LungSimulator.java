@@ -87,10 +87,10 @@ public class LungSimulator {
 	 */
 	public void simulateCircuit() throws InterruptedException {
 		// Create the circuit equivalent to the lung
-		CirSim myCircSim = circuitBuilder.buildCircuitSimulator(patient, archetype);
+		final CirSim myCircSim = circuitBuilder.buildCircuitSimulator(patient, archetype);
 		
 		// ZMQ settings
-		ZContext context = new ZContext();
+		final ZContext context = new ZContext();
 		final Socket socket = context.createSocket(SocketType.REQ);
 		socket.connect("tcp://localhost:5555");
 		
@@ -100,22 +100,20 @@ public class LungSimulator {
 
 		double time = 0;
 
-		while (true) {
-			if (userInterface.getStateOfExecution()) {
-				time += 0.1;
-				
+		while (userInterface.isWindowOpen()) {
+			if (userInterface.getStateOfExecution()) {				
 				//Update ventilator value
 				socket.send(message.getBytes(), 0);
 				final byte[] reply = socket.recv(0);
 				if (reply != null) {
 					replyMessage = new String(reply, ZMQ.CHARSET);
 					ventilatorValue = Double.parseDouble(replyMessage);
-					myCircSim = circuitBuilder.updateVentilatorValue(ventilatorValue);
+					circuitBuilder.updateVentilatorValue(ventilatorValue);
 				}
 
 				//update values for time dependent components
 				if(circuitBuilder.isTimeDependentCir()) {
-					myCircSim = circuitBuilder.updateCircuitSimulator(archetype, time);
+					circuitBuilder.updateCircuitSimulator(archetype, time);
 				}
 
 				// Analyze the circuit and simulate a step
@@ -125,11 +123,15 @@ public class LungSimulator {
 				Thread.sleep(100);
 
 				userInterface.updateShownDataValues(time, myCircSim);
+				
+				//increment time
+				time += 0.1;
 			} else {
 				Thread.sleep(100);
 			}
 		}
-
+		socket.close();
+		context.close();
 	}
 
 	/**

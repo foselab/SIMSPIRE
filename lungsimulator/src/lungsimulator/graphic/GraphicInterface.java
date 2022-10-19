@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,6 +73,7 @@ public class GraphicInterface {
 	private JButton start;
 	private JButton printData;
 	private boolean state = true;
+	private boolean windowIsOpen = true;
 	private int imageCounter = 1;
 	private String modelChoice;
 
@@ -106,8 +109,13 @@ public class GraphicInterface {
 		// frame configuration
 		frame = new JFrame();
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // fullscreen option
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
+		
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent event) {
+				windowIsOpen = false;
+			}
+		});
 
 		int w = 1500;
 		int h = 400;
@@ -516,6 +524,10 @@ public class GraphicInterface {
 
 	public boolean getStateOfExecution() {
 		return state;
+	}
+	
+	public boolean isWindowOpen() {
+		return windowIsOpen;
 	}
 
 }
