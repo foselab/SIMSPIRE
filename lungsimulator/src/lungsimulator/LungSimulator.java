@@ -2,6 +2,10 @@ package lungsimulator;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
@@ -34,7 +38,7 @@ public class LungSimulator {
 	 * Patient health description
 	 */
 	public transient Archetype archetype;
-	
+
 	/**
 	 * Patient demographic data
 	 */
@@ -88,26 +92,43 @@ public class LungSimulator {
 	public void simulateCircuit() throws InterruptedException {
 		// Create the circuit equivalent to the lung
 		final CirSim myCircSim = circuitBuilder.buildCircuitSimulator(patient, archetype);
-		
+
+		// TODO inserire circuitcomponents
+		// userInterface.initValues(myCircSim)
+
 		// ZMQ settings
 		final ZContext context = new ZContext();
 		final Socket socket = context.createSocket(SocketType.REQ);
 		socket.connect("tcp://localhost:5555");
-		
+
 		final String message = "getPressure";
 		double ventilatorValue;
 		String replyMessage;
 
 		// in secondi dall'inzio della simulazione
 		double time = 0;
-		final long init_millisec = System.currentTimeMillis(); 
+		long init_millisec = System.currentTimeMillis();
 
-		final long delta_ms = 100;
-		long last_time_ms = init_millisec; 
-		
+		final long delta_ms = (long) (0.02 * 1000); // timestep in millisec
+
+		TimerTask repeatedTask = new TimerTask() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				System.out.println("time " + (System.currentTimeMillis() - init_millisec));
+				myCircSim.analyzeCircuit();
+				myCircSim.loopAndContinue(false);
+
+			}
+		};
+
+		long delay = 0;
+		long period = (long) (delta_ms);
+
 		while (userInterface.isWindowOpen()) {
-			if (userInterface.getStateOfExecution()) {				
-				//Update ventilator value
+			if (userInterface.getStateOfExecution()) {
+				// Update ventilator value
 				socket.send(message.getBytes(), 0);
 				final byte[] reply = socket.recv(0);
 				if (reply != null) {
@@ -116,22 +137,34 @@ public class LungSimulator {
 					circuitBuilder.updateVentilatorValue(ventilatorValue);
 				}
 
-				//update values for time dependent components
-				if(circuitBuilder.isTimeDependentCir()) {
-					circuitBuilder.updateCircuitSimulator(archetype, time);
+				// update values for time dependent components
+				if (circuitBuilder.isTimeDependentCir()) {
+					circuitBuilder.updateCircuitSimulator(archetype, (System.currentTimeMillis() - init_millisec) / 1000.0);
 				}
 
-				// Analyze the circuit and simulate a step
-				myCircSim.analyzeCircuit();
-				myCircSim.loopAndContinue(true);
+				ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+				executor.scheduleAtFixedRate(repeatedTask, delay, period, TimeUnit.MILLISECONDS);
+				Thread.sleep(100);
+				executor.shutdown();
 
-				//Thread.sleep(100);
-				//increment time
-				long lasted_ms = System.currentTimeMillis() - init_millisec;
-				// fino a quando non è passato 100 sto fermo
-				while(System.currentTimeMillis() - last_time_ms < delta_ms);
-				userInterface.updateShownDataValues(lasted_ms/1000.0, myCircSim);
-				last_time_ms = System.currentTimeMillis(); 
+				userInterface.updateShownDataValues((System.currentTimeMillis() - init_millisec) / 1000.0, myCircSim);
+
+				/*
+				 * while (System.currentTimeMillis() - init_millisec < counter) {
+				 * 
+				 * // stop for delta millisecs while (System.currentTimeMillis() - last_millisec
+				 * < delta_ms) ;
+				 * 
+				 * // Analyze the circuit and simulate a step myCircSim.analyzeCircuit();
+				 * myCircSim.loopAndContinue(true);
+				 * 
+				 * last_millisec = System.currentTimeMillis(); // }
+				 * 
+				 * if (System.currentTimeMillis() - init_millisec > counter) {
+				 * userInterface.updateShownDataValues((System.currentTimeMillis() -
+				 * init_millisec) / 1000.0, myCircSim); counter += 500; }
+				 */
+
 			} else {
 				Thread.sleep(100);
 			}

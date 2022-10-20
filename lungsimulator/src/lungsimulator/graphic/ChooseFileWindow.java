@@ -2,11 +2,14 @@ package lungsimulator.graphic;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileSystemView;
 
 /**
  * Custom window for file choice
@@ -45,13 +48,16 @@ public class ChooseFileWindow extends JComponent {
 		patientPath = new JTextField(35);
 		archetypePath = new JTextField(35);
 		demographicPath = new JTextField(35);
+		
+		JFileChooser filechooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 
 		final JPanel initPanel = new JPanel();
-		initPanel.setLayout(new BoxLayout(initPanel, BoxLayout.Y_AXIS));
-		initPanel.add(new JLabel("NOTE: All files must be in config folder!"));
+		//initPanel.setLayout(new BoxLayout(initPanel, BoxLayout.Y_AXIS));
 		initPanel.add(Box.createVerticalStrut(15));
 
 		initPanel.add(new JLabel("Insert your lung model file name (e.g. myLungModel.yaml)"));
+		JButton chooseFile = new JButton("Choose...");
+		initPanel.add(chooseFile);
 		initPanel.add(patientPath);
 		initPanel.add(Box.createVerticalStrut(15));
 

@@ -67,7 +67,7 @@ public class CircuitBuilder {
 	 * @return the circuit
 	 */
 	public CirSim buildCircuitSimulator(final Patient patient, final Archetype archetype) {
-		cirSim.setTimeStep(0.1);
+		cirSim.setTimeStep(0.02);
 		ResistorElm resistance;
 		CapacitorElm capacitance;
 		ACVoltageElm acVoltage;
@@ -229,6 +229,10 @@ public class CircuitBuilder {
 
 	public void setTimeDependentCir(final boolean hasTimeDependency) {
 		this.timeDependentCir = hasTimeDependency;
+	}
+
+	public List<String> getTimeDependentElm() {
+		return new ArrayList<String>(timeDependentElm.keySet());
 	}
 
 }

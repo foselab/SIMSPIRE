@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,10 +39,11 @@ public class CircuitTest {
 		
 		cirSim.setTimeStep(delta);
 
-		// voglio stampare la corrente per 5 sec
 		final long init_millisec = System.currentTimeMillis();
 		long last_millisec = init_millisec;
 		while (System.currentTimeMillis() - init_millisec < 1000) {
+			System.out.println("\ncurrentTimeMillis() - init_millisec: " + (System.currentTimeMillis() - init_millisec));
+			
 			// stop for delta millisecs
 			while(System.currentTimeMillis() - last_millisec < delta * 1000);
 			System.out.println("time " + (System.currentTimeMillis() - init_millisec) + " battery I: "+ battery.getCurrent());
@@ -66,6 +70,34 @@ public class CircuitTest {
     			cirSim.loopAndContinue(false);            	
             }
         }, 0, (long)(delta*1000));
+	}
+	
+	@Test
+	public void testExecutorService() throws InterruptedException {		
+		buildCircuit();		
+		// in secondi
+		double delta = 0.02;		
+		cirSim.setTimeStep(delta);
+		
+		final long init_millisec = System.currentTimeMillis();
+		TimerTask repeatedTask = new TimerTask() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				System.out.println("time " + (System.currentTimeMillis() - init_millisec) + " battery I: "+ battery.getCurrent());
+    			cirSim.analyzeCircuit();
+    			cirSim.loopAndContinue(false);  
+				
+			}
+		};
+		
+		ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+		long delay = 0;
+		long period = (long) (delta*1000);
+		executor.scheduleAtFixedRate(repeatedTask, delay, period, TimeUnit.MILLISECONDS);
+		Thread.sleep(100);
+		executor.shutdown();
 	}
 
 	

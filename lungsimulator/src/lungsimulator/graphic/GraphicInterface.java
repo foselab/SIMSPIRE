@@ -3,6 +3,7 @@ package lungsimulator.graphic;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -24,6 +26,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.TitledBorder;
 
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.BitmapEncoder.BitmapFormat;
@@ -46,7 +49,19 @@ import lungsimulator.components.SimulatorParams;
 import lungsimulator.utils.Utils;
 import simulator.CirSim;
 
+/**
+ * Graphic view for final user
+ */
 public class GraphicInterface {
+	/**
+	 * The frame of user interface
+	 */
+	private transient JFrame frame;
+	
+	/**
+	 * Show if the frame state (open or close)
+	 */
+	public transient boolean windowIsOpen = true;
 
 	private boolean showVentilator = true;
 	private double[][] initdataPressure;
@@ -61,7 +76,6 @@ public class GraphicInterface {
 	private int flowIndexElm = 1;
 	private int pressureIndexElm = 1;
 
-	private JFrame frame;
 	private XYChart pressureChart;
 	private XYChart flowChart;
 	private XChartPanel<XYChart> sw;
@@ -73,7 +87,6 @@ public class GraphicInterface {
 	private JButton start;
 	private JButton printData;
 	private boolean state = true;
-	private boolean windowIsOpen = true;
 	private int imageCounter = 1;
 	private String modelChoice;
 
@@ -105,21 +118,22 @@ public class GraphicInterface {
 	 * @param archetype
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void frameConfig(Patient patient, Archetype archetype, SimulatorParams demographicData) {
+	public void frameConfig(final Patient patient, final Archetype archetype, final SimulatorParams demographicData) {
 		// frame configuration
 		frame = new JFrame();
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // fullscreen option
 		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		frame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent event) {
+			@Override
+			public void windowClosing(final WindowEvent event) {
 				windowIsOpen = false;
 			}
 		});
 
-		int w = 1500;
-		int h = 400;
-
+		//TODO inizializzare circuitcomponents
+		//TODO calcolare pressureCoord
 		patientPanelConfig(patient, archetype, demographicData);
 
 		// Init the arrays for the data
@@ -135,6 +149,9 @@ public class GraphicInterface {
 		JPanel flowPanel = new JPanel();
 		frame.getContentPane().add(flowPanel);
 		flowPanel.setLayout(new BoxLayout(flowPanel, BoxLayout.Y_AXIS));
+		
+		int w = 1500;
+		int h = 400;
 
 		// Create the flow chart
 		flowChart = new XYChartBuilder().width(w).height(h).title(GraphicConstants.FLOWSERIES + " in " + flowIds.get(0))
@@ -203,8 +220,10 @@ public class GraphicInterface {
 		flowPanel.add(sw);
 
 	}
-
-	private void patientPanelConfig(final Patient patient, final Archetype archetype, SimulatorParams demographicData) {
+	
+	//public initValuesCircuit(myCircSim) --> circuitComponents.initComponent(myCirSim)
+	
+	private void patientPanelConfig(final Patient patient, final Archetype archetype, final SimulatorParams demographicData) {
 		patientPanel = new JPanel();
 		frame.getContentPane().add(patientPanel);
 		patientPanel.setLayout(null);

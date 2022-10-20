@@ -11,6 +11,7 @@ public abstract class CircuitElm {
 	private String id;
 	private String idLeft;
 	private String idRight;
+	private double value;
 	public static CirSim sim;
 
 	public static NumberFormat showFormat;
@@ -418,5 +419,13 @@ public abstract class CircuitElm {
 	public String toString() {
 		return new ToStringBuilder(this).append("current", current).append("\nnodes", nodes).append("\npoint1", point1)
 				.append("\npoint2", point2).append("\nvolts", volts).append("\nvoltSource", voltSource).toString();
+	}
+
+	public double getValue() {
+		return value;
+	}
+
+	public void setValue(double value) {
+		this.value = value;
 	}
 }

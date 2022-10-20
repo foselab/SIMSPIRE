@@ -1,8 +1,8 @@
 ---
 schema: 2
 elementsList:
-- associatedFormula:
-    id: Endo-tracheal Tube Resistance
+- elementName: Endo-tracheal Tube Resistance
+  associatedFormula:
     isTimeDependent: false
     isExternal: false
     formula: resistance1
@@ -13,8 +13,8 @@ elementsList:
   y: 1
   x1: 1 
   y1: 1
-- associatedFormula:
-    id: Tracheo-bronchial Resistance
+- elementName: Tracheo-bronchial Resistance
+  associatedFormula:
     isTimeDependent: false
     isExternal: false
     formula: resistance2
@@ -25,8 +25,8 @@ elementsList:
   y: 1
   x1: 2 
   y1: 1
-- associatedFormula:
-    id: Lung Compliance
+- elementName: Lung Compliance
+  associatedFormula:
     isTimeDependent: false
     isExternal: false
     formula: capacitor1
@@ -41,8 +41,8 @@ elementsList:
   idLeft: Alveoli
   showRight: true
   idRight: Intrathoracic Pressure
-- associatedFormula:
-    id: Chest wall compliance
+- elementName: Chest wall compliance
+  associatedFormula:
     isTimeDependent: false
     isExternal: false
     formula: capacitor2
@@ -53,8 +53,8 @@ elementsList:
   y: 1
   x1: 4 
   y1: 1
-- associatedFormula:
-    id: Ventilator
+- elementName: Ventilator
+  associatedFormula:
     isTimeDependent: false
     isExternal: true
   type: ExternalVoltageElm
