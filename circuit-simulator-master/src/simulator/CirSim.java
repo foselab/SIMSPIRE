@@ -34,8 +34,16 @@ public class CirSim {
 	private Vector<CircuitNode> nodeList;
 
 	private Random random;
-	private double t;
+	
+	/**
+	 * Time of tracking simulation
+	 */
+	private double t = 0;
 	private String stopMessage;
+	
+	/**
+	 * Time increment step
+	 */
 	private double timeStep;
 
 	/**
@@ -44,7 +52,7 @@ public class CirSim {
 	private List<CircuitElm> elmList;
 
 	private CircuitElm plotYElm;
-	double circuitMatrix[][], circuitRightSide[], origRightSide[], origMatrix[][];
+	private double circuitMatrix[][], circuitRightSide[], origRightSide[], origMatrix[][];
 	RowInfo circuitRowInfo[];
 	int circuitPermute[];
 	boolean circuitNonLinear;
@@ -941,9 +949,7 @@ public class CirSim {
 			return false;
 		}
 
-		LOGGER.log(Level.FINE,"\nt = " + getT() + ", timeStep = " + getTimeStep());
 		setT(getT() + getTimeStep());
-		LOGGER.log(Level.FINE,"t = " + getT() + ", timeStep = " + getTimeStep());
 
 		return true;
 	}

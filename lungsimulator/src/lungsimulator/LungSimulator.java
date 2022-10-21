@@ -105,68 +105,44 @@ public class LungSimulator {
 		double ventilatorValue;
 		String replyMessage;
 
-		// in secondi dall'inzio della simulazione
-		double time = 0;
-		long init_millisec = System.currentTimeMillis();
-
-		final long delta_ms = (long) (0.02 * 1000); // timestep in millisec
-
-		TimerTask repeatedTask = new TimerTask() {
-
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				System.out.println("time " + (System.currentTimeMillis() - init_millisec));
-				myCircSim.analyzeCircuit();
-				myCircSim.loopAndContinue(false);
-
-			}
-		};
-
-		long delay = 0;
-		long period = (long) (delta_ms);
+		// moment of time (in seconds) where simulation starts
+		double tStart = System.currentTimeMillis() / 1000.0;
+		double lastT = 0;
+		double step = myCircSim.getTimeStep();
+		double ntStart;
+		double initialT;
+		
 
 		while (userInterface.isWindowOpen()) {
 			if (userInterface.getStateOfExecution()) {
-				// Update ventilator value
-				socket.send(message.getBytes(), 0);
-				final byte[] reply = socket.recv(0);
-				if (reply != null) {
-					replyMessage = new String(reply, ZMQ.CHARSET);
-					ventilatorValue = Double.parseDouble(replyMessage);
-					circuitBuilder.updateVentilatorValue(ventilatorValue);
+				ntStart = System.currentTimeMillis() / 1000.0;
+				initialT = ntStart - tStart;
+				// wait for step seconds until next resolution
+				if (initialT - lastT >= step) {
+					// Update ventilator value
+					socket.send(message.getBytes(), 0);
+					final byte[] reply = socket.recv(0);
+					if (reply != null) {
+						replyMessage = new String(reply, ZMQ.CHARSET);
+						ventilatorValue = Double.parseDouble(replyMessage);
+						circuitBuilder.updateVentilatorValue(ventilatorValue);
+					}
+
+					// update values for time dependent components
+					if (circuitBuilder.isTimeDependentCir()) {
+						circuitBuilder.updateCircuitSimulator(archetype, initialT);
+					}
+
+					myCircSim.setT(initialT);
+					System.out.println("initialT " + initialT);
+					myCircSim.analyzeCircuit();
+					myCircSim.loopAndContinue(false);
+					userInterface.updateShownDataValues(initialT, myCircSim);
+					lastT = initialT;
 				}
-
-				// update values for time dependent components
-				if (circuitBuilder.isTimeDependentCir()) {
-					circuitBuilder.updateCircuitSimulator(archetype, (System.currentTimeMillis() - init_millisec) / 1000.0);
-				}
-
-				ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-				executor.scheduleAtFixedRate(repeatedTask, delay, period, TimeUnit.MILLISECONDS);
-				Thread.sleep(100);
-				executor.shutdown();
-
-				userInterface.updateShownDataValues((System.currentTimeMillis() - init_millisec) / 1000.0, myCircSim);
-
-				/*
-				 * while (System.currentTimeMillis() - init_millisec < counter) {
-				 * 
-				 * // stop for delta millisecs while (System.currentTimeMillis() - last_millisec
-				 * < delta_ms) ;
-				 * 
-				 * // Analyze the circuit and simulate a step myCircSim.analyzeCircuit();
-				 * myCircSim.loopAndContinue(true);
-				 * 
-				 * last_millisec = System.currentTimeMillis(); // }
-				 * 
-				 * if (System.currentTimeMillis() - init_millisec > counter) {
-				 * userInterface.updateShownDataValues((System.currentTimeMillis() -
-				 * init_millisec) / 1000.0, myCircSim); counter += 500; }
-				 */
 
 			} else {
-				Thread.sleep(100);
+				Thread.sleep((long) step);
 			}
 		}
 		socket.close();

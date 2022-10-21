@@ -67,7 +67,7 @@ public class CircuitBuilder {
 	 * @return the circuit
 	 */
 	public CirSim buildCircuitSimulator(final Patient patient, final Archetype archetype) {
-		cirSim.setTimeStep(0.02);
+		cirSim.setTimeStep(0.1);
 		ResistorElm resistance;
 		CapacitorElm capacitance;
 		ACVoltageElm acVoltage;

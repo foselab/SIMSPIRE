@@ -1,5 +1,3 @@
-import static org.junit.Assert.*;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
@@ -17,6 +15,7 @@ import components.CapacitorElm;
 import components.CircuitElm;
 import components.DCVoltageElm;
 import components.ResistorElm;
+import components.VoltageElm;
 import simulator.CirSim;
 
 public class CircuitTest {
@@ -29,6 +28,7 @@ public class CircuitTest {
 		Logger.getLogger(CirSim.class.getName()).setLevel(Level.OFF);
 		Logger.getLogger(ResistorElm.class.getName()).setLevel(Level.OFF);
 		Logger.getLogger(CapacitorElm.class.getName()).setLevel(Level.OFF);
+		Logger.getLogger(VoltageElm.class.getName()).setLevel(Level.OFF);
 	}
 
 	@Test

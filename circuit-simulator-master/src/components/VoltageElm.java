@@ -2,8 +2,13 @@ package components;
 
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class VoltageElm extends CircuitElm {
+	
+	static private Logger LOGGER = Logger.getLogger(VoltageElm.class.getName());
+	
 	static final int FLAG_COS = 2;
 	int waveform;
 	static final int WF_DC = 0;
@@ -86,7 +91,7 @@ public class VoltageElm extends CircuitElm {
 
 	@Override
 	public void stamp() {
-		System.out.println("nodes[0]: " + nodes[0] + " nodes[1]: " + nodes[1] + " voltSource: " + voltSource);
+		LOGGER.log(Level.FINE,"nodes[0]: " + nodes[0] + " nodes[1]: " + nodes[1] + " voltSource: " + voltSource);
 		if (waveform == WF_DC)
 			sim.stampVoltageSource(nodes[0], nodes[1], voltSource, getVoltage());
 		else
