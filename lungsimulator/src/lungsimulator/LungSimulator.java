@@ -85,6 +85,41 @@ public class LungSimulator {
 	}
 
 	/**
+	 * Init the lung simulator by reading and validating the patient model and
+	 * archetype and set the frame configuration
+	 * 
+	 * @throws FileNotFoundException one between the lung model and the archetype
+	 *                               file (or both) is not located in config folder
+	 * @throws IOException           the structure of YAML file is not correct: it
+	 *                               could be either lung model or archetype (even
+	 *                               both)
+	 */
+	public LungSimulator(String chosenSchema) throws FileNotFoundException, IOException {
+		//final String chosenSchema = userInterface.selectSchema();
+		YamlReader yamlReader;
+
+		if (chosenSchema != null) {
+			if (chosenSchema.contains(",")) {
+				final String[] fileNames = chosenSchema.split(",");
+				yamlReader = new YamlReader(fileNames[0], fileNames[1], fileNames[2]);
+			} else {
+				yamlReader = new YamlReader(chosenSchema);
+			}
+			// Read patient model and patient archetype
+			patient = yamlReader.readPatientModel();
+			archetype = yamlReader.readArchetypeParameters();
+			demographicData = yamlReader.readDemographicData();
+
+			// Validation
+			final Validator validator = new Validator();
+			validator.evaluate(patient, archetype, demographicData);
+
+			// Frame configuration
+			userInterface.frameConfig(patient, archetype, demographicData);
+		}
+	}
+
+	/**
 	 * Circuit construction and resolution for each iteration
 	 * 
 	 * @throws InterruptedException
@@ -106,12 +141,11 @@ public class LungSimulator {
 		String replyMessage;
 
 		// moment of time (in seconds) where simulation starts
-		double tStart = System.currentTimeMillis() / 1000.0;
+		final double tStart = System.currentTimeMillis() / 1000.0;
 		double lastT = 0;
-		double step = myCircSim.getTimeStep();
+		final double step = myCircSim.getTimeStep();
 		double ntStart;
 		double initialT;
-		
 
 		while (userInterface.isWindowOpen()) {
 			if (userInterface.getStateOfExecution()) {

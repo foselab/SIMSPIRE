@@ -1,19 +1,10 @@
 package components;
 
-import java.awt.Point;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.Test;
 
-import components.CapacitorElm;
-import components.CircuitElm;
-import components.CircuitNode;
-import components.DCVoltageElm;
-import components.ResistorElm;
-import components.VoltageElm;
 import simulator.CirSim;
 
 public class TestResistor {

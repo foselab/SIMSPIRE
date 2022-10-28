@@ -1,0 +1,7 @@
+---
+schema: 2
+parameters:
+   resistance1: 8.0
+   resistance2: 20.0
+   capacitor1: 0.020
+   capacitor2: 0.15
