@@ -1,8 +1,5 @@
 package org.vaadin.example;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;

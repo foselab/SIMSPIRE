@@ -1,17 +1,15 @@
-package org.vaadin.example;
+package view;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import org.vaadin.example.ChooseModelForm;
 
-import com.github.appreciated.apexcharts.ApexCharts;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteConfiguration;
+import com.vaadin.flow.server.VaadinSession;
 
 import lungsimulator.LungSimulator;
 
@@ -20,18 +18,15 @@ import lungsimulator.LungSimulator;
  * that shows a greeting message in a notification.
  */
 @Route("")
-public class MainView extends Composite<Component> {
+public class SelectModelView extends Composite<Component> {
 
 	private LungSimulator lungSimulator = new LungSimulator();
-	CircuitComponents cc;
 	VerticalLayout mvv = new VerticalLayout();
-	VerticalLayout mvvd = new VerticalLayout();
 
 	@Override
 	protected Component initContent() {
-		H3 title = new H3("INSPIRE");
-		mvv.add(title, showChooseModelForm(lungSimulator));
-		return new HorizontalLayout(mvv, mvvd);
+		mvv.add(showChooseModelForm(lungSimulator));
+		return new VerticalLayout(mvv);
 	}
 
 	private Dialog showChooseModelForm(LungSimulator lungSimulator) {
@@ -41,14 +36,14 @@ public class MainView extends Composite<Component> {
 		initDialog.open();
 
 		ChooseModelForm cmf = new ChooseModelForm(lungSimulator, () -> {
-			initDialog.close();
 			lungSimulator.modelValidation();
-			while (true) {
-				lungSimulator.mini();
-				cc = new CircuitComponents(lungSimulator);
-				mvv.add(cc);
-				mvvd.add(new RightVerticalLayout(lungSimulator));
-			}
+			initDialog.close();
+
+			VaadinSession.getCurrent().setAttribute("lungSimulator", lungSimulator);
+			// l'utente può vedere il componente SimulationView solo per questa sessione
+			RouteConfiguration.forSessionScope().setRoute("simulation", SimulationView.class);
+			// accedi alla nuova view
+			UI.getCurrent().navigate(SimulationView.class);
 		});
 
 		initDialog.add(cmf);

@@ -22,4 +22,8 @@ public class RightVerticalLayout extends Composite<Component>{
 	protected Component initContent() {
 		return new VerticalLayout(flowChart, pressureChart);
 	}
+
+	public Plot getFlowChart() {
+		return flowChart;
+	}
 }

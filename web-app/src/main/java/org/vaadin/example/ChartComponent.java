@@ -18,8 +18,10 @@ import com.github.appreciated.apexcharts.helper.Series;
 
 public class ChartComponent extends ApexChartsBuilder{
 	private ApexCharts chart;
+	String seriesName;
 	
 	public ChartComponent(List<String> timeline, String seriesName, double[] yvalues) {
+		this.seriesName = seriesName;
 		setChart(withChart(ChartBuilder.get()
                 .withType(Type.LINE)
                 .withZoom(ZoomBuilder.get()
@@ -46,28 +48,16 @@ public class ChartComponent extends ApexChartsBuilder{
                 .withSeries(new Series<>(seriesName, yvalues))
                 .build());
 		
-		chart.setHeight("200px");
-		chart.setWidth("900px");
-        /*withChart(ChartBuilder.get()
-                .withType(Type.LINE)
-                .withZoom(ZoomBuilder.get()
-                        .withEnabled(false)
-                        .build())
-                .build())
-                .withStroke(StrokeBuilder.get()
-                        .withCurve(Curve.STRAIGHT)
-                        .build())
-                .withGrid(GridBuilder.get()
-                        .withRow(RowBuilder.get()
-                                .withColors("#f3f3f3", "transparent")
-                                .withOpacity(0.5).build()
-                        ).build())
-                .withXaxis(XAxisBuilder.get()
-                        .withCategories("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep")
-                        .withTickPlacement(TickPlacement.BETWEEN)
-                        .build())
-                .withSeries(new Series<>("Desktops", 10.0, 41.0, 35.0, 51.0, 49.0, 62.0, 69.0, 91.0, 148.0));
-    */}
+		chart.setMaxHeight("300px");
+	}
+	
+	public void updateChart(List<String> timeline, double[][] yvalues) {
+		chart.setXaxis(XAxisBuilder.get()
+                		.withTitle(com.github.appreciated.apexcharts.config.xaxis.builder.TitleBuilder.get().withText("Time [s]").build())
+                        .withCategories(timeline) //time
+                        .build());
+		chart.setSeries(new Series<>(seriesName, yvalues[0]));
+	}
 
 	public ApexCharts getChart() {
 		return chart;
