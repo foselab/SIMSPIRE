@@ -22,7 +22,8 @@ public class ChartComponent extends ApexChartsBuilder{
 	
 	public ChartComponent(List<String> timeline, String seriesName, double[] yvalues) {
 		this.seriesName = seriesName;
-		setChart(withChart(ChartBuilder.get()
+		chart = ApexChartsBuilder.get()
+				.withChart(ChartBuilder.get()
                 .withType(Type.LINE)
                 .withZoom(ZoomBuilder.get()
                         .withEnabled(false)
@@ -46,9 +47,8 @@ public class ChartComponent extends ApexChartsBuilder{
                         .build()
                 )
                 .withSeries(new Series<>(seriesName, yvalues))
-                .build());
+                .build();
 		
-		chart.setMaxHeight("300px");
 	}
 	
 	public void updateChart(List<String> timeline, double[][] yvalues) {

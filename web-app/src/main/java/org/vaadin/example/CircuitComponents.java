@@ -20,7 +20,7 @@ public class CircuitComponents extends Composite<Component>{
 			if(lungSimulator.getCircuitBuilder() != null) {
 				if(lungSimulator.getCircuitBuilder().getElements() != null) {
 					for(CircuitElm element: lungSimulator.getCircuitBuilder().getElements()) {
-						CircuitElementRow cer = new CircuitElementRow(element.getId(), element.getValue(), "loading");
+						CircuitElementRow cer = new CircuitElementRow(element.getId(), element.getValue(), element.getUnit());
 						vl.add(cer);
 					}
 				}

@@ -12,6 +12,7 @@ public abstract class CircuitElm {
 	private String idLeft;
 	private String idRight;
 	private double value;
+	private String unit;
 	public static CirSim sim;
 
 	public static NumberFormat showFormat;
@@ -427,5 +428,13 @@ public abstract class CircuitElm {
 
 	public void setValue(double value) {
 		this.value = value;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 }

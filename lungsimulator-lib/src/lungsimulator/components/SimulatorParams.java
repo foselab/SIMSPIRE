@@ -1,5 +1,7 @@
 package lungsimulator.components;
 
+import org.apache.commons.math3.util.Precision;
+
 import lungsimulator.exceptions.InspireException;
 
 /**
@@ -107,7 +109,7 @@ public class SimulatorParams {
 	}
 
 	public double getIbw() {
-		this.ibw = 22 * Math.pow(height, 2);
+		this.ibw = Precision.round(22 * Math.pow(height, 2), 2);
 		return ibw;
 	}
 

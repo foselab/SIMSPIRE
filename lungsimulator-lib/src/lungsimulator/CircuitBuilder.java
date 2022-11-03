@@ -60,6 +60,21 @@ public class CircuitBuilder {
 	private double[][] initdataFlow;
 	private List<String> pressureIds = new ArrayList<>();
 	private Map<String, String> pressureCoord = new LinkedHashMap<>();
+	
+	/**
+	 * Unit of measure for resistance element
+	 */
+	public static final String UMRES = "cmH2O/L/s";
+	
+	/**
+	 * Unit of measure for capacitor element
+	 */
+	public static final String UMCAP = "L/cmH2O";
+	
+	/**
+	 * Unit of measure for voltage element
+	 */
+	public static final String UMGEN = "cmH2O";
 
 	/**
 	 * Init class fields
@@ -96,6 +111,7 @@ public class CircuitBuilder {
 					resistance = new ResistorElm(1, 1);
 					resistance.setResistance(Double.parseDouble(value));
 					resistance.setValue(Double.parseDouble(value));
+					resistance.setUnit(UMRES);
 					circuitElmSetUp(element, resistance);
 					flowIds.add(element.getElementName());
 				}
@@ -105,6 +121,7 @@ public class CircuitBuilder {
 					capacitance = new CapacitorElm(0, 0);
 					capacitance.setCapacitance(Double.parseDouble(value));
 					capacitance.setValue(Double.parseDouble(value));
+					capacitance.setUnit(UMCAP);
 					circuitElmSetUp(element, capacitance);
 					flowIds.add(element.getElementName());
 				}
@@ -114,6 +131,7 @@ public class CircuitBuilder {
 					acVoltage = new ACVoltageElm(1, 1);
 					acVoltage.setMaxVoltage(Double.parseDouble(value));
 					acVoltage.setValue(Double.parseDouble(value));
+					acVoltage.setUnit(UMGEN);
 					circuitElmSetUp(element, acVoltage);
 					flowIds.add(element.getElementName());
 				}
@@ -123,6 +141,7 @@ public class CircuitBuilder {
 					dcVoltage = new DCVoltageElm(1, 1);
 					dcVoltage.setMaxVoltage(Double.parseDouble(value));
 					dcVoltage.setValue(Double.parseDouble(value));
+					dcVoltage.setUnit(UMGEN);
 					circuitElmSetUp(element, dcVoltage);
 					flowIds.add(element.getElementName());
 				}
@@ -131,6 +150,7 @@ public class CircuitBuilder {
 			// externalVoltage doesn't have a formula
 			if ("ExternalVoltageElm".equals(element.getType())) {
 				externalVoltage = new ExternalVoltageElm(1, 1, 28);
+				externalVoltage.setUnit(UMGEN);
 				circuitElmSetUp(element, externalVoltage);
 				ventilatorIndex = elements.size() - 1;
 			}

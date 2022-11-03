@@ -30,7 +30,7 @@ public class Plot extends Composite<Component>{
 		
 		//settare grafico
 		chart = new ChartComponent(timeline, "Flow", yvalues[0]);
-		return new VerticalLayout(ids, chart.build());
+		return new VerticalLayout(ids, chart.getChart());
 	}
 
 	public ChartComponent getChart() {
