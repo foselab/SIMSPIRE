@@ -85,7 +85,7 @@ public class CircuitBuilder {
 		timeDependentElm = new HashMap<>();
 		elements = new ArrayList<>();
 	}
-
+	
 	/**
 	 * The method builds a circuit according to the patient's components and
 	 * archetype

@@ -1,5 +1,7 @@
 package lungsimulator;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -115,34 +117,34 @@ public class LungSimulator {
 
 	boolean wait = false;
 
-	public void miniSimulation() {
-		//while (!wait) {
-			double ntStart = System.currentTimeMillis() / 1000.0;
-			double initialT = ntStart - tStart;
-			// wait for step seconds until next resolution
-			if (initialT - lastT >= step) {
-				// Update ventilator value
-				socket.send(message.getBytes(), 0);
-				final byte[] reply = socket.recv(0);
-				if (reply != null) {
-					String replyMessage = new String(reply, ZMQ.CHARSET);
-					double ventilatorValue = Double.parseDouble(replyMessage);
-					// circuitBuilder.updateVentilatorValue(ventilatorValue);
-				}
-
-				// update values for time dependent components
-				if (circuitBuilder.isTimeDependentCir()) {
-					// circuitBuilder.updateCircuitSimulator(archetype, initialT);
-				}
-
-				myCircSim.setT(initialT);
-				System.out.println("initialT " + initialT);
-				myCircSim.analyzeCircuit();
-				myCircSim.loopAndContinue(false);
-				circuitBuilder.updateData(initialT);
-				lastT = initialT;
+	public void miniSimulation(double initialT) {
+		// while (!wait) {
+		//double ntStart = System.currentTimeMillis() / 1000.0;
+		//double initialT = ntStart - tStart;
+		// wait for step seconds until next resolution
+		//if (initialT - lastT >= step) {
+			// Update ventilator value
+			socket.send(message.getBytes(), 0);
+			final byte[] reply = socket.recv(0);
+			if (reply != null) {
+				String replyMessage = new String(reply, ZMQ.CHARSET);
+				double ventilatorValue = Double.parseDouble(replyMessage);
+				// circuitBuilder.updateVentilatorValue(ventilatorValue);
 			}
+
+			// update values for time dependent components
+			if (circuitBuilder.isTimeDependentCir()) {
+				// circuitBuilder.updateCircuitSimulator(archetype, initialT);
+			}
+
+			myCircSim.setT(initialT);
+			System.out.println("initialT " + initialT);
+			myCircSim.analyzeCircuit();
+			myCircSim.loopAndContinue(false);
+			circuitBuilder.updateData(initialT);
+			//lastT = initialT;
 		//}
+		// }
 	}
 
 	/**

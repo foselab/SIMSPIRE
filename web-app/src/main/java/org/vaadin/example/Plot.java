@@ -13,11 +13,13 @@ public class Plot extends Composite<Component>{
 	List<String> timeline;
 	double[][] yvalues;
 	ChartComponent chart;
+	String seriesName;
 	
-	public Plot(List<String> idsList, String[] timeline, double[][] yvalues) {
+	public Plot(List<String> idsList, String[] timeline, double[][] yvalues, String seriesName) {
 		this.idsList = idsList;
 		this.timeline = Arrays.asList(timeline);
 		this.yvalues = yvalues;
+		this.seriesName = seriesName;
 	}
 	
 	@Override
@@ -29,7 +31,7 @@ public class Plot extends Composite<Component>{
 		ids.addValueChangeListener(null); // cambio grafico
 		
 		//settare grafico
-		chart = new ChartComponent(timeline, "Flow", yvalues[0]);
+		chart = new ChartComponent(timeline, seriesName, yvalues[0]);
 		return new VerticalLayout(ids, chart.getChart());
 	}
 

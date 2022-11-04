@@ -1,5 +1,7 @@
 package org.vaadin.example;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.github.appreciated.apexcharts.ApexCharts;
@@ -13,7 +15,6 @@ import com.github.appreciated.apexcharts.config.chart.Type;
 import com.github.appreciated.apexcharts.config.chart.builder.ZoomBuilder;
 import com.github.appreciated.apexcharts.config.grid.builder.RowBuilder;
 import com.github.appreciated.apexcharts.config.stroke.Curve;
-import com.github.appreciated.apexcharts.config.yaxis.builder.AxisBorderBuilder;
 import com.github.appreciated.apexcharts.helper.Series;
 
 public class ChartComponent extends ApexChartsBuilder{
@@ -21,6 +22,10 @@ public class ChartComponent extends ApexChartsBuilder{
 	String seriesName;
 	
 	public ChartComponent(List<String> timeline, String seriesName, double[] yvalues) {
+		List<Double> myvalues = new ArrayList<>();
+		for(int i=0; i<yvalues.length; i++) {
+			myvalues.add(yvalues[i]);
+		}
 		this.seriesName = seriesName;
 		chart = ApexChartsBuilder.get()
 				.withChart(ChartBuilder.get()
@@ -39,14 +44,16 @@ public class ChartComponent extends ApexChartsBuilder{
                         ).build())
                 .withXaxis(XAxisBuilder.get()
                 		.withTitle(com.github.appreciated.apexcharts.config.xaxis.builder.TitleBuilder.get().withText("Time [s]").build())
-                        .withCategories(timeline) //time
-                        .build())
+                        .withMin(0.0)
+                		.withMax(Double.parseDouble(timeline.get(timeline.size()-1)))
+                		.build())
                 .withYaxis(YAxisBuilder.get()
-                        .withTitle(com.github.appreciated.apexcharts.config.yaxis.builder.TitleBuilder.get().withText("Desktops").build())
-                        .withAxisBorder(AxisBorderBuilder.get().withShow(true).build())
+                        .withTitle(com.github.appreciated.apexcharts.config.yaxis.builder.TitleBuilder.get().withText(seriesName).build())
+                        .withMin(-2.0)
+                        .withMax(2.0)
                         .build()
                 )
-                .withSeries(new Series<>(seriesName, yvalues))
+                .withSeries(new Series<>(seriesName, myvalues.toArray()))
                 .build();
 		
 	}

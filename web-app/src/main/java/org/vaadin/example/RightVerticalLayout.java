@@ -14,8 +14,8 @@ public class RightVerticalLayout extends Composite<Component>{
 	
 	public RightVerticalLayout(LungSimulator lungSimulator) {
 		this.lungSimulator = lungSimulator;
-		this.flowChart = new Plot(lungSimulator.getCircuitBuilder().getFlowIds(), lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataFlow());
-		this.pressureChart = new Plot(lungSimulator.getCircuitBuilder().getPressureIds(), lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataPressure());
+		this.flowChart = new Plot(lungSimulator.getCircuitBuilder().getFlowIds(), lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataFlow(), "Flow");
+		this.pressureChart = new Plot(lungSimulator.getCircuitBuilder().getPressureIds(), lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataPressure(), "Pressure");
 	}
 	
 	@Override
