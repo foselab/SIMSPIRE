@@ -66,8 +66,7 @@ public class SimulationView extends Composite<Component> {
 				double ntStart = System.currentTimeMillis() / 1000.0;
 				double initialT = ntStart - tStart;
 				// wait for step seconds until next resolution
-				if (initialT - lastT >= step) {
-					
+				if (initialT - lastT >= step) {			
 					ui.access(() -> {
 						lungSimulator.miniSimulation(initialT);
 						plots.remove(rvl);

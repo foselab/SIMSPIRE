@@ -129,7 +129,7 @@ public class LungSimulator {
 			if (reply != null) {
 				String replyMessage = new String(reply, ZMQ.CHARSET);
 				double ventilatorValue = Double.parseDouble(replyMessage);
-				// circuitBuilder.updateVentilatorValue(ventilatorValue);
+				circuitBuilder.updateVentilatorValue(ventilatorValue);
 			}
 
 			// update values for time dependent components
