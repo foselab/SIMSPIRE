@@ -18,7 +18,7 @@ import com.github.appreciated.apexcharts.config.stroke.Curve;
 import com.github.appreciated.apexcharts.helper.Series;
 
 public class ChartComponent extends ApexChartsBuilder{
-	private ApexCharts chart;
+	private ApexCharts myChart;
 	String seriesName;
 	
 	public ChartComponent(List<String> timeline, String seriesName, double[] yvalues) {
@@ -26,8 +26,10 @@ public class ChartComponent extends ApexChartsBuilder{
 		for(int i=0; i<yvalues.length; i++) {
 			myvalues.add(yvalues[i]);
 		}
+		
+		//double maxValueX = Double.parseDouble(timeline.get(timeline.size()-1));
 		this.seriesName = seriesName;
-		chart = ApexChartsBuilder.get()
+		myChart = ApexChartsBuilder.get()
 				.withChart(ChartBuilder.get()
                 .withType(Type.LINE)
                 .withZoom(ZoomBuilder.get()
@@ -44,13 +46,14 @@ public class ChartComponent extends ApexChartsBuilder{
                         ).build())
                 .withXaxis(XAxisBuilder.get()
                 		.withTitle(com.github.appreciated.apexcharts.config.xaxis.builder.TitleBuilder.get().withText("Time [s]").build())
-                        .withMin(0.0)
-                		.withMax(Double.parseDouble(timeline.get(timeline.size()-1)))
+                        //.withMin(maxValueX > 12 ?  maxValueX - 12 : 0.0)
+                		//.withMax(maxValueX)
+                		.withCategories(timeline)
                 		.build())
                 .withYaxis(YAxisBuilder.get()
                         .withTitle(com.github.appreciated.apexcharts.config.yaxis.builder.TitleBuilder.get().withText(seriesName).build())
-                        .withMin(-2.0)
-                        .withMax(2.0)
+                        .withMin(-5.0)
+                        .withMax(5.0)
                         .build()
                 )
                 .withSeries(new Series<>(seriesName, myvalues.toArray()))
@@ -58,19 +61,25 @@ public class ChartComponent extends ApexChartsBuilder{
 		
 	}
 	
-	public void updateChart(List<String> timeline, double[][] yvalues) {
-		chart.setXaxis(XAxisBuilder.get()
+	public void updateChart(List<String> timeline, double[] yvalues) {
+		List<Double> myvalues = new ArrayList<>();
+		for(int i=0; i<yvalues.length; i++) {
+			myvalues.add(yvalues[i]);
+		}
+		
+		myChart.setXaxis(XAxisBuilder.get()
                 		.withTitle(com.github.appreciated.apexcharts.config.xaxis.builder.TitleBuilder.get().withText("Time [s]").build())
                         .withCategories(timeline) //time
                         .build());
-		chart.setSeries(new Series<>(seriesName, yvalues[0]));
+
+		myChart.updateSeries(new Series<>(myvalues.toArray()));
 	}
 
 	public ApexCharts getChart() {
-		return chart;
+		return myChart;
 	}
 
 	public void setChart(ApexCharts chart) {
-		this.chart = chart;
+		this.myChart = chart;
 	}
 }

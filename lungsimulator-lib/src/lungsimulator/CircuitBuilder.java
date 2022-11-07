@@ -6,6 +6,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.math3.util.Precision;
+
 import com.udojava.evalex.Expression;
 
 import components.ACVoltageElm;
@@ -190,7 +192,7 @@ public class CircuitBuilder {
 		Utils.shiftData(GraphicConstants.MAXDATA, timeline, initdataPressure, initdataVentilatorPressure, initdataFlow);
 
 		// Update time
-		timeline[GraphicConstants.MAXDATA - 1] = String.valueOf(time);
+		timeline[GraphicConstants.MAXDATA - 1] = String.valueOf(Precision.round(time, 2));
 
 		int count = 0;
 		int countPressure = 0;
