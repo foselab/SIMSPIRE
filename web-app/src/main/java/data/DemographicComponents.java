@@ -1,4 +1,4 @@
-package org.vaadin.example;
+package data;
 
 import java.util.ArrayList;
 import java.util.Arrays;

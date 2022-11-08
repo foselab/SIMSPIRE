@@ -1,4 +1,4 @@
-package org.vaadin.example;
+package charts;
 
 import java.util.Arrays;
 import java.util.List;

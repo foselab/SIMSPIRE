@@ -400,4 +400,8 @@ public class CircuitBuilder {
 		this.timeline = timeline;
 	}
 
+	public int getVentilatorIndex() {
+		return ventilatorIndex;
+	}
+
 }

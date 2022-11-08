@@ -1,4 +1,4 @@
-package org.vaadin.example;
+package data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,6 +76,7 @@ public class DemographicEventManager {
 		ibw.setHasControls(false);
 		ibw.addThemeVariants(TextFieldVariant.LUMO_ALIGN_CENTER);
 		ibw.setValue(value);
+		ibw.setReadOnly(true);
 	}
 	
 	public ComboBox<String> getGender() {

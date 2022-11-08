@@ -1,4 +1,4 @@
-package org.vaadin.example;
+package models;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

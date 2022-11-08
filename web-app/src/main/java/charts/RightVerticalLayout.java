@@ -1,14 +1,15 @@
-package org.vaadin.example;
+package charts;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasComponents;
+import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import lungsimulator.LungSimulator;
 
-public class RightVerticalLayout extends Composite<VerticalLayout> implements HasComponents{
+public class RightVerticalLayout extends Composite<VerticalLayout> implements HasComponents, HasSize{
 	private Plot flowChart;
 	private Plot pressureChart;
 	
@@ -16,6 +17,7 @@ public class RightVerticalLayout extends Composite<VerticalLayout> implements Ha
 	
 	public RightVerticalLayout(LungSimulator lungSimulator) {
 		this.lungSimulator = lungSimulator;
+		setSizeFull();
 		getContent().setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.STRETCH);
 		
 		Div plotWrapper = new Div();
@@ -30,5 +32,6 @@ public class RightVerticalLayout extends Composite<VerticalLayout> implements Ha
 
 	public void updateChart(LungSimulator lungSimulator) {
 		flowChart.updateFlowChart(lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataFlow());
+		pressureChart.updateFlowChart(lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataPressure());
 	}
 }

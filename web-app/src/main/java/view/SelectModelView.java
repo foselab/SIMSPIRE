@@ -1,7 +1,5 @@
 package view;
 
-import org.vaadin.example.ChooseModelForm;
-
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
@@ -12,6 +10,7 @@ import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.server.VaadinSession;
 
 import lungsimulator.LungSimulator;
+import models.ChooseModelForm;
 
 /**
  * The main view contains a text field for getting the user name and a button

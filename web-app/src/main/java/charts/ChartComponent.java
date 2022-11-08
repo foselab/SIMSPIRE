@@ -1,4 +1,4 @@
-package org.vaadin.example;
+package charts;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +26,8 @@ public class ChartComponent extends ApexChartsBuilder{
 		for(int i=0; i<yvalues.length; i++) {
 			myvalues.add(yvalues[i]);
 		}
+		double yMin = seriesName.equalsIgnoreCase("Flow") ? -5.0 : 0.0;
+		double yMax = seriesName.equalsIgnoreCase("Flow") ? 5.0 : 11.0;
 		
 		//double maxValueX = Double.parseDouble(timeline.get(timeline.size()-1));
 		this.seriesName = seriesName;
@@ -46,14 +48,14 @@ public class ChartComponent extends ApexChartsBuilder{
                         ).build())
                 .withXaxis(XAxisBuilder.get()
                 		.withTitle(com.github.appreciated.apexcharts.config.xaxis.builder.TitleBuilder.get().withText("Time [s]").build())
-                        //.withMin(maxValueX > 12 ?  maxValueX - 12 : 0.0)
-                		//.withMax(maxValueX)
-                		.withCategories(timeline)
+                        .withMin(0.0)
+                		.withMax(100.0)
+                		//.withCategories(timeline)
                 		.build())
                 .withYaxis(YAxisBuilder.get()
                         .withTitle(com.github.appreciated.apexcharts.config.yaxis.builder.TitleBuilder.get().withText(seriesName).build())
-                        .withMin(-5.0)
-                        .withMax(5.0)
+                        .withMin(yMin)
+                        .withMax(yMax)
                         .build()
                 )
                 .withSeries(new Series<>(seriesName, myvalues.toArray()))
@@ -67,6 +69,7 @@ public class ChartComponent extends ApexChartsBuilder{
 			myvalues.add(yvalues[i]);
 		}
 		
+		//non aggiorna
 		myChart.setXaxis(XAxisBuilder.get()
                 		.withTitle(com.github.appreciated.apexcharts.config.xaxis.builder.TitleBuilder.get().withText("Time [s]").build())
                         .withCategories(timeline) //time
