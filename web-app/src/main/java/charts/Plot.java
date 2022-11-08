@@ -16,6 +16,7 @@ public class Plot extends Composite<VerticalLayout> implements HasComponents {
 	ChartComponent chartElm;
 	String seriesName;
 	VerticalLayout prova;
+	int shownElm = 0;
 
 	public Plot(List<String> idsList, String[] timeline, double[][] yvalues, String seriesName) {
 		this.idsList = idsList;
@@ -25,14 +26,18 @@ public class Plot extends Composite<VerticalLayout> implements HasComponents {
 
 		ComboBox<String> ids = new ComboBox<>();
 		ids.setItems(idsList);
-		ids.setValue(idsList.get(0));
+		ids.setValue(idsList.get(shownElm));
 		ids.setWidth("900px");
-		ids.addValueChangeListener(null); // cambio grafico
+		ids.addValueChangeListener(event -> {
+			String newId = event.getValue();
+			shownElm = idsList.indexOf(newId);
+			updateChart(timeline, yvalues);
+		}); // cambio grafico
 
 		add(ids);
 
 		// settare grafico
-		chartElm = new ChartComponent(this.timeline, seriesName, yvalues[0]);
+		chartElm = new ChartComponent(this.timeline, seriesName, yvalues[shownElm]);
 		add(chartElm.getChart());
 	}
 
@@ -40,9 +45,9 @@ public class Plot extends Composite<VerticalLayout> implements HasComponents {
 		return chartElm;
 	}
 
-	public void updateFlowChart(String[] timeline, double[][] yvalues) {
+	public void updateChart(String[] timeline, double[][] yvalues) {
 		remove(chartElm.getChart());
-		chartElm.updateChart(Arrays.asList(timeline), yvalues[0]);
+		chartElm.updateChart(Arrays.asList(timeline), yvalues[shownElm]);
 		add(chartElm.getChart());
 	}
 }

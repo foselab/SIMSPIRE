@@ -3,9 +3,12 @@ package data;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
+
+import lungsimulator.LungSimulator;
 
 public class CircuitElementRow extends Composite<Component> {
 	String id;
@@ -13,12 +16,16 @@ public class CircuitElementRow extends Composite<Component> {
 	String unit;
 	boolean isVentilator;
 	NumberField ventilator;
-
-	public CircuitElementRow(String id, double value, String unit, boolean isVentilator) {
+	int posNumber;
+	LungSimulator lungSimulator;
+	
+	public CircuitElementRow(LungSimulator lungSimulator, String id, double value, String unit, boolean isVentilator, int posNumber) {
+		this.lungSimulator = lungSimulator;
 		this.id = id;
 		this.value = value;
 		this.unit = unit;
 		this.isVentilator = isVentilator;
+		this.posNumber = posNumber;
 	}
 
 	public Component initContent() {
@@ -39,6 +46,8 @@ public class CircuitElementRow extends Composite<Component> {
 			elementValue.setHasControls(true);
 			elementValue.addValueChangeListener(event -> {
 				value = event.getValue();
+				lungSimulator.getCircuitBuilder().updateElementValue(value, posNumber);
+				Notification.show("Element updated");
 			});
 		}
 		elementValue.setHeight("10px");

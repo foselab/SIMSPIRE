@@ -75,6 +75,7 @@ public class SimulationView extends Composite<Component> {
 				if (initialT - lastT >= step) {
 					ui.access(() -> {
 						lungSimulator.miniSimulation(initialT);
+						cc.updateVentilator(lungSimulator.getCircuitBuilder().getCurrentVentilatorValue());
 						rvl.updateChart(lungSimulator);
 						/*
 						 * così funziona ma devo ricreare tutto il lato destro plots.remove(rvl); rvl =

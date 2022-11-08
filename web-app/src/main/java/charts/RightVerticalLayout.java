@@ -31,7 +31,7 @@ public class RightVerticalLayout extends Composite<VerticalLayout> implements Ha
 	}
 
 	public void updateChart(LungSimulator lungSimulator) {
-		flowChart.updateFlowChart(lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataFlow());
-		pressureChart.updateFlowChart(lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataPressure());
+		flowChart.updateChart(lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataFlow());
+		pressureChart.updateChart(lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataPressure());
 	}
 }

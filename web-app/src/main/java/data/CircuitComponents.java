@@ -9,12 +9,13 @@ import lungsimulator.LungSimulator;
 
 public class CircuitComponents extends Composite<Component>{
 	private LungSimulator lungSimulator;
-	VerticalLayout vl = new VerticalLayout();
+	VerticalLayout verticalLayout; 
 	private int ventilatorIndex;
-	private double currentVentilatorValue;
+	CircuitElementRow ventilator;
 	
 	public CircuitComponents(LungSimulator lungSimulator) {
 		this.lungSimulator = lungSimulator;
+		verticalLayout = new VerticalLayout();
 	}
 
 	protected Component initContent() {
@@ -25,17 +26,21 @@ public class CircuitComponents extends Composite<Component>{
 				index = lungSimulator.getCircuitBuilder().getVentilatorIndex();
 				if(lungSimulator.getCircuitBuilder().getElements() != null) {
 					for(CircuitElm element: lungSimulator.getCircuitBuilder().getElements()) {
-						CircuitElementRow cer = new CircuitElementRow(element.getId(), element.getValue(), element.getUnit(), index == count);
+						CircuitElementRow cer = new CircuitElementRow(lungSimulator, element.getId(), element.getValue(), element.getUnit(), index == count, count);
 						if(index == count) {
-							ventilatorIndex = count;
+							ventilator = cer;
 						}
 						count++;
-						vl.add(cer);
+						verticalLayout.add(cer);
 					}
 				}
 			}
 		}
 		
-		return vl;
+		return verticalLayout;
+	}
+	
+	public void updateVentilator(double value) {
+		ventilator.setVentilator(value);
 	}
 }

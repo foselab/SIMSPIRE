@@ -53,6 +53,8 @@ public class CircuitBuilder {
 	 * Index of ventilator in cirSim elements list
 	 */
 	private transient int ventilatorIndex;
+	
+	private double currentVentilatorValue;
 
 	private List<String> flowIds = new ArrayList<>();
 
@@ -326,6 +328,37 @@ public class CircuitBuilder {
 	public void updateVentilatorValue(final double ventilatorValue) {
 		final ExternalVoltageElm ventilator = (ExternalVoltageElm) cirSim.getElmList().get(ventilatorIndex);
 		ventilator.setVentVoltage(ventilatorValue);
+		currentVentilatorValue = ventilatorValue;
+	}
+	
+	public void updateElementValue(double value, int indexElm) {
+		CircuitElm circuitElement = cirSim.getElmList().get(indexElm);
+		circuitElement.setValue(value);
+		
+		// resistance
+		if (circuitElement instanceof ResistorElm) {
+			final ResistorElm resistance = (ResistorElm) circuitElement;
+			resistance.setResistance(value);
+		}
+
+		// capacitor
+		if (circuitElement instanceof CapacitorElm) {
+			final CapacitorElm capacitance = (CapacitorElm) circuitElement;
+			capacitance.setCapacitance(value);
+		}
+
+		// acVoltage
+		if (circuitElement instanceof ACVoltageElm) {
+			final ACVoltageElm acVoltage = (ACVoltageElm) circuitElement;
+			acVoltage.setMaxVoltage(value);
+		}
+
+		// dcVoltage
+		if (circuitElement instanceof DCVoltageElm) {
+			final DCVoltageElm dcVoltage = (DCVoltageElm) circuitElement;
+			dcVoltage.setMaxVoltage(value);
+		}
+		
 	}
 
 	public boolean isTimeDependentCir() {
@@ -402,6 +435,10 @@ public class CircuitBuilder {
 
 	public int getVentilatorIndex() {
 		return ventilatorIndex;
+	}
+
+	public double getCurrentVentilatorValue() {
+		return currentVentilatorValue;
 	}
 
 }

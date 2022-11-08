@@ -115,8 +115,6 @@ public class LungSimulator {
 		step = myCircSim.getTimeStep();
 	}
 
-	boolean wait = false;
-
 	public void miniSimulation(double initialT) {
 		// while (!wait) {
 		//double ntStart = System.currentTimeMillis() / 1000.0;
