@@ -3,23 +3,20 @@ package charts;
 import java.util.Arrays;
 import java.util.List;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class Plot extends Composite<VerticalLayout> implements HasComponents {
-	private List<String> idsList;
 	List<String> timeline;
 	double[][] yvalues;
 	ChartComponent chartElm;
 	String seriesName;
-	VerticalLayout prova;
 	int shownElm = 0;
 
-	public Plot(List<String> idsList, String[] timeline, double[][] yvalues, String seriesName) {
-		this.idsList = idsList;
+	public Plot(List<String> idsList, String[] timeline, double[][] yvalues, double[][] yvaluesVent,
+			String seriesName) {
 		this.timeline = Arrays.asList(timeline);
 		this.yvalues = yvalues;
 		this.seriesName = seriesName;
@@ -31,13 +28,21 @@ public class Plot extends Composite<VerticalLayout> implements HasComponents {
 		ids.addValueChangeListener(event -> {
 			String newId = event.getValue();
 			shownElm = idsList.indexOf(newId);
-			updateChart(timeline, yvalues);
+			if (yvaluesVent == null) {
+				updateChart(timeline, yvalues, null);
+			} else {
+				updateChart(timeline, yvalues, yvaluesVent);
+			}
 		}); // cambio grafico
 
 		add(ids);
 
 		// settare grafico
-		chartElm = new ChartComponent(this.timeline, seriesName, yvalues[shownElm]);
+		if (yvaluesVent == null) {
+			chartElm = new ChartComponent(this.timeline, seriesName, yvalues[shownElm], null);
+		} else {
+			chartElm = new ChartComponent(this.timeline, seriesName, yvalues[shownElm], yvaluesVent[1]);
+		}
 		add(chartElm.getChart());
 	}
 
@@ -45,9 +50,13 @@ public class Plot extends Composite<VerticalLayout> implements HasComponents {
 		return chartElm;
 	}
 
-	public void updateChart(String[] timeline, double[][] yvalues) {
+	public void updateChart(String[] timeline, double[][] yvalues, double[][] yvaluesVent) {
 		remove(chartElm.getChart());
-		chartElm.updateChart(Arrays.asList(timeline), yvalues[shownElm]);
+		if (yvaluesVent == null) {
+			chartElm.updateChart(Arrays.asList(timeline), yvalues[shownElm], null);
+		} else {
+			chartElm.updateChart(Arrays.asList(timeline), yvalues[shownElm], yvaluesVent[1]);
+		}
 		add(chartElm.getChart());
 	}
 }

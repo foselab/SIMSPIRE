@@ -10,7 +10,6 @@ import lungsimulator.LungSimulator;
 public class CircuitComponents extends Composite<Component>{
 	private LungSimulator lungSimulator;
 	VerticalLayout verticalLayout; 
-	private int ventilatorIndex;
 	CircuitElementRow ventilator;
 	
 	public CircuitComponents(LungSimulator lungSimulator) {

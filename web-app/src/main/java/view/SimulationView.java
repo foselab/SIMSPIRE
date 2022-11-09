@@ -5,6 +5,7 @@ import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -28,12 +29,14 @@ public class SimulationView extends Composite<Component> {
 
 	public SimulationView() {
 		vertical = new VerticalLayout(new H2("INSPIRE"));
+		vertical.getStyle().set("background-color", "#EFEFF0");
 		this.lungSimulator = (LungSimulator) VaadinSession.getCurrent().getAttribute("lungSimulator");
 		lungSimulator.mini();
+		Div circuitElm = new Div();
 		H4 circuitTitle = new H4("Circuit Components");
-		vertical.add(circuitTitle);
 		cc = new CircuitComponents(lungSimulator);
-		vertical.add(cc);
+		circuitElm.add(circuitTitle, cc);
+		vertical.add(circuitElm);
 		start = new Button("Start", e -> simulationManager());
 		start.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
 		start.setDisableOnClick(true);

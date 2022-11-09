@@ -24,14 +24,14 @@ public class RightVerticalLayout extends Composite<VerticalLayout> implements Ha
 		add(plotWrapper);
 		getContent().setFlexGrow(1, plotWrapper);
 		
-		this.flowChart = new Plot(lungSimulator.getCircuitBuilder().getFlowIds(), lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataFlow(), "Flow");
+		this.flowChart = new Plot(lungSimulator.getCircuitBuilder().getFlowIds(), lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataFlow(), null, "Flow");
 		plotWrapper.add(flowChart);
-		this.pressureChart = new Plot(lungSimulator.getCircuitBuilder().getPressureIds(), lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataPressure(), "Pressure");
+		this.pressureChart = new Plot(lungSimulator.getCircuitBuilder().getPressureIds(), lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataPressure(), lungSimulator.getCircuitBuilder().getInitdataVentilatorPressure(), "Pressure");
 		plotWrapper.add(pressureChart);
 	}
 
 	public void updateChart(LungSimulator lungSimulator) {
-		flowChart.updateChart(lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataFlow());
-		pressureChart.updateChart(lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataPressure());
+		flowChart.updateChart(lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataFlow(), null);
+		pressureChart.updateChart(lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataPressure(), lungSimulator.getCircuitBuilder().getInitdataVentilatorPressure());
 	}
 }
