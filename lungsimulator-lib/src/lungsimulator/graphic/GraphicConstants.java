@@ -22,7 +22,7 @@ public final class GraphicConstants {
 	/**
 	 * Number of data shown in a chart
 	 */
-	public static final int MAXDATA = 100;
+	public static final int MAXDATA = 50;
 
 	
 	/**

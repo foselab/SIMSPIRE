@@ -23,10 +23,6 @@ import simulator.CirSim;
  * Show circuit component according to a id-value-unit structure
  */
 public class CircuitComponents extends JComponent {
-	/**
-	 * Serial version UID constant
-	 */
-	private static final long serialVersionUID = 5354577250667666248L;
 	
 	/**
 	 * Panel with all circuit components

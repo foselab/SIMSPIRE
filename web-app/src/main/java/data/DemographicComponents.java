@@ -28,7 +28,7 @@ public class DemographicComponents extends Composite<Component> {
 			verticalLayout.add(new HorizontalLayout(demographicElementRow("Gender"), dem.getGender()));
 
 			// age set up
-			dem.setAge(18, 125, 1.0, demographicData.getAge());
+			dem.setAge(18, 125, 1, demographicData.getAge());
 			verticalLayout.add(new HorizontalLayout(demographicElementRow("Age (years)"), dem.getAge()));
 
 			// height set up

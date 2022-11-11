@@ -4,49 +4,115 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 
 import lungsimulator.LungSimulator;
 
+/**
+ * Demographic data set up and event manager
+ */
 public class DemographicEventManager {
-	private LungSimulator lungSimulator;
-	private ComboBox<String> gender;
-	private NumberField age; 
-	private NumberField height;
-	private NumberField weight;
-	private NumberField ibw;
+	/**
+	 * Backend access
+	 */
+	final private transient LungSimulator lungSimulator;
 
-	public DemographicEventManager(LungSimulator lungSimulator) {
+	/**
+	 * Gender options
+	 */
+	private ComboBox<String> gender;
+
+	/**
+	 * Age field
+	 */
+	private transient IntegerField age;
+
+	/**
+	 * Height field
+	 */
+	private transient NumberField height;
+
+	/**
+	 * Weight field
+	 */
+	private transient NumberField weight;
+
+	/**
+	 * Ibw field
+	 */
+	private transient NumberField ibw;
+
+	/**
+	 * Set backend access
+	 * 
+	 * @param lungSimulator backend access
+	 */
+	public DemographicEventManager(final LungSimulator lungSimulator) {
 		this.lungSimulator = lungSimulator;
 	}
 
-	public void setGender(String selectedValue) {
+	public void setGender(final String selectedValue) {
 		gender = new ComboBox<>();
+		gender.setAllowCustomValue(false); // custom values are not allowed
+		gender.setRequired(true); // there must be a value selected
 		gender.setItems(new ArrayList<>(Arrays.asList("Male", "Female")));
 		gender.setValue(selectedValue.equalsIgnoreCase("female") ? "Female" : "Male");
 		gender.setWidth("130px");
 		gender.addValueChangeListener(event -> {
+			final String newValue = event.getValue();
+			final String oldValue = event.getOldValue();
+
 			// switch gender
-			lungSimulator.getDemographicData().setGender(event.getValue());
+			if (newValue != null) {
+				if (!newValue.equalsIgnoreCase(oldValue)) {
+					lungSimulator.getDemographicData().setGender(event.getValue());
+				}
+			} else {
+				Notification.show("Please pick a valid option for gender field");
+				gender.setValue(oldValue);
+			}
 		});
 	}
-	
-	public void setAge(double min, double max, double step, double value) {
-		age = new NumberField();
+
+	/**
+	 * Age field set up
+	 * @param min minimum value for age field
+	 * @param max maximum value for age field
+	 * @param step step for age field
+	 * @param value current value for age field
+	 */
+	public void setAge(final int min, final int max, final int step, final int value) {
+		age = new IntegerField();
 		age.setHasControls(true);
 		age.setMin(min);
 		age.setMax(max);
 		age.setStep(step);
 		age.setValue(value);
 		age.addValueChangeListener(event -> {
-			double val = event.getValue();
-			lungSimulator.getDemographicData().setAge((int) val);
+			final int newValue = event.getValue();
+			final int oldValue = event.getOldValue();
+			if (newValue >= min && newValue <= max) {
+				if (oldValue != newValue) {
+					lungSimulator.getDemographicData().setAge(newValue);
+				}
+			} else {
+				Notification.show("The age value must be between " + min + " and " + max);
+				age.setValue(oldValue);
+			}
 		});
 	}
-	
-	public void setHeight(double min, double max, double step, double value) {
+
+	/**
+	 * Height field set up
+	 * @param min minimum value for height field
+	 * @param max maximum value for height field
+	 * @param step step for height field
+	 * @param value current value for height field
+	 */
+	public void setHeight(final double min, final double max, final double step, final double value) {
 		height = new NumberField();
 		height.setHasControls(true);
 		height.setMin(min);
@@ -54,12 +120,28 @@ public class DemographicEventManager {
 		height.setStep(step);
 		height.setValue(value);
 		height.addValueChangeListener(event -> {
-			lungSimulator.getDemographicData().setHeight(event.getValue());
-			ibw.setValue(lungSimulator.getDemographicData().getIbw());
+			final double newValue = event.getValue();
+			final double oldValue = event.getOldValue();
+			if (newValue >= min && newValue <= max) {
+				if (oldValue != newValue) {
+					lungSimulator.getDemographicData().setHeight(event.getValue());
+					ibw.setValue(lungSimulator.getDemographicData().getIbw());
+				}
+			} else {
+				Notification.show("The height value must be between " + min + " and " + max);
+				height.setValue(oldValue);
+			}
 		});
 	}
-	
-	public void setWeight(double min, double max, double step, double value) {
+
+	/**
+	 * Weight field set up
+	 * @param min minimum value for weight field
+	 * @param max maximum value for weight field
+	 * @param step step for weight field
+	 * @param value current value for weight field
+	 */
+	public void setWeight(final double min, final double max, final double step, final double value) {
 		weight = new NumberField();
 		weight.setHasControls(true);
 		weight.setMin(min);
@@ -67,23 +149,36 @@ public class DemographicEventManager {
 		weight.setStep(step);
 		weight.setValue(value);
 		weight.addValueChangeListener(event -> {
-			lungSimulator.getDemographicData().setWeight(event.getValue());
+			final double newValue = event.getValue();
+			final double oldValue = event.getOldValue();
+			if (newValue >= min && newValue <= max) {
+				if (oldValue != newValue) {
+					lungSimulator.getDemographicData().setWeight(event.getValue());
+				}
+			} else {
+				Notification.show("The weight value must be between " + min + " and " + max);
+				weight.setValue(oldValue);
+			}
 		});
 	}
 
-	public void setIbw(double value) {
+	/**
+	 * Ibw field set up
+	 * @param value	current value for ibw field
+	 */
+	public void setIbw(final double value) {
 		ibw = new NumberField();
 		ibw.setHasControls(false);
 		ibw.addThemeVariants(TextFieldVariant.LUMO_ALIGN_CENTER);
 		ibw.setValue(value);
 		ibw.setReadOnly(true);
 	}
-	
+
 	public ComboBox<String> getGender() {
 		return gender;
 	}
 
-	public NumberField getAge() {
+	public IntegerField getAge() {
 		return age;
 	}
 
