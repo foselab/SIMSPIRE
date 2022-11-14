@@ -1,6 +1,24 @@
-# mvm-adapt
-materiale relativo al progetto MVM adapt
-- simulatore di paziente in stile DT
+# INSPIRE
+
+INSPIRE is a simulation software for testing mechanical ventilators through the creation of a digital twin for the respiratory system. It comes with a Swing interface so that it can be used more easily, but it is also available as a web-app. 
+
+## Project overview
+
+The project is composed of four main components:
+* a circuit simulator which is able to solve electrical circuits 
+* a lung simulator which manages the chosen model for the respiratory system and the simulation business logic
+* a ventilator simulator which simulates the ventilator that has to be tested
+* a graphic user interface
+
+## Installation (Swing interface)
+
+## Installation (web-app)
+
+## How to build a custom model with YAML
+
+## Swing interface usage
+
+## Web-app usage
 
 * circuit-simulator-master: risolutore di circuiti elettrici
 * lungsimulator: simulatore del polmone con interfaccia costruita in Swing
