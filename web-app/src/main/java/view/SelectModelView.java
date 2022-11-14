@@ -1,7 +1,7 @@
 package view;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -17,24 +17,23 @@ import models.ChooseModelForm;
  * that shows a greeting message in a notification.
  */
 @Route("")
-public class SelectModelView extends Composite<Component> {
+public class SelectModelView extends Composite<VerticalLayout> implements HasComponents{
 
-	private LungSimulator lungSimulator = new LungSimulator();
-	VerticalLayout mvv = new VerticalLayout();
-
-	@Override
-	protected Component initContent() {
-		mvv.add(showChooseModelForm(lungSimulator));
-		return new VerticalLayout(mvv);
+	/**
+	 * Init the view for model selection
+	 */
+	public SelectModelView() {
+		final LungSimulator lungSimulator = new LungSimulator();
+		add(showChooseModelForm(lungSimulator));
 	}
 
-	private Dialog showChooseModelForm(LungSimulator lungSimulator) {
-		Dialog initDialog = new Dialog();
+	private Dialog showChooseModelForm(final LungSimulator lungSimulator) {
+		final Dialog initDialog = new Dialog();
 		initDialog.setModal(true);
 		initDialog.setCloseOnOutsideClick(false);
 		initDialog.open();
 
-		ChooseModelForm cmf = new ChooseModelForm(lungSimulator, () -> {
+		final ChooseModelForm cmf = new ChooseModelForm(lungSimulator, () -> {
 			lungSimulator.modelValidation();
 			initDialog.close();
 

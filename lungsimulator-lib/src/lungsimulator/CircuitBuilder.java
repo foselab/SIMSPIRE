@@ -20,7 +20,6 @@ import lungsimulator.components.Archetype;
 import lungsimulator.components.Element;
 import lungsimulator.components.Formula;
 import lungsimulator.components.Patient;
-import lungsimulator.utils.GraphicConstants;
 import lungsimulator.utils.Utils;
 import simulator.CirSim;
 
@@ -57,6 +56,11 @@ public class CircuitBuilder {
 	private double currentVentilatorValue;
 
 	private List<String> flowIds = new ArrayList<>();
+	
+	/**
+	 * Number of data shown in a chart
+	 */
+	public static final int MAXDATA = 50;
 
 	private String[] timeline;
 	private double[][] initdataPressure;
@@ -175,26 +179,26 @@ public class CircuitBuilder {
 	private void dataInit() {
 		pressureIds = new ArrayList<>(pressureCoord.keySet());
 		// Init the arrays for the data
-		initdataPressure = new double[pressureCoord.size()][GraphicConstants.MAXDATA];
+		initdataPressure = new double[pressureCoord.size()][MAXDATA];
 		// One row for time values and one row for pressure values
-		initdataVentilatorPressure = new double[2][GraphicConstants.MAXDATA];
+		initdataVentilatorPressure = new double[2][MAXDATA];
 		// One row for time values and one row for each element of the circuit
-		initdataFlow = new double[flowIds.size()][GraphicConstants.MAXDATA];
+		initdataFlow = new double[flowIds.size()][MAXDATA];
 
-		timeline = new String[GraphicConstants.MAXDATA];
+		timeline = new String[MAXDATA];
 
 		// Fill initData with zeros
-		Utils.initVectors(GraphicConstants.MAXDATA, timeline, initdataPressure, initdataVentilatorPressure,
+		Utils.initVectors(MAXDATA, timeline, initdataPressure, initdataVentilatorPressure,
 				initdataFlow);
 
 	}
 
 	public void updateData(double time) {
 		// Shift data in vectors
-		Utils.shiftData(GraphicConstants.MAXDATA, timeline, initdataPressure, initdataVentilatorPressure, initdataFlow);
+		Utils.shiftData(MAXDATA, timeline, initdataPressure, initdataVentilatorPressure, initdataFlow);
 
 		// Update time
-		timeline[GraphicConstants.MAXDATA - 1] = String.valueOf(Precision.round(time, 2));
+		timeline[MAXDATA - 1] = String.valueOf(Precision.round(time, 2));
 
 		int count = 0;
 		int countPressure = 0;
@@ -208,21 +212,21 @@ public class CircuitBuilder {
 
 			if (cir.getIdLeft() != null && pressureCoord.containsKey(cir.getIdLeft())
 					&& pressureCoord.get(cir.getIdLeft()).equals("left")) {
-				initdataPressure[countPressure][GraphicConstants.MAXDATA - 1] = cir.getVoltZero();
+				initdataPressure[countPressure][MAXDATA - 1] = cir.getVoltZero();
 				countPressure++;
 			}
 
 			if (cir.getIdRight() != null && pressureCoord.containsKey(cir.getIdRight())
 					&& pressureCoord.get(cir.getIdRight()).equals("right")) {
-				initdataPressure[countPressure][GraphicConstants.MAXDATA - 1] = cir.getVoltOne();
+				initdataPressure[countPressure][MAXDATA - 1] = cir.getVoltOne();
 				countPressure++;
 			}
 
 			if (cir.getClass().getSimpleName().equals("ExternalVoltageElm")) {
-				initdataVentilatorPressure[1][GraphicConstants.MAXDATA - 1] = cir.getVoltageDiff();
+				initdataVentilatorPressure[1][MAXDATA - 1] = cir.getVoltageDiff();
 				//ventilator.setValue(cir.getVoltageDiff());
 			} else {
-				initdataFlow[count][GraphicConstants.MAXDATA - 1] = cir.getCurrent();
+				initdataFlow[count][MAXDATA - 1] = cir.getCurrent();
 				count++;
 			}
 		}

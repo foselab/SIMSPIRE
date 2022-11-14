@@ -41,14 +41,13 @@ public class LungSimulator {
 	public transient SimulatorParams demographicData;
 
 	/**
-	 * Init the lung simulator by reading and validating the patient model and
-	 * archetype and set the frame configuration
+	 * Init the lung simulator by reading the patient model, archetype and
+	 * demographic data
 	 * 
-	 * @throws FileNotFoundException one between the lung model and the archetype
-	 *                               file (or both) is not located in config folder
-	 * @throws IOException           the structure of YAML file is not correct: it
-	 *                               could be either lung model or archetype (even
-	 *                               both)
+	 * @throws FileNotFoundException at least one of the required files can't be
+	 *                               found
+	 * @throws IOException           the structure of at least one YAML file is not
+	 *                               correct
 	 */
 	public void initSchema(String chosenSchema) throws FileNotFoundException, IOException {
 		YamlReader yamlReader = new YamlReader(chosenSchema);
@@ -61,30 +60,52 @@ public class LungSimulator {
 		}
 	}
 
+	/**
+	 * Init the lung simulator by reading the patient model
+	 * 
+	 * @throws FileNotFoundException the patient model file can't be found
+	 * @throws IOException           the structure of the patient model YAML file is
+	 *                               not correct
+	 */
 	public void initCustomPatient(InputStream input) throws FileNotFoundException, IOException {
 		YamlReader yamlReader = new YamlReader("Custom");
 		patient = yamlReader.readPatientModel(input);
 	}
 
+	/**
+	 * Init the lung simulator by reading the patient archetype
+	 * 
+	 * @throws FileNotFoundException the patient archetype file can't be found
+	 * @throws IOException           the structure of the patient archetype YAML
+	 *                               file is not correct
+	 */
 	public void initCustomArchetype(InputStream input) throws FileNotFoundException, IOException {
 		YamlReader yamlReader = new YamlReader("Custom");
 		archetype = yamlReader.readArchetypeParameters(input);
 	}
 
+	/**
+	 * Init the lung simulator by reading the patient demographic data
+	 * 
+	 * @throws FileNotFoundException the patient demographic data file can't be
+	 *                               found
+	 * @throws IOException           the structure of the patient demographic data
+	 *                               YAML file is not correct
+	 */
 	public void initCustomDemographic(InputStream input) throws FileNotFoundException, IOException {
 		YamlReader yamlReader = new YamlReader("Custom");
 		demographicData = yamlReader.readDemographicData(input);
 	}
 
+	/**
+	 * Validation of the chosen model
+	 */
 	public void modelValidation() {
 		// Validation
 		final Validator validator = new Validator();
 		validator.evaluate(patient, archetype, demographicData);
 	}
 
-	double tStart;
-	double lastT;
-	double step;
 	Socket socket;
 	final String message = "getPressure";
 	CirSim myCircSim;
@@ -96,33 +117,28 @@ public class LungSimulator {
 		final ZContext context = new ZContext();
 		socket = context.createSocket(SocketType.REQ);
 		socket.connect("tcp://localhost:5555");
-
-		// moment of time (in seconds) where simulation starts
-		tStart = System.currentTimeMillis() / 1000.0;
-		lastT = 0;
-		step = myCircSim.getTimeStep();
 	}
 
 	public void miniSimulation(double initialT) {
-			// Update ventilator value
-			socket.send(message.getBytes(), 0);
-			final byte[] reply = socket.recv(0);
-			if (reply != null) {
-				String replyMessage = new String(reply, ZMQ.CHARSET);
-				double ventilatorValue = Double.parseDouble(replyMessage);
-				circuitBuilder.updateVentilatorValue(ventilatorValue);
-			}
+		// Update ventilator value
+		socket.send(message.getBytes(), 0);
+		final byte[] reply = socket.recv(0);
+		if (reply != null) {
+			String replyMessage = new String(reply, ZMQ.CHARSET);
+			double ventilatorValue = Double.parseDouble(replyMessage);
+			circuitBuilder.updateVentilatorValue(ventilatorValue);
+		}
 
-			// update values for time dependent components
-			if (circuitBuilder.isTimeDependentCir()) {
-				// circuitBuilder.updateCircuitSimulator(archetype, initialT);
-			}
+		// update values for time dependent components
+		if (circuitBuilder.isTimeDependentCir()) {
+			// circuitBuilder.updateCircuitSimulator(archetype, initialT);
+		}
 
-			myCircSim.setT(initialT);
-			System.out.println("initialT " + initialT);
-			myCircSim.analyzeCircuit();
-			myCircSim.loopAndContinue(false);
-			circuitBuilder.updateData(initialT);
+		myCircSim.setT(initialT);
+		System.out.println("initialT " + initialT);
+		myCircSim.analyzeCircuit();
+		myCircSim.loopAndContinue(false);
+		circuitBuilder.updateData(initialT);
 	}
 
 	public Patient getPatient() {

@@ -5,9 +5,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import lungsimulator.ResourceReader;
 import lungsimulator.components.Patient;
 import lungsimulator.utils.YamlReader;
+import resourcereader.ResourceReader;
 
 public class TestPath {
 

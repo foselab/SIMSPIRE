@@ -3,9 +3,8 @@ package models;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H3;
@@ -16,68 +15,79 @@ import com.vaadin.flow.function.SerializableRunnable;
 
 import lungsimulator.LungSimulator;
 
-public class ChooseModelForm extends Composite<Component> {
-	private final LungSimulator lungSimulator;
-	private final SerializableRunnable saveListener;
+/**
+ * Custom component for model selection
+ */
+public class ChooseModelForm extends Composite<VerticalLayout> implements HasComponents {
+	/**
+	 * Backend access
+	 */
+	private final transient LungSimulator lungSimulator;
 
-	private ComboBox<String> modelBox = new ComboBox<>("Available models");
-	FileUploader uploader;
+	/**
+	 * Component for uploading custom model files
+	 */
+	private final transient FileUploader uploader;
 
-	// configuration options
-	final static String[] models = { "Model of Albanese", "Model of Al-Naggar", "Model of Baker", "Model of Jain",
-			"Model of Campbell-Brown", "Your own model..." };
+	/**
+	 * List of available models
+	 */
+	final static private String[] MODELS = { "Model of Albanese", "Model of Al-Naggar", "Model of Baker",
+			"Model of Jain", "Model of Campbell-Brown", "Your own model..." };
 
-	public ChooseModelForm(LungSimulator lungSimulator, SerializableRunnable saveListener) {
+	/**
+	 * Builds the form for model selection
+	 * 
+	 * @param lungSimulator backend access
+	 * @param saveListener  instructions that have to be executed after model
+	 *                      selection
+	 */
+	public ChooseModelForm(final LungSimulator lungSimulator, final SerializableRunnable saveListener) {
 		this.lungSimulator = lungSimulator;
-		this.saveListener = saveListener;
-	}
 
-	@Override
-	protected Component initContent() {
-		H3 title = new H3("Select a model");
-		modelBox.setItems(models);
+		final H3 title = new H3("Select a model");
+		final ComboBox<String> modelBox = new ComboBox<>("Available models");
+		modelBox.setItems(MODELS);
 		modelBox.setAllowCustomValue(false); // custom values are not allowed
 		modelBox.setRequired(true); // there must be a value selected
 		modelBox.addValueChangeListener(event -> {
 			try {
-				analyzeChoice(event);
+				analyzeChoice(event.getValue());
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Notification.show("File not found");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Notification.show("Incorrect file structure");
 			}
 		});
-		
-		TextArea info = new TextArea();
+
+		final TextArea info = new TextArea();
 		info.setValue("You can either pick a default model or upload your own model");
 		info.setReadOnly(true);
-		
+
 		uploader = new FileUploader(lungSimulator);
-        uploader.setVisible(false);
-        
-		Button saveButton = new Button("OK", event -> {
-			if(modelBox.getValue() == null) {
+		uploader.setVisible(false);
+
+		final Button saveButton = new Button("OK", event -> {
+			if (modelBox.getValue() == null) {
 				Notification.show("A model must be selected");
-			}else {
-			saveListener.run();}
+			} else {
+				saveListener.run();
+			}
 		});
-		
-		return new VerticalLayout(title, modelBox, info, uploader, saveButton);
+
+		add(title, modelBox, info, uploader, saveButton);
 	}
 
-	private void analyzeChoice(ComponentValueChangeEvent<ComboBox<String>, String> event) throws FileNotFoundException, IOException {
-		String value = event.getValue();
-		
+	private void analyzeChoice(final String value) throws FileNotFoundException, IOException {
 		if (value != null) {
-			if (value.equals("Your own model...")) {
+			if ("Your own model...".equals(value)) {
 				uploader.setVisible(true);
 			} else {
+				uploader.setVisible(false);
 				lungSimulator.initSchema(value.replace("Model of ", ""));
 			}
-		}else {
-			Notification.show("A model must be selected!");
+		} else {
+			Notification.show("A model must be selected");
 		}
 	}
 

@@ -1,6 +1,5 @@
 package lungsimulator.utils;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,10 +9,10 @@ import java.util.logging.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-import lungsimulator.ResourceReader;
 import lungsimulator.components.Archetype;
 import lungsimulator.components.Patient;
 import lungsimulator.components.SimulatorParams;
+import resourcereader.ResourceReader;
 
 /**
  * Read, translate and validate lung model and archetype files

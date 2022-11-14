@@ -1,4 +1,4 @@
-package lungsimulator;
+package resourcereader;
 
 import java.io.IOException;
 import java.io.InputStream;
