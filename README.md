@@ -13,12 +13,21 @@ The project is composed of four main components:
 ## Installation (Swing interface)
 
 ## Installation (web-app)
+In order to start the web-app, the following folders have to be downloaded: circuit-simulator-master, lungsimulator-lib, zeromq_schema_ventilation and web-app. 
+Java 11 is also required.
+
+First of all, run command `mvn install` for circuit-simulator-master and lungsimulator-lib and then run command `mvn jetty:run` for the web-app project.
+If all commands succeeded, the web-app can be started from your browser at `localhost:8080`, otherwise check [Troubleshooting](#troubleshooting) section for help.
+
+Finally, run manually the main class of zeromq_schema_ventilation folder.
 
 ## How to build a custom model with YAML
 
 ## Swing interface usage
 
 ## Web-app usage
+
+## Troubleshooting
 
 * circuit-simulator-master: risolutore di circuiti elettrici
 * lungsimulator: simulatore del polmone con interfaccia costruita in Swing
@@ -33,8 +42,3 @@ Simulazione con l'interfaccia in Swing:
 * scaricare circuit-simulator-master, lungsimulator e zeromq_schema_ventilation
 * il main è nel progetto lungsimulator
 
-Simulazione con web-app:
-* Java 11 required
-* scaricare circuit-simulator-master, lungsimulator-lib, zeromq_schema_ventilation e web-app
-* da web-app, aprire il cmd ed eseguire il comando mvn jetty:run
-* una volta avviata la web-app digitare su browser localhost:8080
