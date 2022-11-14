@@ -20,7 +20,7 @@ import lungsimulator.components.Archetype;
 import lungsimulator.components.Element;
 import lungsimulator.components.Formula;
 import lungsimulator.components.Patient;
-import lungsimulator.graphic.GraphicConstants;
+import lungsimulator.utils.GraphicConstants;
 import lungsimulator.utils.Utils;
 import simulator.CirSim;
 

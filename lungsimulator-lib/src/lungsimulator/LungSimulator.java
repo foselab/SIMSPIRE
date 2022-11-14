@@ -1,14 +1,8 @@
 package lungsimulator;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
@@ -18,7 +12,6 @@ import org.zeromq.ZMQ.Socket;
 import lungsimulator.components.Archetype;
 import lungsimulator.components.Patient;
 import lungsimulator.components.SimulatorParams;
-import lungsimulator.graphic.GraphicInterface;
 import lungsimulator.utils.Validator;
 import lungsimulator.utils.YamlReader;
 import simulator.CirSim;
@@ -46,11 +39,6 @@ public class LungSimulator {
 	 * Patient demographic data
 	 */
 	public transient SimulatorParams demographicData;
-
-	/**
-	 * Manages user interface properties
-	 */
-	public transient GraphicInterface userInterface = new GraphicInterface();
 
 	/**
 	 * Init the lung simulator by reading and validating the patient model and
@@ -116,11 +104,6 @@ public class LungSimulator {
 	}
 
 	public void miniSimulation(double initialT) {
-		// while (!wait) {
-		//double ntStart = System.currentTimeMillis() / 1000.0;
-		//double initialT = ntStart - tStart;
-		// wait for step seconds until next resolution
-		//if (initialT - lastT >= step) {
 			// Update ventilator value
 			socket.send(message.getBytes(), 0);
 			final byte[] reply = socket.recv(0);
@@ -140,70 +123,6 @@ public class LungSimulator {
 			myCircSim.analyzeCircuit();
 			myCircSim.loopAndContinue(false);
 			circuitBuilder.updateData(initialT);
-			//lastT = initialT;
-		//}
-		// }
-	}
-
-	/**
-	 * Circuit construction and resolution for each iteration
-	 * 
-	 * @throws InterruptedException
-	 */
-	public void simulateCircuit() throws InterruptedException {
-		// Create the circuit equivalent to the lung
-		final CirSim myCircSim = circuitBuilder.buildCircuitSimulator(patient, archetype);
-
-		// ZMQ settings
-		final ZContext context = new ZContext();
-		final Socket socket = context.createSocket(SocketType.REQ);
-		socket.connect("tcp://localhost:5555");
-
-		final String message = "getPressure";
-		double ventilatorValue;
-		String replyMessage;
-
-		// moment of time (in seconds) where simulation starts
-		final double tStart = System.currentTimeMillis() / 1000.0;
-		double lastT = 0;
-		final double step = myCircSim.getTimeStep();
-		double ntStart;
-		double initialT;
-
-		while (userInterface.isWindowOpen()) {
-			if (userInterface.getStateOfExecution()) {
-				ntStart = System.currentTimeMillis() / 1000.0;
-				initialT = ntStart - tStart;
-				// wait for step seconds until next resolution
-				if (initialT - lastT >= step) {
-					// Update ventilator value
-					socket.send(message.getBytes(), 0);
-					final byte[] reply = socket.recv(0);
-					if (reply != null) {
-						replyMessage = new String(reply, ZMQ.CHARSET);
-						ventilatorValue = Double.parseDouble(replyMessage);
-						circuitBuilder.updateVentilatorValue(ventilatorValue);
-					}
-
-					// update values for time dependent components
-					if (circuitBuilder.isTimeDependentCir()) {
-						circuitBuilder.updateCircuitSimulator(archetype, initialT);
-					}
-
-					myCircSim.setT(initialT);
-					System.out.println("initialT " + initialT);
-					myCircSim.analyzeCircuit();
-					myCircSim.loopAndContinue(false);
-					userInterface.updateShownDataValues(initialT, myCircSim);
-					lastT = initialT;
-				}
-
-			} else {
-				Thread.sleep((long) step);
-			}
-		}
-		socket.close();
-		context.close();
 	}
 
 	public Patient getPatient() {

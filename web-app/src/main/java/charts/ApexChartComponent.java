@@ -37,7 +37,6 @@ public class ApexChartComponent extends Composite<VerticalLayout> implements Has
 	List<String> time;
 	List<Double> yvaluesList;
 	List<Double> yvaluesVentList;
-	Div tentativo;
 
 	public ApexChartComponent(List<String> timeline, double[] yvalues, double[] yvaluesVent, String seriesName) {
 		myChart = ApexChartsBuilder.get(); // init chart
@@ -52,9 +51,7 @@ public class ApexChartComponent extends Composite<VerticalLayout> implements Has
 		}
 		counter = 0;
 		updateChart(timeline, yvalues, yvaluesVent);
-		tentativo = new Div();
-		tentativo.add(finalChart);
-		add(tentativo);
+		add(finalChart);
 	}
 
 	/**
@@ -129,7 +126,8 @@ public class ApexChartComponent extends Composite<VerticalLayout> implements Has
 		if (counter > 1) {
 			oldfinalChart = finalChart;
 			finalChart = myChart.build();
-			tentativo.replace(oldfinalChart, finalChart);
+			remove(oldfinalChart);
+			add(finalChart);
 		} else {
 			finalChart = myChart.build();
 		}

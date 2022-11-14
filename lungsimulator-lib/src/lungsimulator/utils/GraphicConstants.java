@@ -1,4 +1,4 @@
-package lungsimulator.graphic;
+package lungsimulator.utils;
 
 /**
  * Constants for graphic layout
