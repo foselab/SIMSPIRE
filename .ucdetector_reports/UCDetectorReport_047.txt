@@ -1,0 +1,4 @@
+Created with UCDetector 2.0.0	2022-11-15 10:08:51	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+view.SimulationView.<init>(SimulationView.java:20)	Change visibility of Class "SimulationView" to default - May cause compile errors!	SimulationView	org.ucdetector.analyzeMarkerVisibilityDefault	
+view.SimulationView.simulationManager(SimulationView.java:67)	Change visibility of Method "SimulationView.simulationManager()" to private	SimulationView.simulationManager()	org.ucdetector.analyzeMarkerVisibilityPrivate	

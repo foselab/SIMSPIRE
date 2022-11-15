@@ -17,6 +17,8 @@ import com.github.appreciated.apexcharts.config.builder.StrokeBuilder;
 import com.github.appreciated.apexcharts.config.builder.XAxisBuilder;
 import com.github.appreciated.apexcharts.config.builder.YAxisBuilder;
 import com.github.appreciated.apexcharts.config.chart.Type;
+import com.github.appreciated.apexcharts.config.chart.animations.builder.DynamicAnimationBuilder;
+import com.github.appreciated.apexcharts.config.chart.builder.AnimationsBuilder;
 import com.github.appreciated.apexcharts.config.chart.builder.ZoomBuilder;
 import com.github.appreciated.apexcharts.config.grid.builder.RowBuilder;
 import com.github.appreciated.apexcharts.config.stroke.Curve;
@@ -58,8 +60,10 @@ public class ApexChartComponent extends Composite<VerticalLayout> implements Has
 	 * Set up all chart's parameters that won't change during simulation
 	 */
 	private void chartSetUpConstantParameters() {
-		myChart.withChart(
-				ChartBuilder.get().withType(Type.LINE).withZoom(ZoomBuilder.get().withEnabled(false).build()).build());
+		myChart.withChart(ChartBuilder.get().withType(Type.LINE).withZoom(ZoomBuilder.get().withEnabled(false).build())
+				.withAnimations(AnimationsBuilder.get().withEnabled(false)
+						.withDynamicAnimation(DynamicAnimationBuilder.get().withEnabled(false).build()).build())
+				.build());
 
 		myChart.withStroke(StrokeBuilder.get().withCurve(Curve.STRAIGHT).build());
 
@@ -108,14 +112,14 @@ public class ApexChartComponent extends Composite<VerticalLayout> implements Has
 		// y-axis set up
 		myChart.withYaxis(YAxisBuilder.get().withTitle(
 				com.github.appreciated.apexcharts.config.yaxis.builder.TitleBuilder.get().withText(seriesName).build())
-				.withMin(-yLimit).withMax(yLimit).build());
+				.withMin(yvaluesVent == null ? -yLimit : 0.0).withMax(yLimit).build());
 		// if (counter == 1) {
-		if (yvaluesVent == null) {
-			myChart.withSeries(new Series<>(seriesName, yvaluesList.toArray())).build();
-		} else {
-			myChart.withSeries(new Series<>(seriesName, yvaluesList.toArray()),
-					new Series<>("Ventilator", yvaluesVentList.toArray())).build();
-		}
+		/*
+		 * if (yvaluesVent == null) { myChart.withSeries(new Series<>(seriesName,
+		 * yvaluesList.toArray())).build(); } else { myChart.withSeries(new
+		 * Series<>(seriesName, yvaluesList.toArray()), new Series<>("Ventilator",
+		 * yvaluesVentList.toArray())).build(); }
+		 */
 		/*
 		 * } else { if (yvaluesVent == null) { finalChart.updateSeries(new
 		 * Series<>(seriesName, yvaluesList.toArray())); } else {
@@ -126,9 +130,21 @@ public class ApexChartComponent extends Composite<VerticalLayout> implements Has
 		if (counter > 1) {
 			oldfinalChart = finalChart;
 			finalChart = myChart.build();
+			if (yvaluesVent == null) {
+				finalChart.updateSeries(new Series<>(seriesName, yvaluesList.toArray()));
+			} else {
+				finalChart.updateSeries(new Series<>(seriesName, yvaluesList.toArray()),
+						new Series<>("Ventilator", yvaluesVentList.toArray()));
+			}
 			remove(oldfinalChart);
 			add(finalChart);
 		} else {
+			if (yvaluesVent == null) {
+				myChart.withSeries(new Series<>(seriesName, yvaluesList.toArray())).build();
+			} else {
+				myChart.withSeries(new Series<>(seriesName, yvaluesList.toArray()),
+						new Series<>("Ventilator", yvaluesVentList.toArray())).build();
+			}
 			finalChart = myChart.build();
 		}
 	}

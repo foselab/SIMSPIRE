@@ -110,7 +110,10 @@ public class LungSimulator {
 	final String message = "getPressure";
 	CirSim myCircSim;
 
-	public void mini() {
+	/**
+	 * Init the circuit and the connection to the ventilator
+	 */
+	public void simulationSetUp() {
 		myCircSim = circuitBuilder.buildCircuitSimulator(patient, archetype);
 
 		// ZMQ settings
