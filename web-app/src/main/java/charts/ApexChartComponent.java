@@ -1,13 +1,6 @@
 package charts;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.logging.log4j.core.pattern.EqualsBaseReplacementConverter;
 
 import com.github.appreciated.apexcharts.ApexCharts;
 import com.github.appreciated.apexcharts.ApexChartsBuilder;
@@ -25,7 +18,6 @@ import com.github.appreciated.apexcharts.config.stroke.Curve;
 import com.github.appreciated.apexcharts.helper.Series;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasComponents;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class ApexChartComponent extends Composite<VerticalLayout> implements HasComponents {
@@ -33,27 +25,14 @@ public class ApexChartComponent extends Composite<VerticalLayout> implements Has
 	ApexCharts finalChart;
 	ApexCharts oldfinalChart;
 	int yLimit;
-	int numberOfData;
 	String seriesName;
-	int counter;
-	List<String> time;
-	List<Double> yvaluesList;
-	List<Double> yvaluesVentList;
 
-	public ApexChartComponent(List<String> timeline, double[] yvalues, double[] yvaluesVent, String seriesName) {
+	public ApexChartComponent(List<String> timeline, List<Double> yvalues, List<Double> yvaluesVent,
+			String seriesName) {
 		myChart = ApexChartsBuilder.get(); // init chart
 		this.seriesName = seriesName;
 		chartSetUpConstantParameters();
-		yLimit = 0;
-		numberOfData = yvalues.length;
-		time = new ArrayList<>();
-		yvaluesList = new ArrayList<>();
-		if (yvaluesVent != null) {
-			yvaluesVentList = new ArrayList<>();
-		}
-		counter = 0;
-		updateChart(timeline, yvalues, yvaluesVent);
-		add(finalChart);
+		yLimit = 2;
 	}
 
 	/**
@@ -73,95 +52,52 @@ public class ApexChartComponent extends Composite<VerticalLayout> implements Has
 
 	/**
 	 * Set up or update modified parameters
+	 * 
+	 * @param init
 	 */
-	public void updateChart(List<String> timeline, double[] yvalues, double[] yvaluesVent) {
-		if (counter < numberOfData) {
-			time.add(timeline.get(numberOfData - 1));
-			yvaluesList.add(yvalues[numberOfData - 1]);
-
-			if (yvaluesVent != null) {
-				yvaluesVentList.add(yvaluesVent[numberOfData - 1]);
-			}
-			counter++;
-		} else {
-			time = timeline;
-			yvaluesList = Arrays.asList(ArrayUtils.toObject(yvalues));
-			if (yvaluesVent != null) {
-				yvaluesVentList = yvaluesVent == null ? null : Arrays.asList(ArrayUtils.toObject(yvaluesVent));
-			}
-		}
-
+	public void updateChart(List<String> timeline, List<Double> yvalues, List<Double> yvaluesVent) {
 		// x-axis set up
 		myChart.withXaxis(XAxisBuilder.get().withTitle(
 				com.github.appreciated.apexcharts.config.xaxis.builder.TitleBuilder.get().withText("Time [s]").build())
-				.withCategories(time).build());
+				.withCategories(timeline).build());
 
-		if (yLimit == 0) {
-			// cerco il massimo
-			yLimit = findMax(yvaluesList, yvaluesVentList);
-		} else {
-			if (yLimit < yvalues[numberOfData - 1]) {
-				yLimit = (int) yvalues[numberOfData - 1] + 1;
-			}
+		int lastIndex = yvalues.size() - 1;
 
-			if (yvaluesVent != null && yLimit < yvaluesVent[numberOfData - 1]) {
-				yLimit = (int) yvaluesVent[numberOfData - 1] + 1;
-			}
+		if (yLimit < yvalues.get(lastIndex)) {
+			yLimit = (int) (yvalues.get(lastIndex) + 1);
+		}
+
+		if (yvaluesVent != null && yLimit < yvaluesVent.get(lastIndex)) {
+			yLimit = (int) (yvaluesVent.get(lastIndex) + 1);
 		}
 
 		// y-axis set up
-		myChart.withYaxis(YAxisBuilder.get().withTitle(
-				com.github.appreciated.apexcharts.config.yaxis.builder.TitleBuilder.get().withText(seriesName).build())
+		myChart.withYaxis(YAxisBuilder.get()
+				.withTitle(com.github.appreciated.apexcharts.config.yaxis.builder.TitleBuilder.get()
+						.withText(seriesName).build())
 				.withMin(yvaluesVent == null ? -yLimit : 0.0).withMax(yLimit).build());
-		// if (counter == 1) {
-		/*
-		 * if (yvaluesVent == null) { myChart.withSeries(new Series<>(seriesName,
-		 * yvaluesList.toArray())).build(); } else { myChart.withSeries(new
-		 * Series<>(seriesName, yvaluesList.toArray()), new Series<>("Ventilator",
-		 * yvaluesVentList.toArray())).build(); }
-		 */
-		/*
-		 * } else { if (yvaluesVent == null) { finalChart.updateSeries(new
-		 * Series<>(seriesName, yvaluesList.toArray())); } else {
-		 * finalChart.updateSeries(new Series<>(seriesName, yvaluesList.toArray()), new
-		 * Series<>("Ventilator", yvaluesVentList.toArray())); } }
-		 */
 
-		if (counter > 1) {
+		if (yvalues.size() > 1) {
 			oldfinalChart = finalChart;
 			finalChart = myChart.build();
 			if (yvaluesVent == null) {
-				finalChart.updateSeries(new Series<>(seriesName, yvaluesList.toArray()));
+				finalChart.updateSeries(new Series<>(seriesName, yvalues.toArray()));
 			} else {
-				finalChart.updateSeries(new Series<>(seriesName, yvaluesList.toArray()),
-						new Series<>("Ventilator", yvaluesVentList.toArray()));
+				finalChart.updateSeries(new Series<>(seriesName, yvalues.toArray()),
+						new Series<>("Ventilator", yvaluesVent.toArray()));
 			}
 			remove(oldfinalChart);
 			add(finalChart);
 		} else {
 			if (yvaluesVent == null) {
-				myChart.withSeries(new Series<>(seriesName, yvaluesList.toArray())).build();
+				myChart.withSeries(new Series<>(seriesName, yvalues.toArray())).build();
 			} else {
-				myChart.withSeries(new Series<>(seriesName, yvaluesList.toArray()),
-						new Series<>("Ventilator", yvaluesVentList.toArray())).build();
+				myChart.withSeries(new Series<>(seriesName, yvalues.toArray()),
+						new Series<>("Ventilator", yvaluesVent.toArray())).build();
 			}
 			finalChart = myChart.build();
+			add(finalChart);
 		}
-	}
-
-	private int findMax(List<Double> yvaluesList, List<Double> yvaluesVentList) {
-		double yValuesMax = Collections.max(yvaluesList);
-		double yValuesVentMax = yvaluesVentList == null ? 0.0 : Collections.max(yvaluesVentList);
-
-		int max;
-
-		if (yValuesMax > yValuesVentMax) {
-			max = (int) yValuesMax + 1;
-		} else {
-			max = (int) yValuesVentMax + 1;
-		}
-
-		return max;
 	}
 
 	public ApexCharts getMyChart() {

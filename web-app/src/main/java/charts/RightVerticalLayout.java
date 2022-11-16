@@ -13,10 +13,7 @@ public class RightVerticalLayout extends Composite<VerticalLayout> implements Ha
 	private Plot flowChart;
 	private Plot pressureChart;
 	
-	private LungSimulator lungSimulator;
-	
 	public RightVerticalLayout(LungSimulator lungSimulator) {
-		this.lungSimulator = lungSimulator;
 		setSizeFull();
 		getContent().setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.STRETCH);
 		
@@ -24,9 +21,9 @@ public class RightVerticalLayout extends Composite<VerticalLayout> implements Ha
 		add(plotWrapper);
 		getContent().setFlexGrow(1, plotWrapper);
 		
-		this.flowChart = new Plot(lungSimulator.getCircuitBuilder().getFlowIds(), lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataFlow(), null, "Flow");
+		flowChart = new Plot(lungSimulator.getCircuitBuilder().getFlowIds(), lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataFlow(), null, "Flow");
 		plotWrapper.add(flowChart);
-		this.pressureChart = new Plot(lungSimulator.getCircuitBuilder().getPressureIds(), lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataPressure(), lungSimulator.getCircuitBuilder().getInitdataVentilatorPressure(), "Pressure");
+		pressureChart = new Plot(lungSimulator.getCircuitBuilder().getPressureIds(), lungSimulator.getCircuitBuilder().getTimeline(), lungSimulator.getCircuitBuilder().getInitdataPressure(), lungSimulator.getCircuitBuilder().getInitdataVentilatorPressure(), "Pressure");
 		plotWrapper.add(pressureChart);
 	}
 

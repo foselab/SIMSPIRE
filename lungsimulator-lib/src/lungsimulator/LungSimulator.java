@@ -122,7 +122,7 @@ public class LungSimulator {
 		socket.connect("tcp://localhost:5555");
 	}
 
-	public void miniSimulation(double initialT) {
+	public void miniSimulation(double initialT, double timeStep) {
 		// Update ventilator value
 		socket.send(message.getBytes(), 0);
 		final byte[] reply = socket.recv(0);
@@ -137,6 +137,7 @@ public class LungSimulator {
 			// circuitBuilder.updateCircuitSimulator(archetype, initialT);
 		}
 
+		myCircSim.setTimeStep(timeStep);
 		myCircSim.setT(initialT);
 		System.out.println("initialT " + initialT);
 		myCircSim.analyzeCircuit();

@@ -103,14 +103,14 @@ public class SimulationView extends Composite<HorizontalLayout> implements HasCo
 		
 		new Thread(() -> {
 			double lastT = 0;
-			final double step = 0.3;
+			final double step = 0.1;
 			while (flag) {
 				final double ntStart = System.currentTimeMillis() / 1000.0;
 				final double initialT = ntStart - tStart;
 				// wait for step seconds until next resolution
 				if (initialT - lastT >= step) {
 					userInterface.access(() -> {
-						lungSimulator.miniSimulation(initialT);
+						lungSimulator.miniSimulation(initialT, step);
 						circuitSection.updateVentilator(lungSimulator.getCircuitBuilder().getCurrentVentilatorValue());
 						plotSection.updateChart(lungSimulator);
 					});

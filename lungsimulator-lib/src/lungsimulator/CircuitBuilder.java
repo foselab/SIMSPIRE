@@ -52,33 +52,28 @@ public class CircuitBuilder {
 	 * Index of ventilator in cirSim elements list
 	 */
 	private transient int ventilatorIndex;
-	
+
 	private double currentVentilatorValue;
 
 	private List<String> flowIds = new ArrayList<>();
-	
-	/**
-	 * Number of data shown in a chart
-	 */
-	public static final int MAXDATA = 50;
 
-	private String[] timeline;
-	private double[][] initdataPressure;
-	private double[][] initdataVentilatorPressure;
-	private double[][] initdataFlow;
+	private List<String> timeline;
+	private Map<String, List<Double>> initdataPressure;
+	private List<Double> initdataVentilatorPressure;
+	private Map<String, List<Double>> initdataFlow;
 	private List<String> pressureIds = new ArrayList<>();
 	private Map<String, String> pressureCoord = new LinkedHashMap<>();
-	
+
 	/**
 	 * Unit of measure for resistance element
 	 */
 	public static final String UMRES = "cmH2O/L/s";
-	
+
 	/**
 	 * Unit of measure for capacitor element
 	 */
 	public static final String UMCAP = "L/cmH2O";
-	
+
 	/**
 	 * Unit of measure for voltage element
 	 */
@@ -93,7 +88,7 @@ public class CircuitBuilder {
 		timeDependentElm = new HashMap<>();
 		elements = new ArrayList<>();
 	}
-	
+
 	/**
 	 * The method builds a circuit according to the patient's components and
 	 * archetype
@@ -103,7 +98,7 @@ public class CircuitBuilder {
 	 * @return the circuit
 	 */
 	public CirSim buildCircuitSimulator(final Patient patient, final Archetype archetype) {
-		cirSim.setTimeStep(0.1);
+		//cirSim.setTimeStep(0.1);
 		ResistorElm resistance;
 		CapacitorElm capacitance;
 		ACVoltageElm acVoltage;
@@ -178,56 +173,43 @@ public class CircuitBuilder {
 
 	private void dataInit() {
 		pressureIds = new ArrayList<>(pressureCoord.keySet());
-		// Init the arrays for the data
-		initdataPressure = new double[pressureCoord.size()][MAXDATA];
-		// One row for time values and one row for pressure values
-		initdataVentilatorPressure = new double[2][MAXDATA];
-		// One row for time values and one row for each element of the circuit
-		initdataFlow = new double[flowIds.size()][MAXDATA];
+		initdataPressure = Utils.initMap(pressureIds);
 
-		timeline = new String[MAXDATA];
+		initdataVentilatorPressure = new ArrayList<>();
 
-		// Fill initData with zeros
-		Utils.initVectors(MAXDATA, timeline, initdataPressure, initdataVentilatorPressure,
-				initdataFlow);
+		initdataFlow = Utils.initMap(flowIds);
 
+		timeline = new ArrayList<>();
 	}
 
 	public void updateData(double time) {
-		// Shift data in vectors
-		Utils.shiftData(MAXDATA, timeline, initdataPressure, initdataVentilatorPressure, initdataFlow);
 
 		// Update time
-		timeline[MAXDATA - 1] = String.valueOf(Precision.round(time, 2));
-
-		int count = 0;
-		int countPressure = 0;
+		timeline = Utils.updateStringList(timeline, String.valueOf(Precision.round(time, 2)));
 
 		for (final CircuitElm cir : elements) {
 			/*
-			 * Questione tempo dipendenza
-			if (spinnersTime.containsKey(cir.getId())) {
-				updateSpinners(cir);
-			}*/
+			 * Questione tempo dipendenza if (spinnersTime.containsKey(cir.getId())) {
+			 * updateSpinners(cir); }
+			 */
 
 			if (cir.getIdLeft() != null && pressureCoord.containsKey(cir.getIdLeft())
 					&& pressureCoord.get(cir.getIdLeft()).equals("left")) {
-				initdataPressure[countPressure][MAXDATA - 1] = cir.getVoltZero();
-				countPressure++;
+				initdataPressure = Utils.updateMap(initdataPressure, cir.getIdLeft(),
+						Precision.round(cir.getVoltZero(), 3));
 			}
 
 			if (cir.getIdRight() != null && pressureCoord.containsKey(cir.getIdRight())
 					&& pressureCoord.get(cir.getIdRight()).equals("right")) {
-				initdataPressure[countPressure][MAXDATA - 1] = cir.getVoltOne();
-				countPressure++;
+				initdataPressure = Utils.updateMap(initdataPressure, cir.getIdRight(),
+						Precision.round(cir.getVoltOne(), 3));
 			}
 
 			if (cir.getClass().getSimpleName().equals("ExternalVoltageElm")) {
-				initdataVentilatorPressure[1][MAXDATA - 1] = cir.getVoltageDiff();
-				//ventilator.setValue(cir.getVoltageDiff());
+				initdataVentilatorPressure = Utils.updateDoubleList(initdataVentilatorPressure, Precision.round(cir.getVoltageDiff(), 3));
 			} else {
-				initdataFlow[count][MAXDATA - 1] = cir.getCurrent();
-				count++;
+				initdataFlow = Utils.updateMap(initdataFlow, cir.getId(),
+						Precision.round(cir.getCurrent(), 3)); 
 			}
 		}
 	}
@@ -334,11 +316,11 @@ public class CircuitBuilder {
 		ventilator.setVentVoltage(ventilatorValue);
 		currentVentilatorValue = ventilatorValue;
 	}
-	
+
 	public void updateElementValue(double value, int indexElm) {
 		CircuitElm circuitElement = cirSim.getElmList().get(indexElm);
 		circuitElement.setValue(value);
-		
+
 		// resistance
 		if (circuitElement instanceof ResistorElm) {
 			final ResistorElm resistance = (ResistorElm) circuitElement;
@@ -362,7 +344,7 @@ public class CircuitBuilder {
 			final DCVoltageElm dcVoltage = (DCVoltageElm) circuitElement;
 			dcVoltage.setMaxVoltage(value);
 		}
-		
+
 	}
 
 	public boolean isTimeDependentCir() {
@@ -389,30 +371,6 @@ public class CircuitBuilder {
 		this.flowIds = flowIds;
 	}
 
-	public double[][] getInitdataPressure() {
-		return initdataPressure;
-	}
-
-	public void setInitdataPressure(double[][] initdataPressure) {
-		this.initdataPressure = initdataPressure;
-	}
-
-	public double[][] getInitdataVentilatorPressure() {
-		return initdataVentilatorPressure;
-	}
-
-	public void setInitdataVentilatorPressure(double[][] initdataVentilatorPressure) {
-		this.initdataVentilatorPressure = initdataVentilatorPressure;
-	}
-
-	public double[][] getInitdataFlow() {
-		return initdataFlow;
-	}
-
-	public void setInitdataFlow(double[][] initdataFlow) {
-		this.initdataFlow = initdataFlow;
-	}
-
 	public List<String> getPressureIds() {
 		return pressureIds;
 	}
@@ -429,20 +387,28 @@ public class CircuitBuilder {
 		this.pressureCoord = pressureCoord;
 	}
 
-	public String[] getTimeline() {
-		return timeline;
-	}
-
-	public void setTimeline(String[] timeline) {
-		this.timeline = timeline;
-	}
-
 	public int getVentilatorIndex() {
 		return ventilatorIndex;
 	}
 
 	public double getCurrentVentilatorValue() {
 		return currentVentilatorValue;
+	}
+
+	public List<String> getTimeline() {
+		return timeline;
+	}
+
+	public Map<String, List<Double>> getInitdataPressure() {
+		return initdataPressure;
+	}
+
+	public List<Double> getInitdataVentilatorPressure() {
+		return initdataVentilatorPressure;
+	}
+
+	public Map<String, List<Double>> getInitdataFlow() {
+		return initdataFlow;
 	}
 
 }

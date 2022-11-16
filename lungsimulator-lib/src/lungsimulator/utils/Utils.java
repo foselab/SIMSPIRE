@@ -1,5 +1,10 @@
 package lungsimulator.utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import lombok.experimental.UtilityClass;
 
 /**
@@ -7,6 +12,57 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public class Utils {
+	
+	/**
+	 * Number of data shown in a chart
+	 */
+	public static final int MAXDATA = 50;
+	
+	public static Map<String, List<Double>> initMap(List<String> ids) {
+		Map<String, List<Double>> myMap = new HashMap<>();
+		
+		for(String index: ids) {
+			myMap.put(index, new ArrayList<>());
+		}
+		
+		return myMap;
+	}
+	
+	public static List<String> updateStringList(List<String> myList, String newValue){
+		if(myList.size() < MAXDATA) {
+			myList.add(newValue);
+		}else {
+			myList.remove(0);
+			myList.add(newValue);
+		}
+		
+		return myList;
+	}
+	
+	public static Map<String, List<Double>> updateMap(Map<String, List<Double>> myMap, String key, double value){
+		List<Double> myList = myMap.get(key);
+		
+		if(myList.size() < MAXDATA) {
+			myList.add(value);
+			myMap.put(key, myList);
+		}else {
+			myList.remove(0);
+			myList.add(value);
+			myMap.put(key, myList);
+		}
+		
+		return myMap;
+	}
+	
+	public static List<Double> updateDoubleList(List<Double> myList, double newValue){
+		if(myList.size() >= MAXDATA) {
+			myList.remove(0);	
+		}
+		
+		myList.add(newValue);
+		
+		return myList;
+	}
 
 	/**
 	 * Shift data when a new one has to be included
