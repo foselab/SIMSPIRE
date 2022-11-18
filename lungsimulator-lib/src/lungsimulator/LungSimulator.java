@@ -134,12 +134,12 @@ public class LungSimulator {
 
 		// update values for time dependent components
 		if (circuitBuilder.isTimeDependentCir()) {
-			// circuitBuilder.updateCircuitSimulator(archetype, initialT);
+			circuitBuilder.updateCircuitSimulator(archetype, initialT);
 		}
 
 		myCircSim.setTimeStep(timeStep);
 		myCircSim.setT(initialT);
-		System.out.println("initialT " + initialT);
+		System.out.println("timeStep: " + timeStep + " - initialT " + initialT);
 		myCircSim.analyzeCircuit();
 		myCircSim.loopAndContinue(false);
 		circuitBuilder.updateData(initialT);

@@ -37,8 +37,8 @@ public class Ventilator {
 					if (msg.equals("getPressure")) {
 						// 	per 5 secondi 10, per altri 5 secondi 0					
 						long time = System.currentTimeMillis();
-						long resto = time%10000;
-						String response =  resto < 5000? "10" : "0"; 
+						long resto = time%4000;
+						String response =  resto < 2000? "10" : "0"; 
 						// Send a response
 						socket.send(response.getBytes(ZMQ.CHARSET), 0);
 					}

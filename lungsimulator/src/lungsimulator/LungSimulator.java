@@ -146,7 +146,7 @@ public class LungSimulator {
 		final double step = myCircSim.getTimeStep();
 		double ntStart;
 		double initialT;
-
+		
 		while (userInterface.isWindowOpen()) {
 			if (userInterface.getStateOfExecution()) {
 				ntStart = System.currentTimeMillis() / 1000.0;
@@ -160,8 +160,9 @@ public class LungSimulator {
 						replyMessage = new String(reply, ZMQ.CHARSET);
 						ventilatorValue = Double.parseDouble(replyMessage);
 						circuitBuilder.updateVentilatorValue(ventilatorValue);
+						
 					}
-
+					
 					// update values for time dependent components
 					if (circuitBuilder.isTimeDependentCir()) {
 						circuitBuilder.updateCircuitSimulator(archetype, initialT);

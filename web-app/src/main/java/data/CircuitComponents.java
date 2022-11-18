@@ -1,5 +1,7 @@
 package data;
 
+import java.util.List;
+
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -11,6 +13,7 @@ public class CircuitComponents extends Composite<Component>{
 	private LungSimulator lungSimulator;
 	VerticalLayout verticalLayout; 
 	CircuitElementRow ventilator;
+	List<CircuitElementRow> timeDependentElms;
 	
 	public CircuitComponents(LungSimulator lungSimulator) {
 		this.lungSimulator = lungSimulator;

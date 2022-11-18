@@ -12,7 +12,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class Plot extends Composite<VerticalLayout> implements HasComponents {
 	ChartComponent chartElm;
-	ApexChartComponent myChart;
+	public ApexChartComponent myChart;
 	String seriesName;
 	String shownElm;
 

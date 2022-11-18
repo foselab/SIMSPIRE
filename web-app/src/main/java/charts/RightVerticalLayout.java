@@ -10,8 +10,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import lungsimulator.LungSimulator;
 
 public class RightVerticalLayout extends Composite<VerticalLayout> implements HasComponents, HasSize{
-	private Plot flowChart;
-	private Plot pressureChart;
+	public Plot flowChart;
+	public Plot pressureChart;
 	
 	public RightVerticalLayout(LungSimulator lungSimulator) {
 		setSizeFull();
