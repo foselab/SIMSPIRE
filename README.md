@@ -89,7 +89,21 @@ elementsList:
   y1: 2
 ```
 For a complete file example, please refer to the default [models](https://github.com/foselab/mvm-adapt/tree/simulatore-paziente-ventilatore/lungsimulator-lib/resources/resourcereader) (lung-model-modelName.yaml) included in this project.
+
 #### The archetype file
+The archetype file has two fields: a schema number (`schema`) and a variables list (`parameters`). The first one is an arbitrary number which is used to check that both circuit model file and archetype file are associated to the same circuit. Hence, this number must be equal in both files. The latter contains all the variables values but time listed in each element field `variables` of the chosen circuit model.
+
+For instance, a circuit model with all constant resistors and capacitors would look like the following snippet.
+```yaml
+schema: 2
+parameters:
+   resistance1: 8.0
+   resistance2: 20.0
+   capacitor1: 0.020
+   capacitor2: 0.15
+```
+For other file examples, please refer to the default [models](https://github.com/foselab/mvm-adapt/tree/simulatore-paziente-ventilatore/lungsimulator-lib/resources/resourcereader) (archetype-modelName.yaml) included in this project.
+
 #### The demographic patient data file
 
 
