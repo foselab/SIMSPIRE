@@ -22,6 +22,14 @@ If all commands succeeded, the web-app can be started from your browser at `loca
 Finally, run manually the main class of zeromq_schema_ventilation folder.
 
 ## How to build a custom model with YAML
+This project has been conceived to allow the user to create and test its own customized model. In order to avoid exceptions and get a better understanding on how the model should be built, a detailed guide is presented. 
+
+A custom model is composed of three different YAML files:
+* the circuit model file where all the circuit components are listed
+* the archetype file with all the required intial or constant values of each circuit component
+* the demographic patient data file where some basic patient's info are provided
+
+
 
 ## Swing interface usage
 
