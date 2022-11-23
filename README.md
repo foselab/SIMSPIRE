@@ -88,7 +88,7 @@ elementsList:
   x1: 0 
   y1: 2
 ```
-For a complete file example, please refer to the default models (lung-model-modelName) included in this project.
+For a complete file example, please refer to the default [models](https://github.com/foselab/mvm-adapt/tree/simulatore-paziente-ventilatore/lungsimulator-lib/resources/resourcereader) (lung-model-modelName.yaml) included in this project.
 #### The archetype file
 #### The demographic patient data file
 
