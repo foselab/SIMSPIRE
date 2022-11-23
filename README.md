@@ -105,8 +105,15 @@ parameters:
 For other file examples, please refer to the default [models](https://github.com/foselab/mvm-adapt/tree/simulatore-paziente-ventilatore/lungsimulator-lib/resources/resourcereader) (archetype-modelName.yaml) included in this project.
 
 #### The demographic patient data file
+The last file which has to be provided for a complete model is the patient demographic data file. At the moment, this file does not influence the outcome of the simulation but it is still required for completeness.
 
-
+The following snippet of code shows the demographic data of a 75 years-old female patient that is high 1.9 m and weighs 100 kg.
+```yaml
+gender: female
+age: 75
+height: 1.9
+weight: 100
+```
 
 ## Swing interface usage
 
