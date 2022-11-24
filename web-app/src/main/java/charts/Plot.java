@@ -1,6 +1,5 @@
 package charts;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -11,12 +10,11 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class Plot extends Composite<VerticalLayout> implements HasComponents {
-	ChartComponent chartElm;
 	public ApexChartComponent myChart;
 	String seriesName;
 	String shownElm;
 
-	public Plot(List<String> idsList, List<String> timeline, Map<String, List<Double>> yvalues, List<Double> yvaluesVent,
+	public Plot(List<String> idsList, List<Double> timeline, Map<String, List<Double>> yvalues, List<Double> yvaluesVent,
 			String seriesName) {
 		this.seriesName = seriesName;
 		shownElm = idsList.get(0); //primo della lista come default
@@ -56,7 +54,7 @@ public class Plot extends Composite<VerticalLayout> implements HasComponents {
 		add(myChart);
 	}
 
-	public void updateChart(List<String> timeline, Map<String, List<Double>> yvalues, List<Double> yvaluesVent) {		
+	public void updateChart(List<Double> timeline, Map<String, List<Double>> yvalues, List<Double> yvaluesVent) {		
 		if (yvaluesVent == null) {
 			myChart.updateChart(timeline, yvalues.get(shownElm), null);
 		} else {

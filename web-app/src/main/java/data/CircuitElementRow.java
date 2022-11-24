@@ -25,6 +25,11 @@ public class CircuitElementRow extends Composite<HorizontalLayout> implements Ha
 	private NumberField ventilator;
 
 	/**
+	 * Location of element value
+	 */
+	private NumberField elementValue;
+	
+	/**
 	 * Minimum value for a circuit element
 	 */
 	final static private double MIN = 0.0;
@@ -33,6 +38,9 @@ public class CircuitElementRow extends Composite<HorizontalLayout> implements Ha
 	 * Maximum value for a circuit element
 	 */
 	final static private double MAX = 50.0;
+	
+	private int posNumber;
+	LungSimulator lungSimulator;
 
 	/**
 	 * Creates a custom component where the name, value and unit of measure of a
@@ -47,12 +55,14 @@ public class CircuitElementRow extends Composite<HorizontalLayout> implements Ha
 	 */
 	public CircuitElementRow(final LungSimulator lungSimulator, final String elmId, final double value,
 			final String unit, final boolean isVentilator, final int posNumber) {
+		this.lungSimulator = lungSimulator;
+		this.posNumber = posNumber;
 		ventilator = new NumberField();
 
 		final Label elementName = new Label(elmId);
 		elementName.setWidth("250px");
 
-		final NumberField elementValue = new NumberField();
+		elementValue = new NumberField();
 		elementValue.setMin(MIN);
 		elementValue.setMax(MAX);
 		elementValue.setStep(0.000_001);
@@ -70,7 +80,6 @@ public class CircuitElementRow extends Composite<HorizontalLayout> implements Ha
 				if (newvalue >= MIN && newvalue <= MAX) {
 					if (oldValue != newvalue) {
 						lungSimulator.getCircuitBuilder().updateElementValue(newvalue, posNumber);
-						Notification.show("Element " + elmId + " updated to " + newvalue);
 					}
 				} else {
 					Notification.show("The value must be between 0.0 and 50.0");
@@ -93,5 +102,9 @@ public class CircuitElementRow extends Composite<HorizontalLayout> implements Ha
 		if (ventilator != null) {
 			ventilator.setValue(value);
 		}
+	}
+
+	public void updateElmValue() {
+		elementValue.setValue(lungSimulator.getCircuitBuilder().getElementValue(posNumber));
 	}
 }

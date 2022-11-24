@@ -100,6 +100,7 @@ public class SimulationView extends Composite<HorizontalLayout> implements HasCo
 	public void simulationManager() {
 		// moment of time (in seconds) where the simulation starts
 		double tStart = System.currentTimeMillis() / 1000.0;
+		boolean isTimeDependent = lungSimulator.getCircuitBuilder().isTimeDependentCir();
 
 		stop.setVisible(true);
 		stop.setEnabled(true);
@@ -143,6 +144,9 @@ public class SimulationView extends Composite<HorizontalLayout> implements HasCo
 					 */
 					if (count == 3) {
 						userInterface.access(() -> {
+							if(isTimeDependent) {
+								circuitSection.updateTimeDependentElms();
+							}
 							circuitSection
 									.updateVentilator(lungSimulator.getCircuitBuilder().getCurrentVentilatorValue());
 							plotSection.updateChart(lungSimulator);

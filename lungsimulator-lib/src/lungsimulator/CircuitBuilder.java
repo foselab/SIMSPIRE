@@ -57,7 +57,7 @@ public class CircuitBuilder {
 
 	private List<String> flowIds = new ArrayList<>();
 
-	private List<String> timeline;
+	private List<Double> timeline;
 	private Map<String, List<Double>> initdataPressure;
 	private List<Double> initdataVentilatorPressure;
 	private Map<String, List<Double>> initdataFlow;
@@ -185,14 +185,9 @@ public class CircuitBuilder {
 	public void updateData(double time) {
 
 		// Update time
-		timeline = Utils.updateStringList(timeline, String.valueOf(Precision.round(time, 2)));
+		timeline = Utils.updateDoubleList(timeline, Precision.round(time, 2));
 
 		for (final CircuitElm cir : elements) {
-			/*
-			 * Questione tempo dipendenza if (spinnersTime.containsKey(cir.getId())) {
-			 * updateSpinners(cir); }
-			 */
-
 			if (cir.getIdLeft() != null && pressureCoord.containsKey(cir.getIdLeft())
 					&& pressureCoord.get(cir.getIdLeft()).equals("left")) {
 				initdataPressure = Utils.updateMap(initdataPressure, cir.getIdLeft(),
@@ -278,6 +273,8 @@ public class CircuitBuilder {
 			if (timeDependentElm.containsKey(circuitElement.getId())) {
 				final String value = resolveFormula(timeDependentElm.get(circuitElement.getId()),
 						archetype.getParameters(), String.valueOf(time));
+				
+				circuitElement.setValue(Double.parseDouble(value));
 
 				// resistance
 				if (circuitElement instanceof ResistorElm) {
@@ -346,6 +343,10 @@ public class CircuitBuilder {
 		}
 
 	}
+	
+	public double getElementValue(int index) {
+		return cirSim.getElmList().get(index).getValue();
+	}
 
 	public boolean isTimeDependentCir() {
 		return timeDependentCir;
@@ -395,7 +396,7 @@ public class CircuitBuilder {
 		return currentVentilatorValue;
 	}
 
-	public List<String> getTimeline() {
+	public List<Double> getTimeline() {
 		return timeline;
 	}
 

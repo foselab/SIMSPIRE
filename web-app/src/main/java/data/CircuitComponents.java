@@ -1,6 +1,9 @@
 package data;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
@@ -13,10 +16,12 @@ public class CircuitComponents extends Composite<Component>{
 	private LungSimulator lungSimulator;
 	VerticalLayout verticalLayout; 
 	CircuitElementRow ventilator;
-	List<CircuitElementRow> timeDependentElms;
+	List<String> timeDependentElms;
+	Map<String, CircuitElementRow> components;
 	
 	public CircuitComponents(LungSimulator lungSimulator) {
 		this.lungSimulator = lungSimulator;
+		components = new HashMap<>();
 		verticalLayout = new VerticalLayout();
 	}
 
@@ -25,6 +30,11 @@ public class CircuitComponents extends Composite<Component>{
 		int index;
 		if(lungSimulator != null) {
 			if(lungSimulator.getCircuitBuilder() != null) {
+				
+				if(lungSimulator.getCircuitBuilder().isTimeDependentCir()) {
+					timeDependentElms = lungSimulator.getCircuitBuilder().getTimeDependentElm();
+				}
+				
 				index = lungSimulator.getCircuitBuilder().getVentilatorIndex();
 				if(lungSimulator.getCircuitBuilder().getElements() != null) {
 					for(CircuitElm element: lungSimulator.getCircuitBuilder().getElements()) {
@@ -33,6 +43,7 @@ public class CircuitComponents extends Composite<Component>{
 							ventilator = cer;
 						}
 						count++;
+						components.put(element.getId(), cer);
 						verticalLayout.add(cer);
 					}
 				}
@@ -44,5 +55,14 @@ public class CircuitComponents extends Composite<Component>{
 	
 	public void updateVentilator(double value) {
 		ventilator.setVentilator(value);
+	}
+
+	public void updateTimeDependentElms() {
+		for(Map.Entry<String, CircuitElementRow> entry: components.entrySet()) {
+			if(timeDependentElms.contains(entry.getKey())) {
+				entry.getValue().updateElmValue();
+			}
+		}
+		
 	}
 }
