@@ -11,6 +11,9 @@ The project is composed of four main components:
 * a graphic user interface
 
 ## Installation (Swing interface)
+In order to use the Swing interface that comes with this project, the following folders have to be downloaded: circuit-simulator-master, lungsimulator and zeromq_schema_ventilation. Java 1.8 is suggested.
+
+To start the simulation process, run manually the main method in both LungSimulator and Ventilator classes, located respectively in lungsimulator and zeromq_schema_ventilation projects.
 
 ## Installation (web-app)
 In order to start the web-app, the following folders have to be downloaded: circuit-simulator-master, lungsimulator-lib, zeromq_schema_ventilation and web-app. 
@@ -120,17 +123,4 @@ weight: 100
 ## Web-app usage
 
 ## Troubleshooting
-
-* circuit-simulator-master: risolutore di circuiti elettrici
-* lungsimulator: simulatore del polmone con interfaccia costruita in Swing
-* zeromq_schema_ventilation: simulatore del ventilatore
-* lungsimulator-lib: business logic del simulatore del polmone
-* web-app: web app costruita con Vaadin per il simulatore del polmone
-
-- altri progetti di prova
-* state_machine_controller\mvm-yakindu-controller: state machine con adaptive
-
-Simulazione con l'interfaccia in Swing:
-* scaricare circuit-simulator-master, lungsimulator e zeromq_schema_ventilation
-* il main è nel progetto lungsimulator
 
