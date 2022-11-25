@@ -2,6 +2,15 @@
 
 INSPIRE is a simulation software for testing mechanical ventilators through the creation of a digital twin for the respiratory system. It comes with a Swing interface so that it can be used more easily, but it is also available as a web-app. 
 
+#### Table of contents
+* [Project Overview](#project-overview)
+* [Installation (Swing interface)](#installation-swing-interface)
+* [Installation (web-app)](#installation-web-app)
+* [How to build a custom model with YAML](#how-to-build-a-custom-model-with-yaml)
+* [Swing interface usage](#swing-interface-usage)
+* [Web-app usage](#web-app-usage)
+* [Troubleshooting](#troubleshooting)
+
 ## Project overview
 
 The project is composed of four main components:
