@@ -119,6 +119,20 @@ weight: 100
 ```
 
 ## Swing interface usage
+After launching the application, a dialog window will automatically pop up as shown in the figure below. The first step is the choice of the model from the drop-down box. There are two main options available: choose a default model among those proposed or select "Your own model..." option to upload a custom model.
+
+![Select Model View](https://github.com/foselab/mvm-adapt/blob/simulatore-paziente-ventilatore/readme-files/SI_SelectModelView.png)
+
+As soon as a model is picked a new window will appear on the screen and the simulation will start immediately after. The simulation view is composed by the following blocks:
+* on the top left the circuit elements list is displayed 
+* below the circuit elements, there are two buttons: a start/stop button where the user can control the simulation and a print button which save the current plots in an Images folder located in lungsimulator project
+* on the bottom left a list of demographic patient data is reported
+* on the top right the flow plot is displayed and can be changed by selecting an available option from the drop-down box above it
+* on the bottom right the pressure plot is displayed and can be changed by selecting an available option from the drop-down box above it
+
+![Simulation View](https://github.com/foselab/mvm-adapt/blob/simulatore-paziente-ventilatore/readme-files/SI_SimulationView.png)
+
+To begin a new simulation, the window must be closed and the project re-started.
 
 ## Web-app usage
 
