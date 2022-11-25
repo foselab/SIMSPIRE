@@ -135,6 +135,22 @@ As soon as a model is picked a new window will appear on the screen and the simu
 To begin a new simulation, the window must be closed and the project re-started.
 
 ## Web-app usage
+After the browser page has loaded, a dialog window will automatically pop up as shown in the figure below. The first step is the choice of the model from the drop-down box. There are two main options available: choose a default model among those proposed or select "Your own model..." option to upload a custom model.
+
+![Select Model View](https://github.com/foselab/mvm-adapt/blob/simulatore-paziente-ventilatore/readme-files/WA_SelectModelView.png)
+
+As soon as a model is picked a new window will appear on the screen. The simulation view is composed by the following blocks:
+* on the top left the circuit elements list is displayed 
+* below the circuit elements, there are two buttons to launch and stop the simulation 
+* on the bottom left a list of demographic patient data is reported
+* on the top right the flow plot is displayed and can be changed by selecting an available option from the drop-down box above it
+* on the bottom right the pressure plot is displayed and can be changed by selecting an available option from the drop-down box above it
+
+![Simulation View](https://github.com/foselab/mvm-adapt/blob/simulatore-paziente-ventilatore/readme-files/WA_SimulationViewStop.png)
+
+To start the simulation, the start button has to be clicked. During the simulation circuit elements values can be changed as well as the flow and pressure plot shown. To save a plot image, pick an option from the three-line botton on the top right of each plot.
+
+To begin a new simulation with a different model, the project has to be re-started.
 
 ## Troubleshooting
 
