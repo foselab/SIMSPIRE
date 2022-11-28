@@ -7,6 +7,7 @@ import java.util.List;
 
 import lungsimulator.LungSimulator;
 import modelselection.SelectModelView;
+import simulationsection.SimulationView;
 
 public class GraphicUserInterface {
 
@@ -35,23 +36,32 @@ public class GraphicUserInterface {
 	}
 
 	public void showSimulationView() {
-		//init simulationview
-		
+		SimulationView simulationView = new SimulationView(lungSimulator);
+		boolean isTimeDependent = lungSimulator.getCircuitBuilder().isTimeDependentCir();
+
 		// moment of time (in seconds) where simulation starts
 		final double tStart = System.currentTimeMillis() / 1000.0;
 		double lastT = 0;
 		final double step = 0.1;
 		double ntStart;
 		double initialT;
-		
-		while (isWindowOpen()) {
-			if (getStateOfExecution()) {
+
+		while (simulationView.isWindowIsOpen()) {
+			if (simulationView.getStateOfExecution()) {
 				ntStart = System.currentTimeMillis() / 1000.0;
 				initialT = ntStart - tStart;
 				// wait for step seconds until next resolution
 				if (initialT - lastT >= step) {
+					//update backend
 					lungSimulator.miniSimulation(initialT, step);
-					//update gui
+					
+					//update frontend
+					if (isTimeDependent) {
+						simulationView.updateTimeDependentElms();
+					}
+					simulationView.updateVentilator(lungSimulator.getCircuitBuilder().getCurrentVentilatorValue());
+					simulationView.updateCharts(lungSimulator);
+					lastT = initialT;
 				} else {
 					try {
 						Thread.sleep((long) step);
@@ -62,16 +72,6 @@ public class GraphicUserInterface {
 				}
 			}
 		}
-	}
-
-	private boolean getStateOfExecution() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	private boolean isWindowOpen() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

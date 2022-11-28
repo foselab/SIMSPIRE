@@ -1,6 +1,7 @@
 package lungsimulator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -175,11 +176,11 @@ public class CircuitBuilder {
 		pressureIds = new ArrayList<>(pressureCoord.keySet());
 		initdataPressure = Utils.initMap(pressureIds);
 
-		initdataVentilatorPressure = new ArrayList<>();
+		initdataVentilatorPressure = new ArrayList<>(Arrays.asList(0.0));
 
 		initdataFlow = Utils.initMap(flowIds);
 
-		timeline = new ArrayList<>();
+		timeline = new ArrayList<>(Arrays.asList(0.0));
 	}
 
 	public void updateData(double time) {

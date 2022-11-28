@@ -1,9 +1,0 @@
-schema: 4
-parameters:
-   resistance1: 1.5
-   resistance2: 0.4
-   resistance3: 0.4
-   resistance4: 1.0
-   capacitor2: 0.1
-   capacitor3: 0.1
-   capacitor4: 0.2

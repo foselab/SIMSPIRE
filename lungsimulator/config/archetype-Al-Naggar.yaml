@@ -1,9 +1,0 @@
----
-schema: 6
-parameters:
-   resistanceC: 1.0
-   resistanceP: 0.5
-   capacitorS: 0.005
-   capacitorL: 0.2
-   capacitorW: 0.2
-   

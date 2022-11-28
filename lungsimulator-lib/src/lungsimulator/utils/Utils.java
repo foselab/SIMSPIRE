@@ -1,6 +1,7 @@
 package lungsimulator.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class Utils {
 		Map<String, List<Double>> myMap = new HashMap<>();
 		
 		for(String index: ids) {
-			myMap.put(index, new ArrayList<>());
+			myMap.put(index, new ArrayList<>(Arrays.asList(0.0)));
 		}
 		
 		return myMap;
