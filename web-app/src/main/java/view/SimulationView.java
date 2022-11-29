@@ -1,8 +1,5 @@
 package view;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.UI;
@@ -20,6 +17,9 @@ import data.CircuitComponents;
 import data.DemographicComponents;
 import lungsimulator.LungSimulator;
 
+/**
+ * Manages the simulation data that has to be shown
+ */
 public class SimulationView extends Composite<HorizontalLayout> implements HasComponents {
 	/**
 	 * Backend access
@@ -51,6 +51,11 @@ public class SimulationView extends Composite<HorizontalLayout> implements HasCo
 	 * when stop button is pressed
 	 */
 	private transient boolean flag;
+
+	/**
+	 * User interface is updated every shownDataStep cycles
+	 */
+	private final static int SHOWNDATASTEP = 3;
 
 	/**
 	 * Builds the simulation view
@@ -100,7 +105,7 @@ public class SimulationView extends Composite<HorizontalLayout> implements HasCo
 	public void simulationManager() {
 		// moment of time (in seconds) where the simulation starts
 		double tStart = System.currentTimeMillis() / 1000.0;
-		boolean isTimeDependent = lungSimulator.getCircuitBuilder().isTimeDependentCir();
+		final boolean isTimeDependent = lungSimulator.getCircuitBuilder().isTimeDependentCir();
 
 		stop.setVisible(true);
 		stop.setEnabled(true);
@@ -120,7 +125,7 @@ public class SimulationView extends Composite<HorizontalLayout> implements HasCo
 			 * seconds) lastT: the instant of time where the step ends
 			 */
 			double lastT = 0;
-			double stepLength = 0.1;
+			final double stepLength = 0.1;
 
 			int count = 0;
 
@@ -142,9 +147,9 @@ public class SimulationView extends Composite<HorizontalLayout> implements HasCo
 					 * Updating the interface is quite burdensome, so to avoid a crash it is updated
 					 * every three steps (about every 3*stepLength seconds)
 					 */
-					if (count == 3) {
+					if (count == SHOWNDATASTEP) {
 						userInterface.access(() -> {
-							if(isTimeDependent) {
+							if (isTimeDependent) {
 								circuitSection.updateTimeDependentElms();
 							}
 							circuitSection

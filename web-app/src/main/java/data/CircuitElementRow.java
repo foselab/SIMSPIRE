@@ -27,7 +27,7 @@ public class CircuitElementRow extends Composite<HorizontalLayout> implements Ha
 	/**
 	 * Location of element value
 	 */
-	private NumberField elementValue;
+	private final transient NumberField elementValue;
 	
 	/**
 	 * Minimum value for a circuit element
@@ -39,8 +39,15 @@ public class CircuitElementRow extends Composite<HorizontalLayout> implements Ha
 	 */
 	final static private double MAX = 50.0;
 	
-	private int posNumber;
-	LungSimulator lungSimulator;
+	/**
+	 * Index of element in elementList
+	 */
+	private final transient int posNumber;
+	
+	/**
+	 * backend access
+	 */
+	private final transient LungSimulator lungSimulator;
 
 	/**
 	 * Creates a custom component where the name, value and unit of measure of a
@@ -104,6 +111,9 @@ public class CircuitElementRow extends Composite<HorizontalLayout> implements Ha
 		}
 	}
 
+	/**
+	 * Updates element value
+	 */
 	public void updateElmValue() {
 		elementValue.setValue(lungSimulator.getCircuitBuilder().getElementValue(posNumber));
 	}

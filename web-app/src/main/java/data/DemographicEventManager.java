@@ -59,7 +59,7 @@ public class DemographicEventManager {
 		gender.setAllowCustomValue(false); // custom values are not allowed
 		gender.setRequired(true); // there must be a value selected
 		gender.setItems(new ArrayList<>(Arrays.asList("Male", "Female")));
-		gender.setValue(selectedValue.equalsIgnoreCase("female") ? "Female" : "Male");
+		gender.setValue("female".equalsIgnoreCase(selectedValue) ? "Female" : "Male");
 		gender.setWidth("130px");
 		gender.addValueChangeListener(event -> {
 			final String newValue = event.getValue();

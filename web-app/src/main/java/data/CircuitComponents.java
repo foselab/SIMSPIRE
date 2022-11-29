@@ -1,68 +1,88 @@
 package data;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import components.CircuitElm;
+import lungsimulator.CircuitBuilder;
 import lungsimulator.LungSimulator;
 
-public class CircuitComponents extends Composite<Component>{
-	private LungSimulator lungSimulator;
-	VerticalLayout verticalLayout; 
-	CircuitElementRow ventilator;
-	List<String> timeDependentElms;
-	Map<String, CircuitElementRow> components;
-	
-	public CircuitComponents(LungSimulator lungSimulator) {
-		this.lungSimulator = lungSimulator;
+/**
+ * Manages the circuit components section of the simulation view
+ */
+public class CircuitComponents extends Composite<VerticalLayout> implements HasComponents {
+	/**
+	 * Reference to the ventilator value shown in the simulation view
+	 */
+	private transient CircuitElementRow ventilator;
+
+	/**
+	 * List of time dependent elements
+	 */
+	private transient List<String> timeDependentElms;
+
+	/**
+	 * List of circuit elements
+	 */
+	private final transient Map<String, CircuitElementRow> components;
+
+	/**
+	 * Init the circuit components section
+	 * 
+	 * @param lungSimulator backend access
+	 */
+	public CircuitComponents(final LungSimulator lungSimulator) {
 		components = new HashMap<>();
-		verticalLayout = new VerticalLayout();
+
+		final CircuitBuilder circuitBuilder = lungSimulator.getCircuitBuilder();
+
+		if (circuitBuilder.isTimeDependentCir()) {
+			timeDependentElms = circuitBuilder.getTimeDependentElm();
+		}
+
+		final int index = circuitBuilder.getVentilatorIndex();
+
+		final List<CircuitElm> circuitElements = circuitBuilder.getElements();
+		CircuitElementRow cer;
+		
+		for (int i = 0; i < circuitElements.size(); i++) {
+			final CircuitElm element = circuitElements.get(i);
+			
+			cer = new CircuitElementRow(lungSimulator, element.getId(), element.getValue(),
+					element.getUnit(), index == i, i);
+			
+			if (index == i) {
+				ventilator = cer;
+			}
+
+			components.put(element.getId(), cer);
+			add(cer);
+		}
 	}
 
-	protected Component initContent() {
-		int count = 0;
-		int index;
-		if(lungSimulator != null) {
-			if(lungSimulator.getCircuitBuilder() != null) {
-				
-				if(lungSimulator.getCircuitBuilder().isTimeDependentCir()) {
-					timeDependentElms = lungSimulator.getCircuitBuilder().getTimeDependentElm();
-				}
-				
-				index = lungSimulator.getCircuitBuilder().getVentilatorIndex();
-				if(lungSimulator.getCircuitBuilder().getElements() != null) {
-					for(CircuitElm element: lungSimulator.getCircuitBuilder().getElements()) {
-						CircuitElementRow cer = new CircuitElementRow(lungSimulator, element.getId(), element.getValue(), element.getUnit(), index == count, count);
-						if(index == count) {
-							ventilator = cer;
-						}
-						count++;
-						components.put(element.getId(), cer);
-						verticalLayout.add(cer);
-					}
-				}
-			}
-		}
-		
-		return verticalLayout;
-	}
-	
-	public void updateVentilator(double value) {
+	/**
+	 * Updates ventilator value
+	 * 
+	 * @param value ventilator value
+	 */
+	public void updateVentilator(final double value) {
 		ventilator.setVentilator(value);
 	}
 
+	/**
+	 * Update time dependent elements
+	 */
 	public void updateTimeDependentElms() {
-		for(Map.Entry<String, CircuitElementRow> entry: components.entrySet()) {
-			if(timeDependentElms.contains(entry.getKey())) {
+		for (final Map.Entry<String, CircuitElementRow> entry : components.entrySet()) {
+			if (timeDependentElms.contains(entry.getKey())) {
 				entry.getValue().updateElmValue();
 			}
 		}
-		
+
 	}
 }
