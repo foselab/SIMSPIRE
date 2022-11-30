@@ -20,7 +20,7 @@ The project is composed of four main components:
 * a graphic user interface
 
 ## Installation (Swing interface)
-In order to use the Swing interface that comes with this project, the following folders have to be downloaded: circuit-simulator-master, lungsimulator-lib, lungsimulator-swing and zeromq_schema_ventilation. Java 1.8 is suggested.
+In order to use the Swing interface that comes with this project, the following folders have to be downloaded: circuit-simulator-master, lungsimulator-lib, lungsimulator-swing and zeromq_schema_ventilation. Java 1.8 is required.
 
 To start the simulation process, run manually the main method in both Main and Ventilator classes, located respectively in lungsimulator-swing and zeromq_schema_ventilation projects.
 
