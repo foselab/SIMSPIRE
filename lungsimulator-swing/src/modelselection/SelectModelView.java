@@ -7,13 +7,24 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+/**
+ * Manages select model view
+ */
 public class SelectModelView {
-	// default models
+	/**
+	 * Available model options
+	 */
 	final private static String[] MODELS = { "Model of Albanese", "Model of Al-Naggar", "Model of Baker",
 			"Model of Jain", "Model of Campbell-Brown", "Your own model..." };
 
-	private String chosenModel;
+	/**
+	 * Selected model
+	 */
+	private final transient String chosenModel;
 
+	/**
+	 * Select model view set up
+	 */
 	public SelectModelView() {
 		final Object choice = JOptionPane.showInputDialog(null, "Select model", "ChooseModel",
 				JOptionPane.PLAIN_MESSAGE, null, MODELS, MODELS[0]);
@@ -31,8 +42,14 @@ public class SelectModelView {
 		return chosenModel;
 	}
 
+	/**
+	 * Get input stream of custom model files
+	 * 
+	 * @return list of input streams
+	 */
 	public List<InputStream> getCustomFiles() {
-		ChooseFileWindow fileUploader = new ChooseFileWindow();
-		return new ArrayList<InputStream>(Arrays.asList(fileUploader.getPatientStream(), fileUploader.getArchetypeStream(), fileUploader.getDemoDataStream()));
+		final ChooseFileWindow fileUploader = new ChooseFileWindow();
+		return new ArrayList<InputStream>(Arrays.asList(fileUploader.getPatientStream(),
+				fileUploader.getArchetypeStream(), fileUploader.getDemoDataStream()));
 	}
 }

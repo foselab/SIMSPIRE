@@ -11,6 +11,9 @@ import javax.swing.event.ChangeListener;
 import lungsimulator.LungSimulator;
 import utils.GraphicConstants;
 
+/**
+ * Manages the single element graphic in the simulation view
+ */
 public class CircuitElementRow {
 
 	/**
@@ -21,7 +24,7 @@ public class CircuitElementRow {
 	/**
 	 * Location of element value
 	 */
-	private JSpinner elementValue;
+	private transient JSpinner elementValue;
 
 	/**
 	 * Minimum value for a circuit element
@@ -33,16 +36,22 @@ public class CircuitElementRow {
 	 */
 	final static private double MAX = 50.0;
 
-	private int posNumber;
+	/**
+	 * Element index in circuit elements list
+	 */
+	private final transient int posNumber;
 
-	LungSimulator lungSimulator;
+	/**
+	 * Backend access
+	 */
+	private final transient LungSimulator lungSimulator;
 
 	/**
 	 * Creates a custom component where the name, value and unit of measure of a
 	 * circuit element are shown
 	 * 
 	 * @param lungSimulator backend access
-	 * @param id            name of the circuit element
+	 * @param elmId         name of the circuit element
 	 * @param value         current value of the circuit element
 	 * @param unit          unit of measure for the circuit element
 	 * @param isVentilator  true if the circuit element is the ventilator
@@ -74,8 +83,8 @@ public class CircuitElementRow {
 			elementValue.addChangeListener(new ChangeListener() {
 
 				@Override
-				public void stateChanged(ChangeEvent e) {
-					JSpinner spinner = (JSpinner) e.getSource();
+				public void stateChanged(final ChangeEvent event) {
+					final JSpinner spinner = (JSpinner) event.getSource();
 					final double newvalue = (double) spinner.getValue();
 					final double oldValue = (double) spinner.getPreviousValue();
 					if (newvalue >= MIN && newvalue <= MAX) {
@@ -93,7 +102,8 @@ public class CircuitElementRow {
 		}
 
 		final JLabel elementUnit = new JLabel(unit);
-		elementUnit.setBounds(GraphicConstants.UMELEMENTX, elementY, GraphicConstants.UMELEMENTWIDTH, GraphicConstants.UMELEMENTHEIGHT);
+		elementUnit.setBounds(GraphicConstants.UMELEMENTX, elementY, GraphicConstants.UMELEMENTWIDTH,
+				GraphicConstants.UMELEMENTHEIGHT);
 		circElmPanel.add(elementUnit);
 	}
 
@@ -107,6 +117,9 @@ public class CircuitElementRow {
 		}
 	}
 
+	/**
+	 * Updates element value 
+	 */
 	public void updateElmValue() {
 		elementValue.setValue(lungSimulator.getCircuitBuilder().getElementValue(posNumber));
 	}

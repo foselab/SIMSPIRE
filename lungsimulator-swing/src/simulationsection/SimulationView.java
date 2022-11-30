@@ -10,33 +10,43 @@ import javax.swing.JPanel;
 
 import lungsimulator.LungSimulator;
 
+/**
+ * Manages the simulation view
+ */
 public class SimulationView {
-	/**
-	 * The frame of user interface
-	 */
-	private transient JFrame frame;
-	
+
 	/**
 	 * Show if the frame state (open or close)
 	 */
 	private transient boolean windowIsOpen;
-	
-	private CircuitComponents circuitComponents;
-	
-	private ControlButtons buttonSection;
-	
-	private DemographicComponents demoData;
-	
-	private PlotSection plotSection;
 
-	public SimulationView(LungSimulator lungSimulator) {
+	/**
+	 * Circuit component section
+	 */
+	private final transient CircuitComponents circuitComponents;
+
+	/**
+	 * Buttons section
+	 */
+	private final transient ControlButtons buttonSection;
+
+	/**
+	 * Plot section
+	 */
+	private final transient PlotSection plotSection;
+
+	/**
+	 * Init the simulation view
+	 * @param lungSimulator backend access
+	 */
+	public SimulationView(final LungSimulator lungSimulator) {
 		// frame configuration
-		frame = new JFrame();
+		final JFrame frame = new JFrame();
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // fullscreen option
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		windowIsOpen = true;
-		
+
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(final WindowEvent event) {
@@ -44,24 +54,25 @@ public class SimulationView {
 			}
 		});
 
-		JPanel leftPanel = new JPanel();
+		final JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(null);
 		leftPanel.setVisible(true);
-		
+
 		circuitComponents = new CircuitComponents(lungSimulator, leftPanel);
 		buttonSection = new ControlButtons(circuitComponents.getyInit(), leftPanel);
-		demoData = new DemographicComponents(lungSimulator, buttonSection.getyButton(), leftPanel);
+		final DemographicComponents demoData = new DemographicComponents(lungSimulator, buttonSection.getyButton(),
+				leftPanel);
 
 		frame.getContentPane().add(leftPanel);
-		
-		JPanel rightPanel = new JPanel();
+
+		final JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-		
+
 		plotSection = new PlotSection(lungSimulator, rightPanel, true);
-		
+
 		frame.getContentPane().add(rightPanel);
 		frame.getContentPane().setLayout(new GridLayout(1, 2, 0, 0));
-		//frame.pack();
+		// frame.pack();
 		frame.setVisible(true);
 	}
 
@@ -69,19 +80,34 @@ public class SimulationView {
 		return windowIsOpen;
 	}
 
+	/**
+	 * Get the state of the execution
+	 * @return current state of execution
+	 */
 	public boolean getStateOfExecution() {
 		return buttonSection.isState();
 	}
 
+	/**
+	 * Updates time dependent elements
+	 */
 	public void updateTimeDependentElms() {
 		circuitComponents.updateTimeDependentElms();
 	}
 
-	public void updateVentilator(double currentVentilatorValue) {
-		circuitComponents.updateVentilator(currentVentilatorValue);
+	/**
+	 * Updates ventilator value
+	 * @param currentVentValue current ventilator value
+	 */
+	public void updateVentilator(final double currentVentValue) {
+		circuitComponents.updateVentilator(currentVentValue);
 	}
 
-	public void updateCharts(LungSimulator lungSimulator) {
+	/**
+	 * Updates chars values
+	 * @param lungSimulator backend access
+	 */
+	public void updateCharts(final LungSimulator lungSimulator) {
 		plotSection.updateCharts(lungSimulator, true);
 	}
 }

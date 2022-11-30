@@ -1,7 +1,5 @@
 package simulationsection;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -18,41 +16,51 @@ import lungsimulator.LungSimulator;
 import lungsimulator.components.SimulatorParams;
 import utils.GraphicConstants;
 
+/**
+ * Manages demographic components
+ */
 public class DemographicComponents {
-	
-	public DemographicComponents(LungSimulator lungSimulator, int yInit, JPanel leftPanel) {
-		yInit += 102;
-		
-		SimulatorParams demographicData = lungSimulator.getDemographicData();
-		
+
+	/**
+	 * Demographic components constructor
+	 * 
+	 * @param lungSimulator backend access
+	 * @param yInitPar      initial coordinate for components allocation
+	 * @param leftPanel     panel where components have to be added
+	 */
+	public DemographicComponents(final LungSimulator lungSimulator, final int yInitPar, final JPanel leftPanel) {
+		int yInit = yInitPar + 102;
+
+		final SimulatorParams demographicData = lungSimulator.getDemographicData();
+
 		final JLabel elementId = new JLabel("Patient demographic data");
 		elementId.setBounds(GraphicConstants.IDELEMENTX, yInit, 200, GraphicConstants.IDELEMENTHEIGHT);
 		leftPanel.add(elementId);
 
 		yInit += 28;
 
-		//gender set up
+		// gender set up
 		final JLabel gender = new JLabel("Gender ");
 		gender.setBounds(GraphicConstants.IDELEMENTX, yInit, 200, GraphicConstants.IDELEMENTHEIGHT);
 		leftPanel.add(gender);
 
-		String[] genders = {"Male", "Female"};
-		JComboBox<String> gendersBox = new JComboBox<String>(genders);
+		final String[] genders = { "Male", "Female" };
+		final JComboBox<String> gendersBox = new JComboBox<>(genders);
 		gendersBox.setBounds(GraphicConstants.IDELEMENTX + 80, yInit, 100, 20);
 		if ("MALE".equalsIgnoreCase(demographicData.getGender())) {
 			gendersBox.setSelectedItem("Male");
 		} else {
 			gendersBox.setSelectedItem("Female");
 		}
-		
+
 		gendersBox.addItemListener(new ItemListener() {
-			
+
 			@Override
-			public void itemStateChanged(ItemEvent event) {
+			public void itemStateChanged(final ItemEvent event) {
 				if (event.getStateChange() == ItemEvent.SELECTED) {
-			          String item = (String) event.getItem();
-			          lungSimulator.getDemographicData().setGender(item);
-			       }
+					final String item = (String) event.getItem();
+					lungSimulator.getDemographicData().setGender(item);
+				}
 			}
 		});
 
@@ -65,13 +73,14 @@ public class DemographicComponents {
 		leftPanel.add(age);
 
 		final SpinnerNumberModel ageModel = new SpinnerNumberModel(demographicData.getAge(), 18, 126, 1);
-		JSpinner ageElm = new JSpinner(ageModel);
-		ageElm.setBounds(GraphicConstants.IDELEMENTX + 80, yInit, GraphicConstants.VALELEMENTWIDTH, GraphicConstants.VALELEMENTHEIGHT);
+		final JSpinner ageElm = new JSpinner(ageModel);
+		ageElm.setBounds(GraphicConstants.IDELEMENTX + 80, yInit, GraphicConstants.VALELEMENTWIDTH,
+				GraphicConstants.VALELEMENTHEIGHT);
 		ageElm.addChangeListener(new ChangeListener() {
 
 			@Override
-			public void stateChanged(ChangeEvent e) {
-				JSpinner spinner = (JSpinner) e.getSource();
+			public void stateChanged(final ChangeEvent event) {
+				final JSpinner spinner = (JSpinner) event.getSource();
 				final int newvalue = (int) spinner.getValue();
 				final int oldValue = (int) spinner.getPreviousValue();
 				if (newvalue >= 18 && newvalue <= 126) {
@@ -93,8 +102,9 @@ public class DemographicComponents {
 		leftPanel.add(height);
 
 		final SpinnerNumberModel heightModel = new SpinnerNumberModel(demographicData.getHeight(), 0.55, 2.60, 0.01);
-		JSpinner heightElm = new JSpinner(heightModel);
-		heightElm.setBounds(GraphicConstants.IDELEMENTX + 80, yInit, GraphicConstants.VALELEMENTWIDTH, GraphicConstants.VALELEMENTHEIGHT);
+		final JSpinner heightElm = new JSpinner(heightModel);
+		heightElm.setBounds(GraphicConstants.IDELEMENTX + 80, yInit, GraphicConstants.VALELEMENTWIDTH,
+				GraphicConstants.VALELEMENTHEIGHT);
 		leftPanel.add(heightElm);
 
 		yInit += 28;
@@ -104,13 +114,14 @@ public class DemographicComponents {
 		leftPanel.add(weight);
 
 		final SpinnerNumberModel weightModel = new SpinnerNumberModel(demographicData.getWeight(), 25, 600, 0.1);
-		JSpinner weightElm = new JSpinner(weightModel);
-		weightElm.setBounds(GraphicConstants.IDELEMENTX + 80, yInit, GraphicConstants.VALELEMENTWIDTH, GraphicConstants.VALELEMENTHEIGHT);
+		final JSpinner weightElm = new JSpinner(weightModel);
+		weightElm.setBounds(GraphicConstants.IDELEMENTX + 80, yInit, GraphicConstants.VALELEMENTWIDTH,
+				GraphicConstants.VALELEMENTHEIGHT);
 		weightElm.addChangeListener(new ChangeListener() {
 
 			@Override
-			public void stateChanged(ChangeEvent e) {
-				JSpinner spinner = (JSpinner) e.getSource();
+			public void stateChanged(final ChangeEvent event) {
+				final JSpinner spinner = (JSpinner) event.getSource();
 				final double newvalue = (double) spinner.getValue();
 				final double oldValue = (double) spinner.getPreviousValue();
 				if (newvalue >= 25 && newvalue <= 600) {
@@ -132,14 +143,15 @@ public class DemographicComponents {
 		leftPanel.add(ibw);
 
 		final JLabel ibwValue = new JLabel(String.valueOf(demographicData.getIbw()));
-		ibwValue.setBounds(GraphicConstants.IDELEMENTX + 80, yInit, GraphicConstants.VALELEMENTWIDTH, GraphicConstants.VALELEMENTHEIGHT);
+		ibwValue.setBounds(GraphicConstants.IDELEMENTX + 80, yInit, GraphicConstants.VALELEMENTWIDTH,
+				GraphicConstants.VALELEMENTHEIGHT);
 		leftPanel.add(ibwValue);
-		
+
 		heightElm.addChangeListener(new ChangeListener() {
 
 			@Override
-			public void stateChanged(ChangeEvent e) {
-				JSpinner spinner = (JSpinner) e.getSource();
+			public void stateChanged(final ChangeEvent event) {
+				final JSpinner spinner = (JSpinner) event.getSource();
 				final double newvalue = (double) spinner.getValue();
 				final double oldValue = (double) spinner.getPreviousValue();
 				if (newvalue >= 0.55 && newvalue <= 2.60) {

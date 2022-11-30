@@ -10,34 +10,42 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * Manages file choices
+ */
 public class JFilePicker extends JPanel {
 
-	private JLabel label;
-	private JTextField textField;
-	private JButton button;
+	/**
+	 * File path
+	 */
+	private final transient JTextField textField;
 
-	private JFileChooser fileChooser;
+	/**
+	 * Component for file selection
+	 */
+	private final transient JFileChooser fileChooser;
 
-	private int mode;
-	public static final int MODE_OPEN = 1;
-	public static final int MODE_SAVE = 2;
-
-	public JFilePicker(String textFieldLabel, String buttonLabel) {
+	/**
+	 * Set up file picker
+	 * @param textFieldLabel label text
+	 * @param buttonLabel button text
+	 */
+	public JFilePicker(final String textFieldLabel, final String buttonLabel) {
 
 		fileChooser = new JFileChooser();
 
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		// creates the GUI
-		label = new JLabel(textFieldLabel);
+		final JLabel label = new JLabel(textFieldLabel);
 
 		textField = new JTextField(30);
-		button = new JButton(buttonLabel);
+		final JButton button = new JButton(buttonLabel);
 
 		button.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent evt) {
-				buttonActionPerformed(evt);
+			public void actionPerformed(final ActionEvent evt) {
+				buttonActionPerformed();
 			}
 		});
 
@@ -47,27 +55,26 @@ public class JFilePicker extends JPanel {
 
 	}
 
-	private void buttonActionPerformed(ActionEvent evt) {
-		if (mode == MODE_OPEN) {
-			if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-				textField.setText(fileChooser.getSelectedFile().getAbsolutePath());
-			}
-		} else if (mode == MODE_SAVE) {
-			if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-				textField.setText(fileChooser.getSelectedFile().getAbsolutePath());
-			}
+	private void buttonActionPerformed() {
+		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			textField.setText(fileChooser.getSelectedFile().getAbsolutePath());
 		}
 	}
 
-	public void addFileTypeFilter(String extension, String description) {
-		FileTypeFilter filter = new FileTypeFilter(extension, description);
+	/**
+	 * Set file restrictions
+	 * @param extension accepted file extensions
+	 * @param description file extensions description
+	 */
+	public void addFileTypeFilter(final String extension, final String description) {
+		final FileTypeFilter filter = new FileTypeFilter(extension, description);
 		fileChooser.addChoosableFileFilter(filter);
 	}
 
-	public void setMode(int mode) {
-		this.mode = mode;
-	}
-
+	/**
+	 * Get selected file path
+	 * @return file path seleted
+	 */
 	public String getSelectedFilePath() {
 		return textField.getText();
 	}
