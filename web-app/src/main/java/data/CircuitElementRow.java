@@ -28,7 +28,7 @@ public class CircuitElementRow extends Composite<HorizontalLayout> implements Ha
 	 * Location of element value
 	 */
 	private final transient NumberField elementValue;
-	
+
 	/**
 	 * Minimum value for a circuit element
 	 */
@@ -38,12 +38,12 @@ public class CircuitElementRow extends Composite<HorizontalLayout> implements Ha
 	 * Maximum value for a circuit element
 	 */
 	final static private double MAX = 50.0;
-	
+
 	/**
 	 * Index of element in elementList
 	 */
 	private final transient int posNumber;
-	
+
 	/**
 	 * backend access
 	 */
@@ -54,7 +54,7 @@ public class CircuitElementRow extends Composite<HorizontalLayout> implements Ha
 	 * circuit element are shown
 	 * 
 	 * @param lungSimulator backend access
-	 * @param id            name of the circuit element
+	 * @param elmId         name of the circuit element
 	 * @param value         current value of the circuit element
 	 * @param unit          unit of measure for the circuit element
 	 * @param isVentilator  true if the circuit element is the ventilator

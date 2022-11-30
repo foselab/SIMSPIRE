@@ -153,7 +153,7 @@ public class SimulationView extends Composite<HorizontalLayout> implements HasCo
 								circuitSection.updateTimeDependentElms();
 							}
 							circuitSection
-									.updateVentilator(lungSimulator.getCircuitBuilder().getCurrentVentilatorValue());
+									.updateVentilator(lungSimulator.getCircuitBuilder().getCurrentVentValue());
 							plotSection.updateChart(lungSimulator);
 						});
 						count = 0;
