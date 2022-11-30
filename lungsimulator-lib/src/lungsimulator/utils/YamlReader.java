@@ -38,8 +38,7 @@ public class YamlReader {
 	}
 
 	/**
-	 * Given the name of the chosen model, this method builds a new Patient
-	 * object
+	 * Given the name of the chosen model, this method builds a new Patient object
 	 * 
 	 * @return patient's model
 	 * @throws FileNotFoundException the lung model is not located in the config
@@ -51,16 +50,15 @@ public class YamlReader {
 
 		LOGGER.log(Level.INFO, "Loading patient model...");
 
-		Patient patient = ResourceReader.readPatientModel(modelName);
+		final Patient patient = ResourceReader.readPatientModel(modelName);
 
 		LOGGER.log(Level.INFO, "Patient model successfully loaded");
 
 		return patient;
 	}
-	
+
 	/**
-	 * Given a custom patient model, this method builds a new Patient
-	 * object
+	 * Given a custom patient model, this method builds a new Patient object
 	 * 
 	 * @return patient's model
 	 * @throws FileNotFoundException the lung model is not located in the config
@@ -68,7 +66,7 @@ public class YamlReader {
 	 * @throws IOException           the structure of the lung model YAML file is
 	 *                               not correct
 	 */
-	public Patient readPatientModel(InputStream input) throws FileNotFoundException, IOException {
+	public Patient readPatientModel(final InputStream input) throws FileNotFoundException, IOException {
 
 		LOGGER.log(Level.INFO, "Loading patient model...");
 
@@ -84,8 +82,7 @@ public class YamlReader {
 	}
 
 	/**
-	 * Given the name of the chosen model, this method builds a new
-	 * Archetype object
+	 * Given the name of the chosen model, this method builds a new Archetype object
 	 * 
 	 * @return patient's archetype
 	 * @throws FileNotFoundException the archetype file is not located in the config
@@ -103,10 +100,10 @@ public class YamlReader {
 
 		return archetype;
 	}
-	
+
 	/**
-	 * Given custom parameteres of the model, this method builds a new
-	 * Archetype object
+	 * Given custom parameteres of the model, this method builds a new Archetype
+	 * object
 	 * 
 	 * @return patient's archetype
 	 * @throws FileNotFoundException the archetype file is not located in the config
@@ -114,7 +111,7 @@ public class YamlReader {
 	 * @throws IOException           the structure of the archetype YAML file is not
 	 *                               correct
 	 */
-	public Archetype readArchetypeParameters(InputStream input) throws FileNotFoundException, IOException {
+	public Archetype readArchetypeParameters(final InputStream input) throws FileNotFoundException, IOException {
 
 		LOGGER.log(Level.INFO, "Loading archetype parameters...");
 
@@ -130,8 +127,8 @@ public class YamlReader {
 	}
 
 	/**
-	 * Given the patient demographic data, this method builds a new
-	 * SimulatorParams object
+	 * Given the patient demographic data, this method builds a new SimulatorParams
+	 * object
 	 * 
 	 * @return demographic data of the patient
 	 * @throws FileNotFoundException the archetype file is not located in the config
@@ -140,7 +137,7 @@ public class YamlReader {
 	 *                               correct
 	 */
 	public SimulatorParams readDemographicData() throws FileNotFoundException, IOException {
-		
+
 		LOGGER.log(Level.INFO, "Loading demographic data...");
 
 		final SimulatorParams demographicData = ResourceReader.readDemographicModel();
@@ -149,7 +146,7 @@ public class YamlReader {
 
 		return demographicData;
 	}
-	
+
 	/**
 	 * Given custom patient demographic data, this method builds a new
 	 * SimulatorParams object
@@ -160,7 +157,7 @@ public class YamlReader {
 	 * @throws IOException           the structure of the archetype YAML file is not
 	 *                               correct
 	 */
-	public SimulatorParams readDemographicData(InputStream input) throws FileNotFoundException, IOException {
+	public SimulatorParams readDemographicData(final InputStream input) throws FileNotFoundException, IOException {
 
 		LOGGER.log(Level.INFO, "Loading demographic data...");
 

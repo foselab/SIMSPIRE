@@ -19,7 +19,7 @@ public class Formula {
 	/**
 	 * The formula to calculate the element's value
 	 */
-	private String formula;
+	private transient String elementFormula;
 	
 	/**
 	 * Variables associated to the formula
@@ -47,10 +47,10 @@ public class Formula {
 	}
 
 	public String getFormula() {
-		return formula;
+		return elementFormula;
 	}
 	public void setFormula(final String formula) {
-		this.formula = formula;
+		this.elementFormula = formula;
 	}
 	public List<String> getVariables() {
 		return variables;

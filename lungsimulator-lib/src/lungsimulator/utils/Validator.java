@@ -78,7 +78,7 @@ public class Validator {
 		LOGGER.log(Level.INFO, "Validation process successfully completed");
 	}
 
-	private void checkConsistency(final Patient patient, final Archetype archetype, SimulatorParams demographicData) {
+	private void checkConsistency(final Patient patient, final Archetype archetype, final SimulatorParams demographicData) {
 		if (patient == null) {
 			throw new InspireException("Lung model file is not properly built");
 		}

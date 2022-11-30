@@ -190,7 +190,7 @@ public class Element {
 		return elementName;
 	}
 
-	public void setElementName(String elementName) {
+	public void setElementName(final String elementName) {
 		this.elementName = elementName;
 	}
 

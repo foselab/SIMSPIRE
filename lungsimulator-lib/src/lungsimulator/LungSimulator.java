@@ -3,6 +3,8 @@ package lungsimulator;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
@@ -23,22 +25,49 @@ public class LungSimulator {
 	/**
 	 * Reference used to call methods for circuit construction
 	 */
-	private final transient CircuitBuilder circuitBuilder = new CircuitBuilder();
+	private final transient CircuitBuilder circuitBuilder;
 
 	/**
 	 * Patient model description
 	 */
-	public transient Patient patient;
+	private transient Patient patient;
 
 	/**
 	 * Patient health description
 	 */
-	public transient Archetype archetype;
+	private transient Archetype archetype;
 
 	/**
 	 * Patient demographic data
 	 */
-	public transient SimulatorParams demographicData;
+	private transient SimulatorParams demographicData;
+
+	/**
+	 * Socket for ZMQ communication
+	 */
+	private transient Socket socket;
+
+	/**
+	 * Message for the ZMQ communication
+	 */
+	private final static String MESSAGE = "getPressure";
+
+	/**
+	 * Circuit
+	 */
+	private transient CirSim myCircSim;
+
+	/**
+	 * Internal logger for info report
+	 */
+	private static final Logger LOGGER = Logger.getLogger(LungSimulator.class.getName());
+
+	/**
+	 * Init fields of the class
+	 */
+	public LungSimulator() {
+		circuitBuilder = new CircuitBuilder();
+	}
 
 	/**
 	 * Init the lung simulator by reading the patient model, archetype and
@@ -49,8 +78,8 @@ public class LungSimulator {
 	 * @throws IOException           the structure of at least one YAML file is not
 	 *                               correct
 	 */
-	public void initSchema(String chosenSchema) throws FileNotFoundException, IOException {
-		YamlReader yamlReader = new YamlReader(chosenSchema);
+	public void initSchema(final String chosenSchema) throws FileNotFoundException, IOException {
+		final YamlReader yamlReader = new YamlReader(chosenSchema);
 
 		if (chosenSchema != null) {
 			// Read patient model and patient archetype
@@ -67,8 +96,8 @@ public class LungSimulator {
 	 * @throws IOException           the structure of the patient model YAML file is
 	 *                               not correct
 	 */
-	public void initCustomPatient(InputStream input) throws FileNotFoundException, IOException {
-		YamlReader yamlReader = new YamlReader("Custom");
+	public void initCustomPatient(final InputStream input) throws FileNotFoundException, IOException {
+		final YamlReader yamlReader = new YamlReader("Custom");
 		patient = yamlReader.readPatientModel(input);
 	}
 
@@ -79,8 +108,8 @@ public class LungSimulator {
 	 * @throws IOException           the structure of the patient archetype YAML
 	 *                               file is not correct
 	 */
-	public void initCustomArchetype(InputStream input) throws FileNotFoundException, IOException {
-		YamlReader yamlReader = new YamlReader("Custom");
+	public void initCustomArchetype(final InputStream input) throws FileNotFoundException, IOException {
+		final YamlReader yamlReader = new YamlReader("Custom");
 		archetype = yamlReader.readArchetypeParameters(input);
 	}
 
@@ -92,8 +121,8 @@ public class LungSimulator {
 	 * @throws IOException           the structure of the patient demographic data
 	 *                               YAML file is not correct
 	 */
-	public void initCustomDemographic(InputStream input) throws FileNotFoundException, IOException {
-		YamlReader yamlReader = new YamlReader("Custom");
+	public void initCustomDemographic(final InputStream input) throws FileNotFoundException, IOException {
+		final YamlReader yamlReader = new YamlReader("Custom");
 		demographicData = yamlReader.readDemographicData(input);
 	}
 
@@ -105,10 +134,6 @@ public class LungSimulator {
 		final Validator validator = new Validator();
 		validator.evaluate(patient, archetype, demographicData);
 	}
-
-	Socket socket;
-	final String message = "getPressure";
-	CirSim myCircSim;
 
 	/**
 	 * Init the circuit and the connection to the ventilator
@@ -122,13 +147,19 @@ public class LungSimulator {
 		socket.connect("tcp://localhost:5555");
 	}
 
-	public void miniSimulation(double initialT, double timeStep) {
+	/**
+	 * Executes a simulation step
+	 * 
+	 * @param initialT moment of time at which the step begins
+	 * @param timeStep range between two step execution
+	 */
+	public void miniSimulation(final double initialT, final double timeStep) {
 		// Update ventilator value
-		socket.send(message.getBytes(), 0);
+		socket.send(MESSAGE.getBytes(), 0);
 		final byte[] reply = socket.recv(0);
 		if (reply != null) {
-			String replyMessage = new String(reply, ZMQ.CHARSET);
-			double ventilatorValue = Double.parseDouble(replyMessage);
+			final String replyMessage = new String(reply, ZMQ.CHARSET);
+			final double ventilatorValue = Double.parseDouble(replyMessage);
 			circuitBuilder.updateVentilatorValue(ventilatorValue);
 		}
 
@@ -139,7 +170,11 @@ public class LungSimulator {
 
 		myCircSim.setTimeStep(timeStep);
 		myCircSim.setT(initialT);
-		System.out.println("timeStep: " + timeStep + " - initialT " + initialT);
+
+		if (LOGGER.isLoggable(Level.INFO)) {
+			LOGGER.log(Level.INFO, "timeStep: " + timeStep + " - initialT " + initialT);
+		}
+
 		myCircSim.analyzeCircuit();
 		myCircSim.loopAndContinue(false);
 		circuitBuilder.updateData(initialT);
@@ -149,7 +184,7 @@ public class LungSimulator {
 		return patient;
 	}
 
-	public void setPatient(Patient patient) {
+	public void setPatient(final Patient patient) {
 		this.patient = patient;
 	}
 
@@ -157,7 +192,7 @@ public class LungSimulator {
 		return archetype;
 	}
 
-	public void setArchetype(Archetype archetype) {
+	public void setArchetype(final Archetype archetype) {
 		this.archetype = archetype;
 	}
 
@@ -165,7 +200,7 @@ public class LungSimulator {
 		return demographicData;
 	}
 
-	public void setDemographicData(SimulatorParams demographicData) {
+	public void setDemographicData(final SimulatorParams demographicData) {
 		this.demographicData = demographicData;
 	}
 

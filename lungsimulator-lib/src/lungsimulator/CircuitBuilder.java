@@ -54,15 +54,44 @@ public class CircuitBuilder {
 	 */
 	private transient int ventilatorIndex;
 
-	private double currentVentilatorValue;
+	/**
+	 * Current ventilator value
+	 */
+	private transient double currentVentValue;
 
+	/**
+	 * Ids list for relevant flows
+	 */
 	private List<String> flowIds = new ArrayList<>();
 
-	private List<Double> timeline;
-	private Map<String, List<Double>> initdataPressure;
-	private List<Double> initdataVentilatorPressure;
-	private Map<String, List<Double>> initdataFlow;
+	/**
+	 * X-axis time values
+	 */
+	private transient List<Double> timeline;
+
+	/**
+	 * Pressure series values
+	 */
+	private transient Map<String, List<Double>> initdataPressure;
+
+	/**
+	 * Ventilator pressure series values
+	 */
+	private transient List<Double> initdataVentilatorPressure;
+
+	/**
+	 * Flow series values
+	 */
+	private transient Map<String, List<Double>> initdataFlow;
+
+	/**
+	 * Pressure ids
+	 */
 	private List<String> pressureIds = new ArrayList<>();
+
+	/**
+	 * Reference between pressure id and its position (left or right)
+	 */
 	private Map<String, String> pressureCoord = new LinkedHashMap<>();
 
 	/**
@@ -99,7 +128,7 @@ public class CircuitBuilder {
 	 * @return the circuit
 	 */
 	public CirSim buildCircuitSimulator(final Patient patient, final Archetype archetype) {
-		//cirSim.setTimeStep(0.1);
+		// cirSim.setTimeStep(0.1);
 		ResistorElm resistance;
 		CapacitorElm capacitance;
 		ACVoltageElm acVoltage;
@@ -183,7 +212,12 @@ public class CircuitBuilder {
 		timeline = new ArrayList<>(Arrays.asList(0.0));
 	}
 
-	public void updateData(double time) {
+	/**
+	 * Update series of data
+	 * 
+	 * @param time x-axis value that has to be added
+	 */
+	public void updateData(final double time) {
 
 		// Update time
 		timeline = Utils.updateDoubleList(timeline, Precision.round(time, 2));
@@ -202,10 +236,10 @@ public class CircuitBuilder {
 			}
 
 			if (cir.getClass().getSimpleName().equals("ExternalVoltageElm")) {
-				initdataVentilatorPressure = Utils.updateDoubleList(initdataVentilatorPressure, Precision.round(cir.getVoltageDiff(), 3));
+				initdataVentilatorPressure = Utils.updateDoubleList(initdataVentilatorPressure,
+						Precision.round(cir.getVoltageDiff(), 3));
 			} else {
-				initdataFlow = Utils.updateMap(initdataFlow, cir.getId(),
-						Precision.round(cir.getCurrent(), 3)); 
+				initdataFlow = Utils.updateMap(initdataFlow, cir.getId(), Precision.round(cir.getCurrent(), 3));
 			}
 		}
 	}
@@ -274,7 +308,7 @@ public class CircuitBuilder {
 			if (timeDependentElm.containsKey(circuitElement.getId())) {
 				final String value = resolveFormula(timeDependentElm.get(circuitElement.getId()),
 						archetype.getParameters(), String.valueOf(time));
-				
+
 				circuitElement.setValue(Double.parseDouble(value));
 
 				// resistance
@@ -312,11 +346,17 @@ public class CircuitBuilder {
 	public void updateVentilatorValue(final double ventilatorValue) {
 		final ExternalVoltageElm ventilator = (ExternalVoltageElm) cirSim.getElmList().get(ventilatorIndex);
 		ventilator.setVentVoltage(ventilatorValue);
-		currentVentilatorValue = ventilatorValue;
+		currentVentValue = ventilatorValue;
 	}
 
-	public void updateElementValue(double value, int indexElm) {
-		CircuitElm circuitElement = cirSim.getElmList().get(indexElm);
+	/**
+	 * Update the element value at indexElm position
+	 * 
+	 * @param value    the new element value
+	 * @param indexElm the index of the element in circuit elements list
+	 */
+	public void updateElementValue(final double value, final int indexElm) {
+		final CircuitElm circuitElement = cirSim.getElmList().get(indexElm);
 		circuitElement.setValue(value);
 
 		// resistance
@@ -344,8 +384,14 @@ public class CircuitBuilder {
 		}
 
 	}
-	
-	public double getElementValue(int index) {
+
+	/**
+	 * Get index element value of circuit elements list
+	 * 
+	 * @param index index of the element wanted
+	 * @return value of the element in index position
+	 */
+	public double getElementValue(final int index) {
 		return cirSim.getElmList().get(index).getValue();
 	}
 
@@ -369,7 +415,7 @@ public class CircuitBuilder {
 		return flowIds;
 	}
 
-	public void setFlowIds(List<String> flowIds) {
+	public void setFlowIds(final List<String> flowIds) {
 		this.flowIds = flowIds;
 	}
 
@@ -377,7 +423,7 @@ public class CircuitBuilder {
 		return pressureIds;
 	}
 
-	public void setPressureIds(List<String> pressureIds) {
+	public void setPressureIds(final List<String> pressureIds) {
 		this.pressureIds = pressureIds;
 	}
 
@@ -385,7 +431,7 @@ public class CircuitBuilder {
 		return pressureCoord;
 	}
 
-	public void setPressureCoord(Map<String, String> pressureCoord) {
+	public void setPressureCoord(final Map<String, String> pressureCoord) {
 		this.pressureCoord = pressureCoord;
 	}
 
@@ -393,8 +439,8 @@ public class CircuitBuilder {
 		return ventilatorIndex;
 	}
 
-	public double getCurrentVentilatorValue() {
-		return currentVentilatorValue;
+	public double getCurrentVentValue() {
+		return currentVentValue;
 	}
 
 	public List<Double> getTimeline() {

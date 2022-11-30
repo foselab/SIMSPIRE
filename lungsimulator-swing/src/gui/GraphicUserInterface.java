@@ -59,7 +59,7 @@ public class GraphicUserInterface {
 					if (isTimeDependent) {
 						simulationView.updateTimeDependentElms();
 					}
-					simulationView.updateVentilator(lungSimulator.getCircuitBuilder().getCurrentVentilatorValue());
+					simulationView.updateVentilator(lungSimulator.getCircuitBuilder().getCurrentVentValue());
 					simulationView.updateCharts(lungSimulator);
 					lastT = initialT;
 				} else {
