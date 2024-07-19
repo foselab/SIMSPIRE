@@ -1,0 +1,15 @@
+GeneratorModel for yakindu::java {
+
+	const PROJECT : string = "mvm-controller-java"
+
+	const FOLDER : string = "src-gen"
+
+	statechart MVMStateMachineCore {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+			libraryTargetFolder = "src"
+		}
+	}
+}

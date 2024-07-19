@@ -1,0 +1,36 @@
+<testsuite name="pcv" time="">
+  <testcase name="testFailure" classname="platform:/resource/mvm_controller_yakindu/model/pcv_core.sctunit#pcv.testFailure" time="">
+    <failure>Assertion failed: "assert is_final" (Line 10)
+    </failure>
+  </testcase>
+  <testcase name="testFailure2" classname="platform:/resource/mvm_controller_yakindu/model/pcv_core.sctunit#pcv.testFailure2" time="">
+    <failure>Assertion failed: "assert is_final" (Line 22)
+    </failure>
+  </testcase>
+  <testcase name="testNormalOperation" classname="platform:/resource/mvm_controller_yakindu/model/pcv_core.sctunit#pcv.testNormalOperation" time="">
+  </testcase>
+  <testcase name="testStop" classname="platform:/resource/mvm_controller_yakindu/model/pcv_core.sctunit#pcv.testStop" time="">
+  </testcase>
+  <testcase name="testStopInInspiration" classname="platform:/resource/mvm_controller_yakindu/model/pcv_core.sctunit#pcv.testStopInInspiration" time="">
+    <failure>Assertion failed: "assert active (MAIN_REGION.VENTILATIONOFF)" (Line 112)
+    	Expected: VENTILATIONOFF, actual: [INSPIRATION, PCV, stopRequested]
+    </failure>
+  </testcase>
+  <testcase name="testExpiratoryPauseTermination" classname="platform:/resource/mvm_controller_yakindu/model/pcv_core.sctunit#pcv.testExpiratoryPauseTermination" time="">
+  </testcase>
+  <testcase name="testExpiratoryPauseTerminationTO" classname="platform:/resource/mvm_controller_yakindu/model/pcv_core.sctunit#pcv.testExpiratoryPauseTerminationTO" time="">
+    <failure>Assertion failed: "assert max_exp_pause == 60000" (Line 152)
+    	name: max_exp_pause, value: 20000
+    </failure>
+  </testcase>
+  <testcase name="testtriggerwindow" classname="platform:/resource/mvm_controller_yakindu/model/pcv_core.sctunit#pcv.testtriggerwindow" time="">
+  </testcase>
+  <testcase name="testCoughing" classname="platform:/resource/mvm_controller_yakindu/model/pcv_core.sctunit#pcv.testCoughing" time="">
+  </testcase>
+  <testcase name="testPoweroff" classname="platform:/resource/mvm_controller_yakindu/model/pcv_core.sctunit#pcv.testPoweroff" time="">
+    <failure>Assertion failed: "assert is_final" (Line 214)
+    </failure>
+  </testcase>
+  <testcase name="testGotoPSV" classname="platform:/resource/mvm_controller_yakindu/model/pcv_core.sctunit#pcv.testGotoPSV" time="">
+  </testcase>
+</testsuite>
