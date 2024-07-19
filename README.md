@@ -14,8 +14,8 @@ INSPIRE is a simulation software for testing mechanical ventilators through the 
 ## Project overview
 
 The project is composed of four main components:
-* a circuit simulator which is able to solve electrical circuits 
-* a lung simulator which manages the chosen model for the respiratory system and the simulation business logic
+* a circuit simulator which is able to solve electrical circuits (project **circuit-simulator-master** originally taken from Falstad project) 
+* a lung simulator which manages the chosen model for the respiratory system and the simulation business logic (
 * a ventilator simulator which simulates the ventilator that has to be tested
 * a graphic user interface
 
@@ -162,4 +162,5 @@ To start the simulation, the start button has to be clicked. During the simulati
 To begin a new simulation with a different model, the project has to be re-started.
 
 ## Troubleshooting
+
 
