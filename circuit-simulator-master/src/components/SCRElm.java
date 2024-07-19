@@ -1,11 +1,8 @@
 package components;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 // Silicon-Controlled Rectifier
 // 3 nodes, 1 internal node
@@ -104,53 +101,9 @@ public class SCRElm extends CircuitElm {
 		Point pa[] = newPointArray(2);
 		interpPoint2(lead1, lead2, pa[0], pa[1], 0, hs);
 		interpPoint2(lead1, lead2, cathode[0], cathode[1], 1, hs);
-		poly = createPolygon(pa[0], pa[1], lead2);
 
 		gate = newPointArray(2);
 		double leadlen = (dn - 16) / 2;
-		int gatelen = sim.getGridSize();
-		gatelen += leadlen % sim.getGridSize();
-		if (leadlen < gatelen) {
-			setX2(getX());
-			setY2(getY());
-			return;
-		}
-		interpPoint(lead2, point2, gate[0], gatelen / leadlen, gatelen * dir);
-		interpPoint(lead2, point2, gate[1], gatelen / leadlen, sim.getGridSize() * 2 * dir);
-	}
-
-	@Override
-	public void draw(Graphics g) {
-		setBbox(point1, point2, hs);
-		adjustBbox(gate[0], gate[1]);
-
-		double v1 = volts[anode];
-		double v2 = volts[cnode];
-
-		draw2Leads(g);
-
-		// draw arrow thingy
-		setPowerColor(g, true);
-		setVoltageColor(g, v1);
-		g.fillPolygon(poly);
-
-		// draw thing arrow is pointing to
-		setVoltageColor(g, v2);
-		drawThickLine(g, cathode[0], cathode[1]);
-
-		drawThickLine(g, lead2, gate[0]);
-		drawThickLine(g, gate[0], gate[1]);
-
-		curcount_a = updateDotCount(ia, curcount_a);
-		curcount_c = updateDotCount(ic, curcount_c);
-		curcount_g = updateDotCount(ig, curcount_g);
-		if (sim.getDragElm() != this) {
-			drawDots(g, point1, lead2, curcount_a);
-			drawDots(g, point2, lead2, curcount_c);
-			drawDots(g, gate[1], gate[0], curcount_g);
-			drawDots(g, gate[0], lead2, curcount_g + distance(gate[1], gate[0]));
-		}
-		drawPosts(g);
 	}
 
 	@Override
@@ -222,27 +175,5 @@ public class SCRElm extends CircuitElm {
 		ic = (volts[cnode] - volts[gnode]) / cresistance;
 		ia = (volts[anode] - volts[inode]) / aresistance;
 		ig = -ic - ia;
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		// ohmString doesn't work here on linux
-		if (n == 0)
-			return new EditInfo("Trigger Current (A)", triggerI, 0, 0);
-		if (n == 1)
-			return new EditInfo("Holding Current (A)", holdingI, 0, 0);
-		if (n == 2)
-			return new EditInfo("Gate-Cathode Resistance (ohms)", cresistance, 0, 0);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0 && ei.getValue() > 0)
-			triggerI = ei.getValue();
-		if (n == 1 && ei.getValue() > 0)
-			holdingI = ei.getValue();
-		if (n == 2 && ei.getValue() > 0)
-			cresistance = ei.getValue();
 	}
 }

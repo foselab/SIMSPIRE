@@ -1,0 +1,10 @@
+Created with UCDetector 2.0.0	2022-10-07 09:16:14	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+lungsimulator.GraphicInterface.<init>(GraphicInterface.java:27)	Change visibility of Class "GraphicInterface" to default - May cause compile errors!	GraphicInterface	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.GraphicInterface.frameConfig(GraphicInterface.java:54)	Change visibility of Method "GraphicInterface.frameConfig(Patient,Archetype)" to default	GraphicInterface.frameConfig(Patient,Archetype)	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.GraphicInterface.updateShownDataValues(GraphicInterface.java:150)	Change visibility of Method "GraphicInterface.updateShownDataValues(double,CirSim)" to default	GraphicInterface.updateShownDataValues(double,CirSim)	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.GraphicInterface.columnNames(GraphicInterface.java:34)	Change visibility of Field "GraphicInterface.columnNames" to private	GraphicInterface.columnNames	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.GraphicInterface.data(GraphicInterface.java:35)	Change visibility of Field "GraphicInterface.data" to private	GraphicInterface.data	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.GraphicInterface.initdataPressure(GraphicInterface.java:36)	Change visibility of Field "GraphicInterface.initdataPressure" to private	GraphicInterface.initdataPressure	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.GraphicInterface.initdataVentilatorPressure(GraphicInterface.java:37)	Change visibility of Field "GraphicInterface.initdataVentilatorPressure" to private	GraphicInterface.initdataVentilatorPressure	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.GraphicInterface.initdataFlow(GraphicInterface.java:38)	Change visibility of Field "GraphicInterface.initdataFlow" to private	GraphicInterface.initdataFlow	org.ucdetector.analyzeMarkerVisibilityPrivate	

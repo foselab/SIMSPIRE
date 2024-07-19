@@ -1,11 +1,8 @@
 package components;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class DiodeElm extends CircuitElm {
 	Diode diode;
@@ -67,38 +64,12 @@ public class DiodeElm extends CircuitElm {
 		Point pa[] = newPointArray(2);
 		interpPoint2(lead1, lead2, pa[0], pa[1], 0, hs);
 		interpPoint2(lead1, lead2, cathode[0], cathode[1], 1, hs);
-		poly = createPolygon(pa[0], pa[1], lead2);
 	}
-
-	@Override
-	public void draw(Graphics g) {
-		drawDiode(g);
-		doDots(g);
-		drawPosts(g);
-	}
-
+	
 	@Override
 	public void reset() {
 		diode.reset();
 		volts[0] = volts[1] = curcount = 0;
-	}
-
-	void drawDiode(Graphics g) {
-		setBbox(point1, point2, hs);
-
-		double v1 = volts[0];
-		double v2 = volts[1];
-
-		draw2Leads(g);
-
-		// draw arrow thingy
-		setPowerColor(g, true);
-		setVoltageColor(g, v1);
-		g.fillPolygon(poly);
-
-		// draw thing arrow is pointing to
-		setVoltageColor(g, v2);
-		drawThickLine(g, cathode[0], cathode[1]);
 	}
 
 	@Override
@@ -123,19 +94,6 @@ public class DiodeElm extends CircuitElm {
 		arr[2] = "Vd = " + getVoltageText(getVoltageDiff());
 		arr[3] = "P = " + getUnitText(getPower(), "W");
 		arr[4] = "Vf = " + getVoltageText(fwdrop);
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Fwd Voltage @ 1A", fwdrop, 10, 1000);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		fwdrop = ei.getValue();
-		setup();
 	}
 
 	@Override

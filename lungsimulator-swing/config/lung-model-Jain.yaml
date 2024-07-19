@@ -1,0 +1,51 @@
+---
+schema: 5
+elementsList:
+- elementName: Upper Airway Resistance 
+  associatedFormula:
+    isTimeDependent: true
+    isExternal: false
+    formula: resistanceU + sin(TIME)
+    variables:
+    - resistanceU
+    - TIME
+  type: ResistorElm
+  x: 0
+  y: 0
+  x1: 1 
+  y1: 0
+  showRight: true
+  idRight: Alveoli
+- elementName: Lung Tissues Resistance
+  associatedFormula:
+    isTimeDependent: false
+    isExternal: false
+    formula: resistanceL 
+    variables:
+    - resistanceL
+  type: ResistorElm
+  x: 1
+  y: 0
+  x1: 2 
+  y1: 0
+- elementName: Lung Compliance
+  associatedFormula:
+    isTimeDependent: false
+    isExternal: false
+    formula: capacitor
+    variables:
+    - capacitor
+  type: CapacitorElm
+  x: 2
+  y: 0
+  x1: 3
+  y1: 0
+- elementName: Ventilator
+  associatedFormula:
+    isTimeDependent: false
+    isExternal: true
+  type: ExternalVoltageElm
+  x: 3
+  y: 0
+  x1: 0 
+  y1: 0

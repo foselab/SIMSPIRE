@@ -36,32 +36,6 @@ public class SevenSegElm extends ChipElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		drawChip(g);
-		g.setColor(Color.red);
-		int xl = getX() + cspc * 5;
-		int yl = getY() + cspc;
-		setColor(g, 0);
-		drawThickLine(g, xl, yl, xl + cspc, yl);
-		setColor(g, 1);
-		drawThickLine(g, xl + cspc, yl, xl + cspc, yl + cspc);
-		setColor(g, 2);
-		drawThickLine(g, xl + cspc, yl + cspc, xl + cspc, yl + cspc2);
-		setColor(g, 3);
-		drawThickLine(g, xl, yl + cspc2, xl + cspc, yl + cspc2);
-		setColor(g, 4);
-		drawThickLine(g, xl, yl + cspc, xl, yl + cspc2);
-		setColor(g, 5);
-		drawThickLine(g, xl, yl, xl, yl + cspc);
-		setColor(g, 6);
-		drawThickLine(g, xl, yl + cspc, xl + cspc, yl + cspc);
-	}
-
-	void setColor(Graphics g, int p) {
-		g.setColor(pins[p].value ? Color.red : sim.getPrintableCheckItem().getState() ? Color.white : darkred);
-	}
-
-	@Override
 	public int getPostCount() {
 		return 7;
 	}

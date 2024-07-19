@@ -1,6 +1,9 @@
 package server_vent;
 
 import org.zeromq.ZMQ;
+
+import java.util.Arrays;
+
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 
@@ -20,11 +23,11 @@ public class Ventilator {
 			ZMQ.Socket socket = context.createSocket(SocketType.REP);
 			socket.bind("tcp://localhost:5555");
 			System.out.println("starting ventilator...");
-			
+	
 			while (!Thread.currentThread().isInterrupted()) {				
 				// If there are no messages available on the specified socket, reply is null (non-blocking mode)
 				byte[] reply = socket.recv(ZMQ.DONTWAIT);
-
+				
 				if (reply != null) {					
 					// Print the message
 					String msg = new String(reply, ZMQ.CHARSET);
@@ -34,8 +37,8 @@ public class Ventilator {
 					if (msg.equals("getPressure")) {
 						// 	per 5 secondi 10, per altri 5 secondi 0					
 						long time = System.currentTimeMillis();
-						long resto = time%10000;
-						String response =  resto < 5000? "10" : "0"; 
+						long resto = time%4000;
+						String response =  resto < 2000? "10" : "0"; 
 						// Send a response
 						socket.send(response.getBytes(ZMQ.CHARSET), 0);
 					}

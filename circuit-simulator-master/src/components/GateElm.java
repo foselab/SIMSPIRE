@@ -1,11 +1,7 @@
 package components;
 
-import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Polygon;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public abstract class GateElm extends CircuitElm {
 	final int FLAG_SMALL = 1;
@@ -16,7 +12,6 @@ public abstract class GateElm extends CircuitElm {
 		super(xx, yy);
 		noDiagonal = true;
 		inputCount = 2;
-		setSize(sim.getSmallGridCheckItem().getState() ? 1 : 2);
 	}
 
 	public GateElm(int xa, int ya, int xb, int yb, int f, StringTokenizer st) {
@@ -52,8 +47,6 @@ public abstract class GateElm extends CircuitElm {
 	@Override
 	public void setPoints() {
 		super.setPoints();
-		if (dn > 150 && this == sim.getDragElm())
-			setSize(2);
 		int hs = gheight;
 		int i;
 		ww = gwidth2; // was 24
@@ -74,31 +67,8 @@ public abstract class GateElm extends CircuitElm {
 			volts[i] = (lastOutput ^ isInverting()) ? 5 : 0;
 		}
 		hs2 = gwidth * (inputCount / 2 + 1);
-		setBbox(point1, point2, hs2);
 	}
-
-	@Override
-	public void draw(Graphics g) {
-		int i;
-		for (i = 0; i != inputCount; i++) {
-			setVoltageColor(g, volts[i]);
-			drawThickLine(g, inPosts[i], inGates[i]);
-		}
-		setVoltageColor(g, volts[inputCount]);
-		drawThickLine(g, lead2, point2);
-		g.setColor(needsHighlight() ? getSelectColor() : getLightGrayColor());
-		drawThickPolygon(g, gatePoly);
-		if (linePoints != null)
-			for (i = 0; i != linePoints.length - 1; i++)
-				drawThickLine(g, linePoints[i], linePoints[i + 1]);
-		if (isInverting())
-			drawThickCircle(g, pcircle.x, pcircle.y, 3);
-		curcount = updateDotCount(current, curcount);
-		drawDots(g, lead2, point2, curcount);
-		drawPosts(g);
-	}
-
-	Polygon gatePoly;
+	
 	Point pcircle, linePoints[];
 
 	@Override
@@ -147,19 +117,6 @@ public abstract class GateElm extends CircuitElm {
 		lastOutput = f;
 		double res = f ? 5 : 0;
 		sim.updateVoltageSource(0, nodes[inputCount], voltSource, res);
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("# of Inputs", inputCount, 1, 8).setDimensionless();
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		inputCount = (int) ei.getValue();
-		setPoints();
 	}
 
 	// there is no current path through the gate inputs, but there

@@ -1,0 +1,6 @@
+Created with UCDetector 2.0.0	2022-10-18 11:30:34	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+lungsimulator.CircuitBuilder.<init>(CircuitBuilder.java:23)	Change visibility of Class "CircuitBuilder" to default - May cause compile errors!	CircuitBuilder	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.CircuitBuilder.buildCircuitSimulator(CircuitBuilder.java:37)	Change visibility of Method "CircuitBuilder.buildCircuitSimulator(Patient,Archetype)" to default	CircuitBuilder.buildCircuitSimulator(Patient,Archetype)	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.CircuitBuilder.updateCircuitSimulator(CircuitBuilder.java:149)	Change visibility of Method "CircuitBuilder.updateCircuitSimulator(Archetype,double)" to default	CircuitBuilder.updateCircuitSimulator(Archetype,double)	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.CircuitBuilder.elements(CircuitBuilder.java:28)	Change visibility of Field "CircuitBuilder.elements" to private	CircuitBuilder.elements	org.ucdetector.analyzeMarkerVisibilityPrivate	

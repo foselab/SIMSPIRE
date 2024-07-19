@@ -1,10 +1,7 @@
 package components;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class TappedTransformerElm extends CircuitElm {
 	double inductance, ratio;
@@ -50,45 +47,7 @@ public class TappedTransformerElm extends CircuitElm {
 	public String dump() {
 		return super.dump() + " " + inductance + " " + ratio + " " + current[0] + " " + current[1] + " " + current[2];
 	}
-
-	@Override
-	public void draw(Graphics g) {
-		int i;
-		for (i = 0; i != 5; i++) {
-			setVoltageColor(g, volts[i]);
-			drawThickLine(g, ptEnds[i], ptCoil[i]);
-		}
-		for (i = 0; i != 4; i++) {
-			if (i == 1)
-				continue;
-			setPowerColor(g, current[i] * (volts[i] - volts[i + 1]));
-			drawCoil(g, i > 1 ? -6 : 6, ptCoil[i], ptCoil[i + 1], volts[i], volts[i + 1]);
-		}
-		g.setColor(needsHighlight() ? getSelectColor() : getLightGrayColor());
-		for (i = 0; i != 4; i += 2) {
-			drawThickLine(g, ptCore[i], ptCore[i + 1]);
-		}
-		// calc current of tap wire
-		current[3] = current[1] - current[2];
-		for (i = 0; i != 4; i++)
-			curcount[i] = updateDotCount(current[i], curcount[i]);
-
-		// primary dots
-		drawDots(g, ptEnds[0], ptCoil[0], curcount[0]);
-		drawDots(g, ptCoil[0], ptCoil[1], curcount[0]);
-		drawDots(g, ptCoil[1], ptEnds[1], curcount[0]);
-
-		// secondary dots
-		drawDots(g, ptEnds[2], ptCoil[2], curcount[1]);
-		drawDots(g, ptCoil[2], ptCoil[3], curcount[1]);
-		drawDots(g, ptCoil[3], ptEnds[3], curcount[3]);
-		drawDots(g, ptCoil[3], ptCoil[4], curcount[2]);
-		drawDots(g, ptCoil[4], ptEnds[4], curcount[2]);
-
-		drawPosts(g);
-		setBbox(ptEnds[0], ptEnds[4], 0);
-	}
-
+	
 	@Override
 	public void setPoints() {
 		super.setPoints();
@@ -247,22 +206,5 @@ public class TappedTransformerElm extends CircuitElm {
 		if (comparePair(n1, n2, 2, 4))
 			return true;
 		return false;
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Primary Inductance (H)", inductance, .01, 5);
-		if (n == 1)
-			return new EditInfo("Ratio", ratio, 1, 10).setDimensionless();
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			inductance = ei.getValue();
-		if (n == 1)
-			ratio = ei.getValue();
 	}
 }

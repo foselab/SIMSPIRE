@@ -1,0 +1,5 @@
+Created with UCDetector 2.0.0	2022-10-18 09:47:04	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+lungsimulator.RealTimePlot.<init>(RealTimePlot.java:20)	Change visibility of Class "RealTimePlot" to default - May cause compile errors!	RealTimePlot	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.RealTimePlot.buildCircuitSimulator(RealTimePlot.java:32)	Change visibility of Method "RealTimePlot.buildCircuitSimulator(Patient,Archetype)" to default	RealTimePlot.buildCircuitSimulator(Patient,Archetype)	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.RealTimePlot.updateCircuitSimulator(RealTimePlot.java:185)	Method "RealTimePlot.updateCircuitSimulator(Patient,Archetype)" has 0 references	RealTimePlot.updateCircuitSimulator(Patient,Archetype)	org.ucdetector.analyzeMarkerReference	

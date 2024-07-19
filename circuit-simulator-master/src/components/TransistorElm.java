@@ -1,14 +1,8 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
-
-import scope.Scope;
-import utils.EditInfo;
 
 public class TransistorElm extends CircuitElm {
 	int pnp;
@@ -71,47 +65,6 @@ public class TransistorElm extends CircuitElm {
 	Polygon rectPoly, arrowPoly;
 
 	@Override
-	public void draw(Graphics g) {
-		setBbox(point1, point2, 16);
-		setPowerColor(g, true);
-		// draw collector
-		setVoltageColor(g, volts[1]);
-		drawThickLine(g, coll[0], coll[1]);
-		// draw emitter
-		setVoltageColor(g, volts[2]);
-		drawThickLine(g, emit[0], emit[1]);
-		// draw arrow
-		g.setColor(getLightGrayColor());
-		g.fillPolygon(arrowPoly);
-		// draw base
-		setVoltageColor(g, volts[0]);
-		if (sim.getPowerCheckItem().getState())
-			g.setColor(Color.gray);
-		drawThickLine(g, point1, base);
-		// draw dots
-		curcount_b = updateDotCount(-ib, curcount_b);
-		drawDots(g, base, point1, curcount_b);
-		curcount_c = updateDotCount(-ic, curcount_c);
-		drawDots(g, coll[1], coll[0], curcount_c);
-		curcount_e = updateDotCount(-ie, curcount_e);
-		drawDots(g, emit[1], emit[0], curcount_e);
-		// draw base rectangle
-		setVoltageColor(g, volts[0]);
-		setPowerColor(g, true);
-		g.fillPolygon(rectPoly);
-
-		if ((needsHighlight() || sim.getDragElm() == this) && dy == 0) {
-			g.setColor(Color.white);
-			g.setFont(unitsFont);
-			int ds = sign(dx);
-			g.drawString("B", base.x - 10 * ds, base.y - 5);
-			g.drawString("C", coll[0].x - 3 + 9 * ds, coll[0].y + 4); // x+6 if ds=1, -12 if -1
-			g.drawString("E", emit[0].x - 3 + 9 * ds, emit[0].y + 4);
-		}
-		drawPosts(g);
-	}
-
-	@Override
 	public Point getPost(int n) {
 		return (n == 0) ? point1 : (n == 1) ? coll[0] : emit[0];
 	}
@@ -148,17 +101,6 @@ public class TransistorElm extends CircuitElm {
 		// calc point where base lead contacts rectangle
 		base = new Point();
 		interpPoint(point1, point2, base, 1 - 16 / dn);
-
-		// rectangle
-		rectPoly = createPolygon(rect[0], rect[2], rect[3], rect[1]);
-
-		// arrow
-		if (pnp == 1)
-			arrowPoly = calcArrow(emit[1], emit[0], 8, 4);
-		else {
-			Point pt = interpPoint(point1, point2, 1 - 11 / dn, -5 * dsign * pnp);
-			arrowPoly = calcArrow(emit[0], pt, 8, 4);
-		}
 	}
 
 	static final double leakage = 1e-13; // 1e-6;
@@ -170,7 +112,6 @@ public class TransistorElm extends CircuitElm {
 
 	double limitStep(double vnew, double vold) {
 		double arg;
-		double oo = vnew;
 
 		if (vnew > vcrit && Math.abs(vnew - vold) > (vt + vt)) {
 			if (vold > 0) {
@@ -280,64 +221,6 @@ public class TransistorElm extends CircuitElm {
 		arr[4] = "Vbe = " + getVoltageText(vbe);
 		arr[5] = "Vbc = " + getVoltageText(vbc);
 		arr[6] = "Vce = " + getVoltageText(vce);
-	}
-
-	@Override
-	public double getScopeValue(int x) {
-		switch (x) {
-		case Scope.VAL_IB:
-			return ib;
-		case Scope.VAL_IC:
-			return ic;
-		case Scope.VAL_IE:
-			return ie;
-		case Scope.VAL_VBE:
-			return volts[0] - volts[2];
-		case Scope.VAL_VBC:
-			return volts[0] - volts[1];
-		case Scope.VAL_VCE:
-			return volts[1] - volts[2];
-		}
-		return 0;
-	}
-
-	@Override
-	public String getScopeUnits(int x) {
-		switch (x) {
-		case Scope.VAL_IB:
-		case Scope.VAL_IC:
-		case Scope.VAL_IE:
-			return "A";
-		default:
-			return "V";
-		}
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Beta/hFE", beta, 10, 1000).setDimensionless();
-		if (n == 1) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Swap E/C", (flags & FLAG_FLIP) != 0));
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0) {
-			beta = ei.getValue();
-			setup();
-		}
-		if (n == 1) {
-			if (ei.getCheckbox().getState())
-				flags |= FLAG_FLIP;
-			else
-				flags &= ~FLAG_FLIP;
-			setPoints();
-		}
 	}
 
 	@Override

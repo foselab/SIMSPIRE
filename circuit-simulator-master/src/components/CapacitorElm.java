@@ -1,14 +1,14 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CapacitorElm extends CircuitElm {
+	
+	static private Logger LOGGER = Logger.getLogger(CapacitorElm.class.getName());
+	
 	private double capacitance;
 	double compResistance, voltdiff;
 	Point plate1[], plate2[];
@@ -71,37 +71,6 @@ public class CapacitorElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		int hs = 12;
-		setBbox(point1, point2, hs);
-
-		// draw first lead and plate
-		setVoltageColor(g, volts[0]);
-		drawThickLine(g, point1, lead1);
-		setPowerColor(g, false);
-		drawThickLine(g, plate1[0], plate1[1]);
-		if (sim.getPowerCheckItem().getState())
-			g.setColor(Color.gray);
-
-		// draw second lead and plate
-		setVoltageColor(g, volts[1]);
-		drawThickLine(g, point2, lead2);
-		setPowerColor(g, false);
-		drawThickLine(g, plate2[0], plate2[1]);
-
-		updateDotCount();
-		if (sim.getDragElm() != this) {
-			drawDots(g, point1, lead1, curcount);
-			drawDots(g, point2, lead2, -curcount);
-		}
-		drawPosts(g);
-		if (sim.getShowValuesCheckItem().getState()) {
-			String s = getShortUnitText(getCapacitance(), "F");
-			drawValues(g, s, hs);
-		}
-	}
-
-	@Override
 	public void stamp() {
 		// capacitor companion model using trapezoidal approximation
 		// (Norton equivalent) consists of a current source in
@@ -124,13 +93,13 @@ public class CapacitorElm extends CircuitElm {
 		else
 			curSourceValue = -voltdiff / compResistance;
 
-		System.out.println("CapacitorElm: compResistance = " + compResistance + ", curSourceValue = " + curSourceValue
+		LOGGER.log(Level.FINE,"CapacitorElm: compResistance = " + compResistance + ", curSourceValue = " + curSourceValue
 				+ ", current = " + current + ", voltdiff =" + voltdiff);
 	}
 
 	@Override
 	void calculateCurrent() {
-		System.out.println(this.getClass().getSimpleName() + " - volts[0] = " + volts[0] + ", volts[1] = " + volts[1]);
+		LOGGER.log(Level.FINE,this.getClass().getSimpleName() + " - volts[0] = " + volts[0] + ", volts[1] = " + volts[1]);
 		double voltdiff = volts[0] - volts[1];
 		/*
 		 * we check compResistance because this might get called before stamp(), which
@@ -139,14 +108,14 @@ public class CapacitorElm extends CircuitElm {
 		if (compResistance > 0)
 			current = voltdiff / compResistance + curSourceValue;
 
-		System.out.println(this.getClass().getSimpleName() + " - current set to " + current);
+		LOGGER.log(Level.FINE,this.getClass().getSimpleName() + " - current set to " + current);
 	}
 
 	double curSourceValue;
 
 	@Override
 	public void doStep() {
-		System.out.println("CapacitorElm: nodes[0] = " + nodes[0] + ", nodes[1] = " + nodes[1] + ", curSourceValue = "
+		LOGGER.log(Level.FINE,"CapacitorElm: nodes[0] = " + nodes[0] + ", nodes[1] = " + nodes[1] + ", curSourceValue = "
 				+ curSourceValue);
 		sim.stampCurrentSource(nodes[0], nodes[1], curSourceValue);
 	}
@@ -159,30 +128,6 @@ public class CapacitorElm extends CircuitElm {
 		arr[4] = "P = " + getUnitText(getPower(), "W");
 		// double v = getVoltageDiff();
 		// arr[4] = "U = " + getUnitText(.5*capacitance*v*v, "J");
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Capacitance (F)", getCapacitance(), 0, 0);
-		if (n == 1) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Trapezoidal Approximation", isTrapezoidal()));
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0 && ei.getValue() > 0)
-			setCapacitance(ei.getValue());
-		if (n == 1) {
-			if (ei.getCheckbox().getState())
-				flags &= ~FLAG_BACK_EULER;
-			else
-				flags |= FLAG_BACK_EULER;
-		}
 	}
 
 	@Override

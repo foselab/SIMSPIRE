@@ -1,0 +1,3 @@
+Created with UCDetector 2.0.0	2022-10-14 11:00:50	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+lungsimulator.components.Patient.Patient(Patient.java:19)	Constructor "Patient.Patient(int,List<Element>)" has 0 references	Patient.Patient(int,List<Element>)	org.ucdetector.analyzeMarkerReference	

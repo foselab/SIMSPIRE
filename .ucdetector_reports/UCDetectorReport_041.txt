@@ -1,0 +1,4 @@
+Created with UCDetector 2.0.0	2022-11-09 12:13:17	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+data.CircuitElementRow.<init>(CircuitElementRow.java:13)	Change visibility of Class "CircuitElementRow" to default - May cause compile errors!	CircuitElementRow	org.ucdetector.analyzeMarkerVisibilityDefault	
+data.CircuitElementRow.CircuitElementRow(CircuitElementRow.java:22)	Change visibility of Constructor "CircuitElementRow.CircuitElementRow(LungSimulator,String,double,String,*,*)" to default	CircuitElementRow.CircuitElementRow(LungSimulator,String,double,String,*,*)	org.ucdetector.analyzeMarkerVisibilityDefault	

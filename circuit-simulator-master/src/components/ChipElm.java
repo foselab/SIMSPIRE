@@ -1,14 +1,7 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public abstract class ChipElm extends CircuitElm {
 	int csize, cspc, cspc2;
@@ -23,7 +16,6 @@ public abstract class ChipElm extends CircuitElm {
 			bits = (this instanceof DecadeElm) ? 10 : 4;
 		noDiagonal = true;
 		setupPins();
-		setSize(sim.getSmallGridCheckItem().getState() ? 1 : 2);
 	}
 
 	public ChipElm(int xa, int ya, int xb, int yb, int f, StringTokenizer st) {
@@ -56,46 +48,6 @@ public abstract class ChipElm extends CircuitElm {
 
 	abstract void setupPins();
 
-	@Override
-	public void draw(Graphics g) {
-		drawChip(g);
-	}
-
-	void drawChip(Graphics g) {
-		int i;
-		Font f = new Font("SansSerif", 0, 10 * csize);
-		g.setFont(f);
-		FontMetrics fm = g.getFontMetrics();
-		for (i = 0; i != getPostCount(); i++) {
-			Pin p = pins[i];
-			setVoltageColor(g, volts[i]);
-			Point a = p.post;
-			Point b = p.stub;
-			drawThickLine(g, a, b);
-			p.curcount = updateDotCount(p.current, p.curcount);
-			drawDots(g, b, a, p.curcount);
-			if (p.bubble) {
-				g.setColor(sim.getPrintableCheckItem().getState() ? Color.white : Color.black);
-				drawThickCircle(g, p.bubbleX, p.bubbleY, 1);
-				g.setColor(getLightGrayColor());
-				drawThickCircle(g, p.bubbleX, p.bubbleY, 3);
-			}
-			g.setColor(getWhiteColor());
-			int sw = fm.stringWidth(p.text);
-			g.drawString(p.text, p.textloc.x - sw / 2, p.textloc.y + fm.getAscent() / 2);
-			if (p.lineOver) {
-				int ya = p.textloc.y - fm.getAscent() / 2;
-				g.drawLine(p.textloc.x - sw / 2, ya, p.textloc.x + sw / 2, ya);
-			}
-		}
-		g.setColor(needsHighlight() ? getSelectColor() : getLightGrayColor());
-		drawThickPolygon(g, rectPointsX, rectPointsY, 4);
-		if (clockPointsX != null)
-			g.drawPolyline(clockPointsX, clockPointsY, 3);
-		for (i = 0; i != getPostCount(); i++)
-			drawPost(g, pins[i].post.x, pins[i].post.y, nodes[i]);
-	}
-
 	int rectPointsX[], rectPointsY[];
 	int clockPointsX[], clockPointsY[];
 	Pin pins[];
@@ -103,23 +55,7 @@ public abstract class ChipElm extends CircuitElm {
 	boolean lastClock;
 
 	@Override
-	public void drag(int xx, int yy) {
-		yy = sim.snapGrid(yy);
-		if (xx < getX()) {
-			xx = getX();
-			yy = getY();
-		} else {
-			setY(setY2(yy));
-			setX2(sim.snapGrid(xx));
-		}
-		setPoints();
-	}
-
-	@Override
 	public void setPoints() {
-		if (getX2() - getX() > sizeX * cspc2 && this == sim.getDragElm())
-			setSize(2);
-		int hs = cspc;
 		int x0 = getX() + cspc2;
 		int y0 = getY();
 		int xr = x0 - cspc;
@@ -128,7 +64,6 @@ public abstract class ChipElm extends CircuitElm {
 		int ys = sizeY * cspc2;
 		rectPointsX = new int[] { xr, xr + xs, xr + xs, xr };
 		rectPointsY = new int[] { yr, yr, yr + ys, yr + ys };
-		setBbox(xr, yr, rectPointsX[2], rectPointsY[2]);
 		int i;
 		for (i = 0; i != getPostCount(); i++) {
 			Pin p = pins[i];
@@ -212,7 +147,6 @@ public abstract class ChipElm extends CircuitElm {
 
 	@Override
 	public String dump() {
-		int t = getDumpType();
 		String s = super.dump();
 		if (needsBits())
 			s += " " + bits;
@@ -265,39 +199,6 @@ public abstract class ChipElm extends CircuitElm {
 	@Override
 	public boolean hasGroundConnection(int n1) {
 		return pins[n1].output;
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Flip X", (flags & FLAG_FLIP_X) != 0));
-			return ei;
-		}
-		if (n == 1) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Flip Y", (flags & FLAG_FLIP_Y) != 0));
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0) {
-			if (ei.getCheckbox().getState())
-				flags |= FLAG_FLIP_X;
-			else
-				flags &= ~FLAG_FLIP_X;
-			setPoints();
-		}
-		if (n == 1) {
-			if (ei.getCheckbox().getState())
-				flags |= FLAG_FLIP_Y;
-			else
-				flags &= ~FLAG_FLIP_Y;
-			setPoints();
-		}
 	}
 
 	final int SIDE_N = 0;

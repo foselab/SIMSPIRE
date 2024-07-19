@@ -1,13 +1,8 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class MosfetElm extends CircuitElm {
 	int pnp;
@@ -70,60 +65,6 @@ public class MosfetElm extends CircuitElm {
 	final int hs = 16;
 
 	@Override
-	public void draw(Graphics g) {
-		setBbox(point1, point2, hs);
-		setVoltageColor(g, volts[1]);
-		drawThickLine(g, src[0], src[1]);
-		setVoltageColor(g, volts[2]);
-		drawThickLine(g, drn[0], drn[1]);
-		int segments = 6;
-		int i;
-		setPowerColor(g, true);
-		double segf = 1. / segments;
-		for (i = 0; i != segments; i++) {
-			double v = volts[1] + (volts[2] - volts[1]) * i / segments;
-			setVoltageColor(g, v);
-			interpPoint(src[1], drn[1], ps1, i * segf);
-			interpPoint(src[1], drn[1], ps2, (i + 1) * segf);
-			drawThickLine(g, ps1, ps2);
-		}
-		setVoltageColor(g, volts[1]);
-		drawThickLine(g, src[1], src[2]);
-		setVoltageColor(g, volts[2]);
-		drawThickLine(g, drn[1], drn[2]);
-		if (!drawDigital()) {
-			setVoltageColor(g, pnp == 1 ? volts[1] : volts[2]);
-			g.fillPolygon(arrowPoly);
-		}
-		if (sim.getPowerCheckItem().getState())
-			g.setColor(Color.gray);
-		setVoltageColor(g, volts[0]);
-		drawThickLine(g, point1, gate[1]);
-		drawThickLine(g, gate[0], gate[2]);
-		if (drawDigital() && pnp == -1)
-			drawThickCircle(g, pcircle.x, pcircle.y, pcircler);
-		if ((flags & FLAG_SHOWVT) != 0) {
-			String s = "" + (vt * pnp);
-			g.setColor(getWhiteColor());
-			g.setFont(unitsFont);
-			drawCenteredText(g, s, getX2() + 2, getY2(), false);
-		}
-		if ((needsHighlight() || sim.getDragElm() == this) && dy == 0) {
-			g.setColor(Color.white);
-			g.setFont(unitsFont);
-			int ds = sign(dx);
-			g.drawString("G", gate[1].x - 10 * ds, gate[1].y - 5);
-			g.drawString(pnp == -1 ? "D" : "S", src[0].x - 3 + 9 * ds, src[0].y + 4); // x+6 if ds=1, -12 if -1
-			g.drawString(pnp == -1 ? "S" : "D", drn[0].x - 3 + 9 * ds, drn[0].y + 4);
-		}
-		curcount = updateDotCount(-ids, curcount);
-		drawDots(g, src[0], src[1], curcount);
-		drawDots(g, src[1], drn[1], curcount);
-		drawDots(g, drn[1], drn[0], curcount);
-		drawPosts(g);
-	}
-
-	@Override
 	public Point getPost(int n) {
 		return (n == 0) ? point1 : (n == 1) ? src[0] : drn[0];
 	}
@@ -165,10 +106,6 @@ public class MosfetElm extends CircuitElm {
 		interpPoint(gate[0], gate[2], gate[1], .5);
 
 		if (!drawDigital()) {
-			if (pnp == 1)
-				arrowPoly = calcArrow(src[1], src[0], 10, 4);
-			else
-				arrowPoly = calcArrow(drn[0], drn[1], 12, 5);
 		} else if (pnp == -1) {
 			interpPoint(point1, point2, gate[1], 1 - 36 / dn);
 			int dist = (dsign < 0) ? 32 : 31;
@@ -293,28 +230,5 @@ public class MosfetElm extends CircuitElm {
 	@Override
 	public boolean getConnection(int n1, int n2) {
 		return !(n1 == 0 || n2 == 0);
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Threshold Voltage", pnp * vt, .01, 5);
-		if (n == 1) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new Checkbox("Digital Symbol", drawDigital());
-			return ei;
-		}
-
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			vt = pnp * ei.getValue();
-		if (n == 1) {
-			flags = (ei.checkbox.getState()) ? (flags | FLAG_DIGITAL) : (flags & ~FLAG_DIGITAL);
-			setPoints();
-		}
 	}
 }

@@ -1,12 +1,7 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 // 0 = switch
 // 1 = switch end 1
@@ -83,59 +78,7 @@ public class RelayElm extends CircuitElm {
 		return super.dump() + " " + poleCount + " " + inductance + " " + coilCurrent + " " + r_on + " " + r_off + " "
 				+ onCurrent + " " + coilR;
 	}
-
-	@Override
-	public void draw(Graphics g) {
-		int i, p;
-		for (i = 0; i != 2; i++) {
-			setVoltageColor(g, volts[nCoil1 + i]);
-			drawThickLine(g, coilLeads[i], coilPosts[i]);
-		}
-		int x = ((flags & FLAG_SWAP_COIL) != 0) ? 1 : 0;
-		drawCoil(g, dsign * 6, coilLeads[x], coilLeads[1 - x], volts[nCoil1 + x], volts[nCoil2 - x]);
-
-		// draw lines
-		g.setColor(Color.darkGray);
-		for (i = 0; i != poleCount; i++) {
-			if (i == 0)
-				interpPoint(point1, point2, lines[i * 2], .5, openhs * 2 + 5 * dsign - i * openhs * 3);
-			else
-				interpPoint(point1, point2, lines[i * 2], .5,
-						(int) (openhs * (-i * 3 + 3 - .5 + d_position)) + 5 * dsign);
-			interpPoint(point1, point2, lines[i * 2 + 1], .5, (int) (openhs * (-i * 3 - .5 + d_position)) - 5 * dsign);
-			g.drawLine(lines[i * 2].x, lines[i * 2].y, lines[i * 2 + 1].x, lines[i * 2 + 1].y);
-		}
-
-		for (p = 0; p != poleCount; p++) {
-			int po = p * 3;
-			for (i = 0; i != 3; i++) {
-				// draw lead
-				setVoltageColor(g, volts[nSwitch0 + po + i]);
-				drawThickLine(g, swposts[p][i], swpoles[p][i]);
-			}
-
-			interpPoint(swpoles[p][1], swpoles[p][2], ptSwitch[p], d_position);
-			// setVoltageColor(g, volts[nSwitch0]);
-			g.setColor(Color.lightGray);
-			drawThickLine(g, swpoles[p][0], ptSwitch[p]);
-			switchCurCount[p] = updateDotCount(switchCurrent[p], switchCurCount[p]);
-			drawDots(g, swposts[p][0], swpoles[p][0], switchCurCount[p]);
-
-			if (i_position != 2)
-				drawDots(g, swpoles[p][i_position + 1], swposts[p][i_position + 1], switchCurCount[p]);
-		}
-
-		coilCurCount = updateDotCount(coilCurrent, coilCurCount);
-
-		drawDots(g, coilPosts[0], coilLeads[0], coilCurCount);
-		drawDots(g, coilLeads[0], coilLeads[1], coilCurCount);
-		drawDots(g, coilLeads[1], coilPosts[1], coilCurCount);
-
-		drawPosts(g);
-		setBbox(coilPosts[0], coilLeads[1], 0);
-		adjustBbox(swpoles[poleCount - 1][0], swposts[poleCount - 1][1]); // XXX
-	}
-
+	
 	@Override
 	public void setPoints() {
 		super.setPoints();
@@ -281,55 +224,6 @@ public class RelayElm extends CircuitElm {
 			arr[ln++] = "I" + (i + 1) + " = " + getCurrentDText(switchCurrent[i]);
 		arr[ln++] = "coil I = " + getCurrentDText(coilCurrent);
 		arr[ln++] = "coil Vd = " + getVoltageDText(volts[nCoil1] - volts[nCoil2]);
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Inductance (H)", inductance, 0, 0);
-		if (n == 1)
-			return new EditInfo("On Resistance (ohms)", r_on, 0, 0);
-		if (n == 2)
-			return new EditInfo("Off Resistance (ohms)", r_off, 0, 0);
-		if (n == 3)
-			return new EditInfo("On Current (A)", onCurrent, 0, 0);
-		if (n == 4)
-			return new EditInfo("Number of Poles", poleCount, 1, 4).setDimensionless();
-		if (n == 5)
-			return new EditInfo("Coil Resistance (ohms)", coilR, 0, 0);
-		if (n == 6) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new Checkbox("Swap Coil Direction", (flags & FLAG_SWAP_COIL) != 0);
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0 && ei.getValue() > 0) {
-			inductance = ei.getValue();
-			ind.setup(inductance, coilCurrent, Inductor.FLAG_BACK_EULER);
-		}
-		if (n == 1 && ei.getValue() > 0)
-			r_on = ei.getValue();
-		if (n == 2 && ei.getValue() > 0)
-			r_off = ei.getValue();
-		if (n == 3 && ei.getValue() > 0)
-			onCurrent = ei.getValue();
-		if (n == 4 && ei.getValue() >= 1) {
-			poleCount = (int) ei.getValue();
-			setPoints();
-		}
-		if (n == 5 && ei.getValue() > 0)
-			coilR = ei.getValue();
-		if (n == 6) {
-			if (ei.checkbox.getState())
-				flags |= FLAG_SWAP_COIL;
-			else
-				flags &= ~FLAG_SWAP_COIL;
-			setPoints();
-		}
 	}
 
 	@Override

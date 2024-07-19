@@ -1,18 +1,11 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Polygon;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class LogicInputElm extends SwitchElm {
 	final int FLAG_TERNARY = 1;
 	final int FLAG_NUMERIC = 2;
 	double hiV, loV;
-	Polygon arrowPoly;
 
 	public LogicInputElm(int xx, int yy) {
 		super(xx, yy, false);
@@ -61,25 +54,6 @@ public class LogicInputElm extends SwitchElm {
 	public void setPoints() {
 		super.setPoints();
 		lead1 = interpPoint(point1, point2, 1 - 12 / dn);
-		arrowPoly = calcArrowReverse(point1, lead1, 8, 8);
-	}
-
-	@Override
-	public void draw(Graphics g) {
-		Font f = new Font("SansSerif", Font.BOLD, 20);
-		g.setFont(f);
-		g.setColor(needsHighlight() ? getSelectColor() : getWhiteColor());
-		String s = position == 0 ? "L" : "H";
-		if (isNumeric())
-			s = "" + position;
-		setBbox(point1, lead1, 0);
-		drawCenteredText(g, s, getX2(), getY2(), true);
-		setVoltageColor(g, volts[0]);
-		drawThickLine(g, point1, lead1);
-		g.fillPolygon(arrowPoly);
-		updateDotCount();
-		drawDots(g, point1, lead1, curcount);
-		drawPosts(g);
 	}
 
 	@Override
@@ -118,30 +92,6 @@ public class LogicInputElm extends SwitchElm {
 	@Override
 	public boolean hasGroundConnection(int n1) {
 		return true;
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0) {
-			EditInfo ei = new EditInfo("", 0, 0, 0);
-			ei.checkbox = new Checkbox("Momentary Switch", isMomentary());
-			return ei;
-		}
-		if (n == 1)
-			return new EditInfo("High Voltage", hiV, 10, -10);
-		if (n == 2)
-			return new EditInfo("Low Voltage", loV, 10, -10);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			setMomentary(ei.checkbox.getState());
-		if (n == 1)
-			hiV = ei.getValue();
-		if (n == 2)
-			loV = ei.getValue();
 	}
 
 	@Override

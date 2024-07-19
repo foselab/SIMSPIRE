@@ -1,6 +1,5 @@
 package components;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.StringTokenizer;
@@ -21,30 +20,6 @@ public class JfetElm extends MosfetElm {
 	Point gatePt;
 
 	@Override
-	public void draw(Graphics g) {
-		setBbox(point1, point2, hs);
-		setVoltageColor(g, volts[1]);
-		drawThickLine(g, src[0], src[1]);
-		drawThickLine(g, src[1], src[2]);
-		setVoltageColor(g, volts[2]);
-		drawThickLine(g, drn[0], drn[1]);
-		drawThickLine(g, drn[1], drn[2]);
-		setVoltageColor(g, volts[0]);
-		drawThickLine(g, point1, gatePt);
-		g.fillPolygon(arrowPoly);
-		setPowerColor(g, true);
-		g.fillPolygon(gatePoly);
-		curcount = updateDotCount(-ids, curcount);
-		if (curcount != 0) {
-			drawDots(g, src[0], src[1], curcount);
-			drawDots(g, src[1], src[2], curcount + 8);
-			drawDots(g, drn[0], drn[1], -curcount);
-			drawDots(g, drn[1], drn[2], -(curcount + 8));
-		}
-		drawPosts(g);
-	}
-
-	@Override
 	public void setPoints() {
 		super.setPoints();
 
@@ -62,12 +37,6 @@ public class JfetElm extends MosfetElm {
 		Point ra[] = newPointArray(4);
 		interpPoint2(point1, point2, ra[0], ra[1], 1 - 13 / dn, hs);
 		interpPoint2(point1, point2, ra[2], ra[3], 1 - 10 / dn, hs);
-		gatePoly = createPolygon(ra[0], ra[1], ra[3], ra[2]);
-		if (pnp == -1) {
-			Point x = interpPoint(gatePt, point1, 18 / dn);
-			arrowPoly = calcArrow(gatePt, x, 8, 3);
-		} else
-			arrowPoly = calcArrow(point1, gatePt, 8, 3);
 	}
 
 	@Override

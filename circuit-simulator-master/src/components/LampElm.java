@@ -1,12 +1,10 @@
 package components;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
 
 import simulator.CirSim;
-import utils.EditInfo;
 
 public class LampElm extends CircuitElm {
 	double resistance;
@@ -91,40 +89,6 @@ public class LampElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		double v1 = volts[0];
-		double v2 = volts[1];
-		setBbox(point1, point2, 4);
-		adjustBbox(bulb.x - bulbR, bulb.y - bulbR, bulb.x + bulbR, bulb.y + bulbR);
-		// adjustbbox
-		draw2Leads(g);
-		setPowerColor(g, true);
-		g.setColor(getTempColor());
-		g.fillOval(bulb.x - bulbR, bulb.y - bulbR, bulbR * 2, bulbR * 2);
-		g.setColor(Color.white);
-		drawThickCircle(g, bulb.x, bulb.y, bulbR);
-		setVoltageColor(g, v1);
-		drawThickLine(g, lead1, filament[0]);
-		setVoltageColor(g, v2);
-		drawThickLine(g, lead2, filament[1]);
-		setVoltageColor(g, (v1 + v2) * .5);
-		drawThickLine(g, filament[0], filament[1]);
-		updateDotCount();
-		if (sim.getDragElm() != this) {
-			drawDots(g, point1, lead1, curcount);
-			double cc = curcount + (dn - 16) / 2;
-			drawDots(g, lead1, filament[0], cc);
-			cc += filament_len;
-			drawDots(g, filament[0], filament[1], cc);
-			cc += 16;
-			drawDots(g, filament[1], lead2, cc);
-			cc += filament_len;
-			drawDots(g, lead2, point2, curcount);
-		}
-		drawPosts(g);
-	}
-
-	@Override
 	void calculateCurrent() {
 		current = (volts[0] - volts[1]) / resistance;
 		// System.out.print(this + " res current set to " + current + "\n");
@@ -170,31 +134,5 @@ public class LampElm extends CircuitElm {
 		arr[3] = "R = " + getUnitText(resistance, CirSim.getOhmString());
 		arr[4] = "P = " + getUnitText(getPower(), "W");
 		arr[5] = "T = " + ((int) temp) + " K";
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		// ohmString doesn't work here on linux
-		if (n == 0)
-			return new EditInfo("Nominal Power", nom_pow, 0, 0);
-		if (n == 1)
-			return new EditInfo("Nominal Voltage", nom_v, 0, 0);
-		if (n == 2)
-			return new EditInfo("Warmup Time (s)", warmTime, 0, 0);
-		if (n == 3)
-			return new EditInfo("Cooldown Time (s)", coolTime, 0, 0);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0 && ei.getValue() > 0)
-			nom_pow = ei.getValue();
-		if (n == 1 && ei.getValue() > 0)
-			nom_v = ei.getValue();
-		if (n == 2 && ei.getValue() > 0)
-			warmTime = ei.getValue();
-		if (n == 3 && ei.getValue() > 0)
-			coolTime = ei.getValue();
 	}
 }

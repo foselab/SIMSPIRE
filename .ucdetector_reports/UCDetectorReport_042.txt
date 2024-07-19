@@ -1,0 +1,7 @@
+Created with UCDetector 2.0.0	2022-11-09 15:53:32	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+data.DemographicEventManager.<init>(DemographicEventManager.java:15)	Change visibility of Class "DemographicEventManager" to default - May cause compile errors!	DemographicEventManager	org.ucdetector.analyzeMarkerVisibilityDefault	
+data.DemographicEventManager.DemographicEventManager(DemographicEventManager.java:23)	Change visibility of Constructor "DemographicEventManager.DemographicEventManager(LungSimulator)" to default	DemographicEventManager.DemographicEventManager(LungSimulator)	org.ucdetector.analyzeMarkerVisibilityDefault	
+data.DemographicEventManager.setAge(DemographicEventManager.java:50)	Change visibility of Method "DemographicEventManager.setAge(int,int,int,int)" to default	DemographicEventManager.setAge(int,int,int,int)	org.ucdetector.analyzeMarkerVisibilityDefault	
+data.DemographicEventManager.setHeight(DemographicEventManager.java:71)	Change visibility of Method "DemographicEventManager.setHeight(double,double,double,double)" to default	DemographicEventManager.setHeight(double,double,double,double)	org.ucdetector.analyzeMarkerVisibilityDefault	
+data.DemographicEventManager.setWeight(DemographicEventManager.java:93)	Change visibility of Method "DemographicEventManager.setWeight(double,double,double,double)" to default	DemographicEventManager.setWeight(double,double,double,double)	org.ucdetector.analyzeMarkerVisibilityDefault	

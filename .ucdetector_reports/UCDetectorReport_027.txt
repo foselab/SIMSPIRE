@@ -1,0 +1,36 @@
+Created with UCDetector 2.0.0	2022-10-17 11:11:34	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+components.CircuitElm.initBoundingBox(CircuitElm.java:71)	Change visibility of Method "CircuitElm.initBoundingBox()" to private	CircuitElm.initBoundingBox()	org.ucdetector.analyzeMarkerVisibilityPrivate	
+components.CircuitElm.delete(CircuitElm.java:105)	Method "CircuitElm.delete()" has 0 references	CircuitElm.delete()	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.getPostVoltage(CircuitElm.java:111)	Method "CircuitElm.getPostVoltage(int)" has 0 references	CircuitElm.getPostVoltage(int)	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.move(CircuitElm.java:268)	Method "CircuitElm.move(int,int)" has 0 references	CircuitElm.move(int,int)	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.allowMove(CircuitElm.java:279)	Method "CircuitElm.allowMove(int,int)" has 0 references	CircuitElm.allowMove(int,int)	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.movePoint(CircuitElm.java:295)	Method "CircuitElm.movePoint(int,int,int)" has 0 references	CircuitElm.movePoint(int,int,int)	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.getVoltageSource(CircuitElm.java:331)	Method "CircuitElm.getVoltageSource()" has 0 references	CircuitElm.getVoltageSource()	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.adjustBbox(CircuitElm.java:396)	Change visibility of Method "CircuitElm.adjustBbox(int,int,int,int)" to private	CircuitElm.adjustBbox(int,int,int,int)	org.ucdetector.analyzeMarkerVisibilityPrivate	
+components.CircuitElm.adjustBbox(CircuitElm.java:414)	Method "CircuitElm.adjustBbox(Point,Point)" has 0 references	CircuitElm.adjustBbox(Point,Point)	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.getVoltageText(CircuitElm.java:426)	Change visibility of Method "CircuitElm.getVoltageText(double)" to default	CircuitElm.getVoltageText(double)	org.ucdetector.analyzeMarkerVisibilityDefault	
+components.CircuitElm.getUnitText(CircuitElm.java:430)	Change visibility of Method "CircuitElm.getUnitText(double,String)" to default	CircuitElm.getUnitText(double,String)	org.ucdetector.analyzeMarkerVisibilityDefault	
+components.CircuitElm.getShortUnitText(CircuitElm.java:451)	Method "CircuitElm.getShortUnitText(double,String)" has 0 references	CircuitElm.getShortUnitText(double,String)	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.getCurrentText(CircuitElm.java:472)	Change visibility of Method "CircuitElm.getCurrentText(double)" to default	CircuitElm.getCurrentText(double)	org.ucdetector.analyzeMarkerVisibilityDefault	
+components.CircuitElm.doAdjust(CircuitElm.java:480)	Method "CircuitElm.doAdjust()" has 0 references	CircuitElm.doAdjust()	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.setupAdjust(CircuitElm.java:483)	Method "CircuitElm.setupAdjust()" has 0 references	CircuitElm.setupAdjust()	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.needsHighlight(CircuitElm.java:530)	Method "CircuitElm.needsHighlight()" has 0 references	CircuitElm.needsHighlight()	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.selectRect(CircuitElm.java:542)	Method "CircuitElm.selectRect(Rectangle)" has 0 references	CircuitElm.selectRect(Rectangle)	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.needsShortcut(CircuitElm.java:572)	Method "CircuitElm.needsShortcut()" has 0 references	CircuitElm.needsShortcut()	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.isGraphicElmt(CircuitElm.java:580)	Method "CircuitElm.isGraphicElmt()" has 0 references	CircuitElm.isGraphicElmt()	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.setX2(CircuitElm.java:596)	Change visibility of Method "CircuitElm.setX2(int)" to default	CircuitElm.setX2(int)	org.ucdetector.analyzeMarkerVisibilityDefault	
+components.CircuitElm.setY2(CircuitElm.java:618)	Change visibility of Method "CircuitElm.setY2(int)" to default	CircuitElm.setY2(int)	org.ucdetector.analyzeMarkerVisibilityDefault	
+components.CircuitElm.getCurrentMult(CircuitElm.java:623)	Method "CircuitElm.getCurrentMult()" has 0 references	CircuitElm.getCurrentMult()	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.setCurrentMult(CircuitElm.java:627)	Method "CircuitElm.setCurrentMult(double)" has 0 references	CircuitElm.setCurrentMult(double)	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.getPowerMult(CircuitElm.java:631)	Method "CircuitElm.getPowerMult()" has 0 references	CircuitElm.getPowerMult()	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.setPowerMult(CircuitElm.java:659)	Method "CircuitElm.setPowerMult(double)" has 0 references	CircuitElm.setPowerMult(double)	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.voltageRange(CircuitElm.java:17)	Field "CircuitElm.voltageRange" has 0 references	CircuitElm.voltageRange	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.showFormat(CircuitElm.java:22)	Change visibility of Field "CircuitElm.showFormat" to default	CircuitElm.showFormat	org.ucdetector.analyzeMarkerVisibilityDefault	
+components.CircuitElm.shortFormat(CircuitElm.java:22)	Change visibility of Field "CircuitElm.shortFormat" to private	CircuitElm.shortFormat	org.ucdetector.analyzeMarkerVisibilityPrivate	
+components.CircuitElm.noCommaFormat(CircuitElm.java:22)	Field "CircuitElm.noCommaFormat" has 0 references	CircuitElm.noCommaFormat	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.dpx1(CircuitElm.java:33)	Change visibility of Field "CircuitElm.dpx1" to private	CircuitElm.dpx1	org.ucdetector.analyzeMarkerVisibilityPrivate	
+components.CircuitElm.dpy1(CircuitElm.java:33)	Change visibility of Field "CircuitElm.dpy1" to private	CircuitElm.dpy1	org.ucdetector.analyzeMarkerVisibilityPrivate	
+components.CircuitElm.curcount(CircuitElm.java:36)	Field "CircuitElm.curcount" is never read	CircuitElm.curcount	org.ucdetector.analyzeMarkerReference	
+components.CircuitElm.boundingBox(CircuitElm.java:37)	Change visibility of Field "CircuitElm.boundingBox" to private	CircuitElm.boundingBox	org.ucdetector.analyzeMarkerVisibilityPrivate	
+components.CircuitElm.selected(CircuitElm.java:39)	Change visibility of Field "CircuitElm.selected" to private	CircuitElm.selected	org.ucdetector.analyzeMarkerVisibilityPrivate	

@@ -1,11 +1,7 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class AnalogSwitchElm extends CircuitElm {
 	final int FLAG_INVERT = 1;
@@ -54,26 +50,6 @@ public class AnalogSwitchElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		int openhs = 16;
-		int hs = (open) ? openhs : 0;
-		setBbox(point1, point2, openhs);
-
-		draw2Leads(g);
-
-		g.setColor(getLightGrayColor());
-		interpPoint(lead1, lead2, ps, 1, hs);
-		drawThickLine(g, lead1, ps);
-
-		setVoltageColor(g, volts[2]);
-		drawThickLine(g, point3, lead3);
-
-		if (!open)
-			doDots(g);
-		drawPosts(g);
-	}
-
-	@Override
 	void calculateCurrent() {
 		current = (volts[0] - volts[1]) / resistance;
 	}
@@ -97,22 +73,6 @@ public class AnalogSwitchElm extends CircuitElm {
 			open = !open;
 		resistance = (open) ? r_off : r_on;
 		sim.stampResistor(nodes[0], nodes[1], resistance);
-	}
-
-	@Override
-	public void drag(int xx, int yy) {
-		xx = sim.snapGrid(xx);
-		yy = sim.snapGrid(yy);
-		if (abs(getX() - xx) < abs(getY() - yy))
-			xx = getX();
-		else
-			yy = getY();
-		int q1 = abs(getX() - xx) + abs(getY() - yy);
-		int q2 = (q1 / 2) % sim.getGridSize();
-		if (q2 != 0)
-			return;
-		setX2Y2(xx,yy);
-		setPoints();
 	}
 
 	@Override
@@ -141,29 +101,5 @@ public class AnalogSwitchElm extends CircuitElm {
 		if (n1 == 2 || n2 == 2)
 			return false;
 		return true;
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Normally closed", (flags & FLAG_INVERT) != 0));
-			return ei;
-		}
-		if (n == 1)
-			return new EditInfo("On Resistance (ohms)", r_on, 0, 0);
-		if (n == 2)
-			return new EditInfo("Off Resistance (ohms)", r_off, 0, 0);
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			flags = (ei.getCheckbox().getState()) ? (flags | FLAG_INVERT) : (flags & ~FLAG_INVERT);
-		if (n == 1 && ei.getValue() > 0)
-			r_on = ei.getValue();
-		if (n == 2 && ei.getValue() > 0)
-			r_off = ei.getValue();
 	}
 }

@@ -1,11 +1,7 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class SwitchElm extends CircuitElm {
 	private boolean momentary;
@@ -68,27 +64,6 @@ public class SwitchElm extends CircuitElm {
 	}
 
 	@Override
-	public void draw(Graphics g) {
-		int openhs = 16;
-		int hs1 = (position == 1) ? 0 : 2;
-		int hs2 = (position == 1) ? openhs : 2;
-		setBbox(point1, point2, openhs);
-
-		draw2Leads(g);
-
-		if (position == 0)
-			doDots(g);
-
-		if (!needsHighlight())
-			g.setColor(getWhiteColor());
-		interpPoint(lead1, lead2, ps, 0, hs1);
-		interpPoint(lead1, lead2, ps2, 1, hs2);
-
-		drawThickLine(g, ps, ps2);
-		drawPosts(g);
-	}
-
-	@Override
 	void calculateCurrent() {
 		if (position == 1)
 			current = 0;
@@ -137,22 +112,6 @@ public class SwitchElm extends CircuitElm {
 	@Override
 	public boolean isWire() {
 		return true;
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Momentary Switch", isMomentary()));
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			setMomentary(ei.getCheckbox().getState());
 	}
 
 	@Override

@@ -1,0 +1,11 @@
+Created with UCDetector 2.0.0	2022-11-09 12:11:42	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+data.CircuitElementRow.<init>(CircuitElementRow.java:13)	Change visibility of Class "CircuitElementRow" to default - May cause compile errors!	CircuitElementRow	org.ucdetector.analyzeMarkerVisibilityDefault	
+data.CircuitElementRow.CircuitElementRow(CircuitElementRow.java:22)	Change visibility of Constructor "CircuitElementRow.CircuitElementRow(LungSimulator,String,double,String,*,*)" to default	CircuitElementRow.CircuitElementRow(LungSimulator,String,double,String,*,*)	org.ucdetector.analyzeMarkerVisibilityDefault	
+data.CircuitElementRow.id(CircuitElementRow.java:14)	Change visibility of Field "CircuitElementRow.id" to private	CircuitElementRow.id	org.ucdetector.analyzeMarkerVisibilityPrivate	
+data.CircuitElementRow.value(CircuitElementRow.java:15)	Change visibility of Field "CircuitElementRow.value" to private	CircuitElementRow.value	org.ucdetector.analyzeMarkerVisibilityPrivate	
+data.CircuitElementRow.unit(CircuitElementRow.java:16)	Change visibility of Field "CircuitElementRow.unit" to private	CircuitElementRow.unit	org.ucdetector.analyzeMarkerVisibilityPrivate	
+data.CircuitElementRow.isVentilator(CircuitElementRow.java:17)	Change visibility of Field "CircuitElementRow.isVentilator" to private	CircuitElementRow.isVentilator	org.ucdetector.analyzeMarkerVisibilityPrivate	
+data.CircuitElementRow.ventilator(CircuitElementRow.java:18)	Change visibility of Field "CircuitElementRow.ventilator" to private	CircuitElementRow.ventilator	org.ucdetector.analyzeMarkerVisibilityPrivate	
+data.CircuitElementRow.posNumber(CircuitElementRow.java:19)	Change visibility of Field "CircuitElementRow.posNumber" to private	CircuitElementRow.posNumber	org.ucdetector.analyzeMarkerVisibilityPrivate	
+data.CircuitElementRow.lungSimulator(CircuitElementRow.java:20)	Change visibility of Field "CircuitElementRow.lungSimulator" to private	CircuitElementRow.lungSimulator	org.ucdetector.analyzeMarkerVisibilityPrivate	

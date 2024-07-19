@@ -1,10 +1,6 @@
 package components;
 
-import java.awt.Checkbox;
-import java.awt.Graphics;
 import java.util.StringTokenizer;
-
-import utils.EditInfo;
 
 public class InductorElm extends CircuitElm {
 	Inductor ind;
@@ -39,23 +35,6 @@ public class InductorElm extends CircuitElm {
 	public void setPoints() {
 		super.setPoints();
 		calcLeads(32);
-	}
-
-	@Override
-	public void draw(Graphics g) {
-		double v1 = volts[0];
-		double v2 = volts[1];
-		int hs = 8;
-		setBbox(point1, point2, hs);
-		draw2Leads(g);
-		setPowerColor(g, false);
-		drawCoil(g, 8, lead1, lead2, v1, v2);
-		if (sim.getShowValuesCheckItem().getState()) {
-			String s = getShortUnitText(getInductance(), "H");
-			drawValues(g, s, hs);
-		}
-		doDots(g);
-		drawPosts(g);
 	}
 
 	@Override
@@ -97,31 +76,6 @@ public class InductorElm extends CircuitElm {
 		getBasicInfo(arr);
 		arr[3] = "L = " + getUnitText(getInductance(), "H");
 		arr[4] = "P = " + getUnitText(getPower(), "W");
-	}
-
-	@Override
-	public EditInfo getEditInfo(int n) {
-		if (n == 0)
-			return new EditInfo("Inductance (H)", getInductance(), 0, 0);
-		if (n == 1) {
-			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.setCheckbox(new Checkbox("Trapezoidal Approximation", ind.isTrapezoidal()));
-			return ei;
-		}
-		return null;
-	}
-
-	@Override
-	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0)
-			setInductance(ei.getValue());
-		if (n == 1) {
-			if (ei.getCheckbox().getState())
-				flags &= ~Inductor.FLAG_BACK_EULER;
-			else
-				flags |= Inductor.FLAG_BACK_EULER;
-		}
-		ind.setup(getInductance(), current, flags);
 	}
 
 	public double getInductance() {

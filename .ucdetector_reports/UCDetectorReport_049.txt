@@ -1,0 +1,10 @@
+Created with UCDetector 2.0.0	2022-11-30 09:31:30	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
+Location	Description	Java	Marker	Author
+lungsimulator.CircuitBuilder.<init>(CircuitBuilder.java:30)	Change visibility of Class "CircuitBuilder" to default - May cause compile errors!	CircuitBuilder	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.CircuitBuilder.buildCircuitSimulator(CircuitBuilder.java:101)	Change visibility of Method "CircuitBuilder.buildCircuitSimulator(Patient,Archetype)" to default	CircuitBuilder.buildCircuitSimulator(Patient,Archetype)	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.CircuitBuilder.updateData(CircuitBuilder.java:186)	Change visibility of Method "CircuitBuilder.updateData(double)" to default	CircuitBuilder.updateData(double)	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.CircuitBuilder.updateCircuitSimulator(CircuitBuilder.java:271)	Change visibility of Method "CircuitBuilder.updateCircuitSimulator(Archetype,double)" to default	CircuitBuilder.updateCircuitSimulator(Archetype,double)	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.CircuitBuilder.updateVentilatorValue(CircuitBuilder.java:312)	Change visibility of Method "CircuitBuilder.updateVentilatorValue(double)" to default	CircuitBuilder.updateVentilatorValue(double)	org.ucdetector.analyzeMarkerVisibilityDefault	
+lungsimulator.CircuitBuilder.UMRES(CircuitBuilder.java:71)	Change visibility of Constant "CircuitBuilder.UMRES" to private	CircuitBuilder.UMRES	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.CircuitBuilder.UMCAP(CircuitBuilder.java:76)	Change visibility of Constant "CircuitBuilder.UMCAP" to private	CircuitBuilder.UMCAP	org.ucdetector.analyzeMarkerVisibilityPrivate	
+lungsimulator.CircuitBuilder.UMGEN(CircuitBuilder.java:81)	Change visibility of Constant "CircuitBuilder.UMGEN" to private	CircuitBuilder.UMGEN	org.ucdetector.analyzeMarkerVisibilityPrivate	

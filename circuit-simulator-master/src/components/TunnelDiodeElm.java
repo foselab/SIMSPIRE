@@ -1,8 +1,6 @@
 package components;
 
-import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Polygon;
 import java.util.StringTokenizer;
 
 public class TunnelDiodeElm extends CircuitElm {
@@ -30,7 +28,6 @@ public class TunnelDiodeElm extends CircuitElm {
 	}
 
 	final int hs = 8;
-	Polygon poly;
 	Point cathode[];
 
 	@Override
@@ -42,31 +39,6 @@ public class TunnelDiodeElm extends CircuitElm {
 		interpPoint2(lead1, lead2, pa[0], pa[1], 0, hs);
 		interpPoint2(lead1, lead2, cathode[0], cathode[1], 1, hs);
 		interpPoint2(lead1, lead2, cathode[2], cathode[3], .8, hs);
-		poly = createPolygon(pa[0], pa[1], lead2);
-	}
-
-	@Override
-	public void draw(Graphics g) {
-		setBbox(point1, point2, hs);
-
-		double v1 = volts[0];
-		double v2 = volts[1];
-
-		draw2Leads(g);
-
-		// draw arrow thingy
-		setPowerColor(g, true);
-		setVoltageColor(g, v1);
-		g.fillPolygon(poly);
-
-		// draw thing arrow is pointing to
-		setVoltageColor(g, v2);
-		drawThickLine(g, cathode[0], cathode[1]);
-		drawThickLine(g, cathode[2], cathode[0]);
-		drawThickLine(g, cathode[3], cathode[1]);
-
-		doDots(g);
-		drawPosts(g);
 	}
 
 	@Override
