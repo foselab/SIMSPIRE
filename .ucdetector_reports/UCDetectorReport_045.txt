@@ -1,4 +1,0 @@
-Created with UCDetector 2.0.0	2022-11-14 15:29:53	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
-Location	Description	Java	Marker	Author
-models.FileUploader.<init>(FileUploader.java:19)	Change visibility of Class "FileUploader" to default - May cause compile errors!	FileUploader	org.ucdetector.analyzeMarkerVisibilityDefault	
-models.FileUploader.FileUploader(FileUploader.java:21)	Change visibility of Constructor "FileUploader.FileUploader(LungSimulator)" to default	FileUploader.FileUploader(LungSimulator)	org.ucdetector.analyzeMarkerVisibilityDefault	

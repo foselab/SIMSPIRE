@@ -1,4 +1,0 @@
-Created with UCDetector 2.0.0	2022-11-09 12:10:25	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
-Location	Description	Java	Marker	Author
-data.CircuitComponents.verticalLayout(CircuitComponents.java:12)	Change visibility of Field "CircuitComponents.verticalLayout" to private	CircuitComponents.verticalLayout	org.ucdetector.analyzeMarkerVisibilityPrivate	
-data.CircuitComponents.ventilator(CircuitComponents.java:13)	Change visibility of Field "CircuitComponents.ventilator" to private	CircuitComponents.ventilator	org.ucdetector.analyzeMarkerVisibilityPrivate	

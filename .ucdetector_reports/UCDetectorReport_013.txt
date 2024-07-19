@@ -1,3 +1,0 @@
-Created with UCDetector 2.0.0	2022-10-14 12:04:21	http://www.ucdetector.org/	Created by class: org.ucdetector.report.TextReport	
-Location	Description	Java	Marker	Author
-lungsimulator.components.Element.Element(Element.java:14)	Constructor "Element.Element(Formula,String,int,int,int,int,*,*,*,*)" has 0 references	Element.Element(Formula,String,int,int,int,int,*,*,*,*)	org.ucdetector.analyzeMarkerReference	
