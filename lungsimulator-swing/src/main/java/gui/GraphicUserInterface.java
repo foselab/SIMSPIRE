@@ -1,5 +1,6 @@
 package gui;
 
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +19,7 @@ public class GraphicUserInterface {
 	/**
 	 * Select model view manager
 	 */
-	private final transient SelectModelView selectModelView;
+	private final SelectModelView selectModelView;
 
 	/**
 	 * Backend access
