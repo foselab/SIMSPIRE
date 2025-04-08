@@ -140,7 +140,7 @@ As soon as a model is picked a new window will appear on the screen and the simu
 * on the top right the flow plot is displayed and can be changed by selecting an available option from the drop-down box above it
 * on the bottom right the pressure plot is displayed and can be changed by selecting an available option from the drop-down box above it
 
-![Simulation View](https://github.com/foselab/inspire/blob/main/SI_SimulationView.png)
+![Simulation View](https://github.com/foselab/inspire/blob/main/readme-files/SI_SimulationView.png)
 
 To begin a new simulation, the window must be closed and the project re-started.
 
