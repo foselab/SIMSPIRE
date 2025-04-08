@@ -101,7 +101,7 @@ elementsList:
   x1: 0 
   y1: 2
 ```
-For a complete file example, please refer to the default [models](https://github.com/foselab/mvm-adapt/tree/simulatore-paziente-ventilatore/lungsimulator-lib/resources/resourcereader) (lung-model-modelName.yaml) included in this project.
+For a complete file example, please refer to the default [models](https://github.com/foselab/inspire/lungsimulator-lib/resources/resourcereader) (lung-model-modelName.yaml) included in this project.
 
 #### The archetype file
 The archetype file has two fields: a schema number (`schema`) and a variables list (`parameters`). The first one is an arbitrary number which is used to check that both circuit model file and archetype file are associated to the same circuit. Hence, this number must be equal in both files. The latter contains all the variables values but time listed in each element field `variables` of the chosen circuit model.
@@ -115,7 +115,7 @@ parameters:
    capacitor1: 0.020
    capacitor2: 0.15
 ```
-For other file examples, please refer to the default [models](https://github.com/foselab/mvm-adapt/tree/simulatore-paziente-ventilatore/lungsimulator-lib/resources/resourcereader) (archetype-modelName.yaml) included in this project.
+For other file examples, please refer to the default [models](https://github.com/foselab/inspire/lungsimulator-lib/resources/resourcereader) (archetype-modelName.yaml) included in this project.
 
 #### The demographic patient data file
 The last file which has to be provided for a complete model is the patient demographic data file. At the moment, this file does not influence the outcome of the simulation but it is still required for completeness.
