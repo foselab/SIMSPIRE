@@ -10,10 +10,7 @@ elementsList:
     - resistanceU
     - TIME
   type: ResistorElm
-  x: 0
-  y: 0
-  x1: 1 
-  y1: 0
+  position: {x1: 0, y1: 0, x2: 1, y2: 0}
   showRight: true
   idRight: Alveoli
 - elementName: Lung Tissues Resistance
@@ -24,10 +21,7 @@ elementsList:
     variables:
     - resistanceL
   type: ResistorElm
-  x: 1
-  y: 0
-  x1: 2 
-  y1: 0
+  position: {x1: 1, y1: 0, x2: 2, y2: 0}
 - elementName: Lung Compliance
   associatedFormula:
     isTimeDependent: false
@@ -36,16 +30,10 @@ elementsList:
     variables:
     - capacitor
   type: CapacitorElm
-  x: 2
-  y: 0
-  x1: 3
-  y1: 0
+  position: {x1: 2, y1: 0, x2: 3, y2: 0}
 - elementName: Ventilator
   associatedFormula:
     isTimeDependent: false
     isExternal: true
   type: ExternalVoltageElm
-  x: 3
-  y: 0
-  x1: 0 
-  y1: 0
+  position: {x1: 3, y1: 0, x2: 0, y2: 0}

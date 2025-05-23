@@ -9,10 +9,7 @@ elementsList:
     variables:
     - resistance1
   type: ResistorElm
-  x: 0
-  y: 1
-  x1: 1 
-  y1: 1
+  position: {x1: 0, y1: 1, x2: 1, y2: 1}
 - elementName: Tracheo-bronchial Resistance
   associatedFormula:
     isTimeDependent: false
@@ -21,10 +18,7 @@ elementsList:
     variables:
     - resistance2
   type: ResistorElm
-  x: 1
-  y: 1
-  x1: 2 
-  y1: 1
+  position: {x1: 1, y1: 1, x2: 2, y2: 1}
 - elementName: Lung Compliance
   associatedFormula:
     isTimeDependent: false
@@ -33,10 +27,7 @@ elementsList:
     variables:
     - capacitor1
   type: CapacitorElm
-  x: 2
-  y: 1
-  x1: 3 
-  y1: 1
+  position: {x1: 2, y1: 1, x2: 3, y2: 1}
   showLeft: true
   idLeft: Alveoli
   showRight: true
@@ -49,16 +40,10 @@ elementsList:
     variables:
     - capacitor2
   type: CapacitorElm
-  x: 3
-  y: 1
-  x1: 4 
-  y1: 1
+  position: {x1: 3, y1: 1, x2: 4, y2: 1}
 - elementName: Ventilator
   associatedFormula:
     isTimeDependent: false
     isExternal: true
   type: ExternalVoltageElm
-  x: 4
-  y: 1
-  x1: 0 
-  y1: 1
+  position: {x1: 4, y1: 1, x2: 0, y2: 1}

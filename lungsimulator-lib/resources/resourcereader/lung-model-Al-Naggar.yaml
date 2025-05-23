@@ -9,10 +9,7 @@ elementsList:
     variables:
     - resistanceC
   type: ResistorElm
-  x: 0
-  y: 2
-  x1: 1 
-  y1: 2
+  position: {x1: 0, y1: 2, x2: 1, y2: 2}
   showLeft: true
   idLeft: Airway Opening
   showRight: true
@@ -25,10 +22,7 @@ elementsList:
     variables:
     - resistanceP
   type: ResistorElm
-  x: 1
-  y: 2
-  x1: 2 
-  y1: 2
+  position: {x1: 1, y1: 2, x2: 2, y2: 2}
 - elementName: Shunt Compliance
   associatedFormula:
     isTimeDependent: false
@@ -37,10 +31,7 @@ elementsList:
     variables:
     - capacitorS
   type: CapacitorElm
-  x: 1
-  y: 2
-  x1: 1
-  y1: 0
+  position: {x1: 1, y1: 2, x2: 1, y2: 0}
 - elementName: Lung Compliance
   associatedFormula:
     isTimeDependent: false
@@ -49,10 +40,7 @@ elementsList:
     variables:
     - capacitorL
   type: CapacitorElm
-  x: 2
-  y: 2
-  x1: 2
-  y1: 1
+  position: {x1: 2, y1: 2, x2: 2, y2: 1}
   showLeft: true
   idLeft: Alveoli
   showRight: true
@@ -65,16 +53,10 @@ elementsList:
     variables:
     - capacitorW
   type: CapacitorElm
-  x: 2
-  y: 1
-  x1: 1
-  y1: 0
+  position: {x1: 2, y1: 1, x2: 1, y2: 0}
 - elementName: Ventilator 
   associatedFormula:
     isTimeDependent: false
     isExternal: true
   type: ExternalVoltageElm
-  x: 1
-  y: 0
-  x1: 0 
-  y1: 2
+  position: {x1: 1, y1: 0, x2: 0, y2: 2}

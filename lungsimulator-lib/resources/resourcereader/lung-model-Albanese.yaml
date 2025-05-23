@@ -9,10 +9,7 @@ elementsList:
     variables:
     - resistanceMl
   type: ResistorElm
-  x: 0
-  y: 2
-  x1: 1 
-  y1: 2
+  position: {x1: 0, y1: 2, x2: 1, y2: 2}
   showLeft: true
   idLeft: Airway Opening
   showRight: true
@@ -25,10 +22,7 @@ elementsList:
     variables:
     - resistanceLt
   type: ResistorElm
-  x: 1
-  y: 2
-  x1: 2 
-  y1: 2
+  position: {x1: 1, y1: 2, x2: 2, y2: 2}
   showRight: true
   idRight: Trachea
 - elementName: Trachea to Bronchea Resistance
@@ -39,10 +33,7 @@ elementsList:
     variables:
     - resistanceTb
   type: ResistorElm
-  x: 2
-  y: 2
-  x1: 3 
-  y1: 2
+  position: {x1: 2, y1: 2, x2: 3, y2: 2}
   showRight: true
   idRight: Bronchea
 - elementName: Bronchea to Alveoli Resistance
@@ -53,10 +44,7 @@ elementsList:
     variables:
     - resistanceBa
   type: ResistorElm
-  x: 3
-  y: 2
-  x1: 4 
-  y1: 2
+  position: {x1: 3, y1: 2, x2: 4, y2: 2}
   showRight: true
   idRight: Alveoli
 - elementName: Larinx Capacitance
@@ -67,10 +55,7 @@ elementsList:
     variables:
     - capacitorL
   type: CapacitorElm
-  x: 1
-  y: 2
-  x1: 1 
-  y1: 0
+  position: {x1: 1, y1: 2, x2: 1, y2: 0}
 - elementName: Trachea Capacitance
   associatedFormula:
     isTimeDependent: false
@@ -79,10 +64,7 @@ elementsList:
     variables:
     - capacitorTr
   type: CapacitorElm
-  x: 2
-  y: 2
-  x1: 3 
-  y1: 1
+  position: {x1: 2, y1: 2, x2: 3, y2: 1}
 - elementName: Bronchea Capacitance
   associatedFormula:
     isTimeDependent: false
@@ -91,10 +73,7 @@ elementsList:
     variables:
     - capacitorB
   type: CapacitorElm
-  x: 3
-  y: 2
-  x1: 3 
-  y1: 1
+  position: {x1: 3, y1: 2, x2: 3, y2: 1}
   showRight: true
   idRight: Pleural Space
 - elementName: Alveoli Capacitance
@@ -105,10 +84,7 @@ elementsList:
     variables:
     - capacitorA
   type: CapacitorElm
-  x: 4
-  y: 2
-  x1: 3 
-  y1: 1
+  position: {x1: 4, y1: 2, x2: 3, y2: 1}
 - elementName: Chest wall Capacitance
   associatedFormula:
     isTimeDependent: false
@@ -117,16 +93,10 @@ elementsList:
     variables:
     - capacitorCw
   type: CapacitorElm
-  x: 3
-  y: 1
-  x1: 1 
-  y1: 0  
+  position: {x1: 3, y1: 1, x2: 1, y2: 0}
 - elementName: Ventilator
   associatedFormula:
     isTimeDependent: false
     isExternal: true
   type: ExternalVoltageElm
-  x: 1
-  y: 0
-  x1: 0 
-  y1: 2
+  position: {x1: 1, y1: 0, x2: 0, y2: 2}

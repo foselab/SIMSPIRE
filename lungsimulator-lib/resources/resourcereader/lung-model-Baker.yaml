@@ -9,10 +9,7 @@ elementsList:
     variables:
     - resistance1
   type: ResistorElm
-  x: 0
-  y: 0
-  x1: 1 
-  y1: 0
+  position: {x1: 0, y1: 0, x2: 1, y2: 0}
 - associatedFormula:
     id: R2
     isTimeDependent: false
@@ -21,10 +18,7 @@ elementsList:
     variables:
     - resistance2
   type: ResistorElm
-  x: 1
-  y: 0
-  x1: 2 
-  y1: 1
+  position: {x1: 1, y1: 0, x2: 2, y2: 1}
 - associatedFormula:
     id: R3
     isTimeDependent: false
@@ -33,10 +27,7 @@ elementsList:
     variables:
     - resistance3
   type: ResistorElm
-  x: 1
-  y: 0
-  x1: 2 
-  y1: 0
+  position: {x1: 1, y1: 0, x2: 2, y2: 0}
 - associatedFormula:
     id: R4
     isTimeDependent: false
@@ -45,10 +36,7 @@ elementsList:
     variables:
     - resistance4
   type: ResistorElm
-  x: 3
-  y: 0
-  x1: 4 
-  y1: 0
+  position: {x1: 3, y1: 0, x2: 4, y2: 0}
 - associatedFormula:
     id: C2
     isTimeDependent: false
@@ -57,10 +45,7 @@ elementsList:
     variables:
     - capacitor2
   type: CapacitorElm
-  x: 2
-  y: 1
-  x1: 3
-  y1: 0
+  position: {x1: 2, y1: 1, x2: 3, y2: 0}
   showLeft: true
   idLeft: Alveoli
   showRight: true
@@ -73,10 +58,7 @@ elementsList:
     variables:
     - capacitor3
   type: CapacitorElm
-  x: 2
-  y: 0
-  x1: 3 
-  y1: 0
+  position: {x1: 2, y1: 0, x2: 3, y2: 0}
 - associatedFormula:
     id: C4
     isTimeDependent: false
@@ -85,16 +67,10 @@ elementsList:
     variables:
     - capacitor4
   type: CapacitorElm
-  x: 4
-  y: 0
-  x1: 5 
-  y1: 0
+  position: {x1: 4, y1: 0, x2: 5, y2: 0}
 - associatedFormula:
     id: Ventilator
     isTimeDependent: false
     isExternal: true
   type: ExternalVoltageElm
-  x: 5
-  y: 0
-  x1: 0 
-  y1: 0
+  position: {x1: 5, y1: 0, x2: 0, y2: 0}
