@@ -47,7 +47,7 @@ The circuit model file has two main fields: a schema number (`schema`) and a cir
 * `elementName`: the name or id of the given element
 * `associatedFormula`: a description of the formula that has to be used to compute the element value
 * `type`: type of element (resistor, capacitor, etc...)
-* `x`, `y`, `x1`, `y1`: coordinates of the element nodes
+* `x1`, `y1`, `x2`, `y2`: coordinates of the element nodes
 * `showLeft`, `idLeft`, `showRight`, `idRight`: optional parameters to set if the left node or the right node (or both) should be displayed as key pressure points
 
 For instance, a constant resistance description is shown in the following code. The fields `isTimeDependent` and `isExternal` will be both set to false because if the element is constant, it won't have a time dependency and its value has to be reported in the archetype file.  
@@ -62,10 +62,7 @@ elementsList:
     variables:
     - resistance1
   type: ResistorElm
-  x: 0
-  y: 1
-  x1: 1 
-  y1: 1
+  position: {x1: 0, y1: 1, x2: 1, y2: 1}
 ```
 Instead, if an element is time dependent a proper description would look like the following snippet of code. The field `formula` shows how the value should be computed while in the field `variables` are listed all the formula's parameters. Please note that the `TIME` variable must be written in capital letters and other formats won't be accepted and will result in exceptions. Finally, a key pressure point is associated to the right node.
 ```yaml
@@ -80,10 +77,7 @@ elementsList:
     - resistanceU
     - TIME
   type: ResistorElm
-  x: 0
-  y: 0
-  x1: 1 
-  y1: 0
+  position: {x1: 0, y1: 0, x2: 1, y2: 0}
   showRight: true
   idRight: Alveoli
 ```
@@ -96,10 +90,7 @@ elementsList:
     isTimeDependent: false
     isExternal: true
   type: ExternalVoltageElm
-  x: 1
-  y: 0
-  x1: 0 
-  y1: 2
+  position: {x1: 1, y1: 0, x2: 0, y2: 2}
 ```
 For a complete file example, please refer to the default [models](https://github.com/foselab/inspire/lungsimulator-lib/resources/resourcereader) (lung-model-modelName.yaml) included in this project.
 
