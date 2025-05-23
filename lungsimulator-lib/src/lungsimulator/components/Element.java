@@ -1,5 +1,7 @@
 package lungsimulator.components;
 
+import java.util.HashMap;
+
 import lungsimulator.exceptions.InspireException;
 
 /**
@@ -20,6 +22,11 @@ public class Element {
 	 * The class name of the component model in circuit-simulator
 	 */
 	private String type; 
+	
+	/**
+	 * The position of the element in the circuit
+	 */
+	private HashMap<String, Integer> position;
 	
 	/**
 	 * Coordinate on the x-axis for the first node
@@ -115,30 +122,45 @@ public class Element {
 	}
 
 	public int getX() {
+		if (position != null && position.containsKey("x1")) {
+			return position.get("x1");
+		}
 		return x;
 	}
 
 	public void setX(final int x) {
+		position.put("x1", x);
 		this.x = x;
 	}
 
 	public int getY() {
+		if (position != null && position.containsKey("y1")) {
+			return position.get("y1");
+		}
 		return y;
 	}
 
 	public void setY(final int y) {
 		this.y = y;
+		position.put("y1", y);
 	}
 
 	public int getX1() {
+		if (position != null && position.containsKey("x2")) {
+			return position.get("x2");
+		}
 		return x1;
 	}
 
 	public void setX1(final int x1) {
 		this.x1 = x1;
+		position.put("x2", x1);
 	}
 
 	public int getY1() {
+		if (position != null && position.containsKey("y2")) {
+			return position.get("y2");
+		}
 		return y1;
 	}
 
@@ -175,6 +197,7 @@ public class Element {
 	}
 
 	public void setY1(final int y1) {
+		position.put("y2", y1);
 		this.y1 = y1;
 	}
 
