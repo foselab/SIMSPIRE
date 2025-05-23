@@ -1,6 +1,6 @@
-# INSPIRE
+# SIMSPIRE
 
-INSPIRE is a simulation software for testing mechanical ventilators through the creation of a digital twin for the respiratory system. It comes with a Swing interface so that it can be used more easily, but it is also available as a web-app. 
+SIMSPIRE is a simulation software for testing mechanical ventilators through the creation of a digital twin for the respiratory system. It comes with a Swing interface so that it can be used more easily, but it is also available as a web-app. 
 
 #### Table of contents
 * [Project Overview](#project-overview)
@@ -92,7 +92,7 @@ elementsList:
   type: ExternalVoltageElm
   position: {x1: 1, y1: 0, x2: 0, y2: 2}
 ```
-For a complete file example, please refer to the default [models](https://github.com/foselab/inspire/lungsimulator-lib/resources/resourcereader) (lung-model-modelName.yaml) included in this project.
+For a complete file example, please refer to the default [models](https://github.com/foselab/SIMSPIRE/lungsimulator-lib/resources/resourcereader) (lung-model-modelName.yaml) included in this project.
 
 #### The archetype file
 The archetype file has two fields: a schema number (`schema`) and a variables list (`parameters`). The first one is an arbitrary number which is used to check that both circuit model file and archetype file are associated to the same circuit. Hence, this number must be equal in both files. The latter contains all the variables values but time listed in each element field `variables` of the chosen circuit model.
@@ -106,7 +106,7 @@ parameters:
    capacitor1: 0.020
    capacitor2: 0.15
 ```
-For other file examples, please refer to the default [models](https://github.com/foselab/inspire/lungsimulator-lib/resources/resourcereader) (archetype-modelName.yaml) included in this project.
+For other file examples, please refer to the default [models](https://github.com/foselab/SIMSPIRE/lungsimulator-lib/resources/resourcereader) (archetype-modelName.yaml) included in this project.
 
 #### The demographic patient data file
 The last file which has to be provided for a complete model is the patient demographic data file. At the moment, this file does not influence the outcome of the simulation but it is still required for completeness.
@@ -122,7 +122,7 @@ weight: 100
 ## Swing interface usage
 After launching the application, a dialog window will automatically pop up as shown in the figure below. The first step is the choice of the model from the drop-down box. There are two main options available: choose a default model among those proposed or select "Your own model..." option to upload a custom model.
 
-![Select Model View](https://github.com/foselab/inspire/blob/main/readme-files/SI_SelectModelView.png)
+![Select Model View](https://github.com/foselab/SIMSPIRE/blob/main/readme-files/SI_SelectModelView.png)
 
 As soon as a model is picked a new window will appear on the screen and the simulation will start immediately after. The simulation view is composed by the following blocks:
 * on the top left the circuit elements list is displayed 
@@ -131,14 +131,14 @@ As soon as a model is picked a new window will appear on the screen and the simu
 * on the top right the flow plot is displayed and can be changed by selecting an available option from the drop-down box above it
 * on the bottom right the pressure plot is displayed and can be changed by selecting an available option from the drop-down box above it
 
-![Simulation View](https://github.com/foselab/inspire/blob/main/readme-files/SI_SimulationView.png)
+![Simulation View](https://github.com/foselab/SIMSPIRE/blob/main/readme-files/SI_SimulationView.png)
 
 To begin a new simulation, the window must be closed and the project re-started.
 
 ## Web-app usage
 After the browser page has loaded, a dialog window will automatically pop up as shown in the figure below. The first step is the choice of the model from the drop-down box. There are two main options available: choose a default model among those proposed or select "Your own model..." option to upload a custom model.
 
-![Select Model View](https://github.com/foselab/inspire/blob/main/readme-files/WA_SelectModelView.png)
+![Select Model View](https://github.com/foselab/SIMSPIRE/blob/main/readme-files/WA_SelectModelView.png)
 
 As soon as a model is picked a new window will appear on the screen. The simulation view is composed by the following blocks:
 * on the top left the circuit elements list is displayed 
@@ -147,7 +147,7 @@ As soon as a model is picked a new window will appear on the screen. The simulat
 * on the top right the flow plot is displayed and can be changed by selecting an available option from the drop-down box above it
 * on the bottom right the pressure plot is displayed and can be changed by selecting an available option from the drop-down box above it
 
-![Simulation View](https://github.com/foselab/inspire/blob/main/readme-files/WA_SimulationViewStop.png)
+![Simulation View](https://github.com/foselab/SIMSPIRE/blob/main/readme-files/WA_SimulationViewStop.png)
 
 To start the simulation, the start button has to be clicked. During the simulation circuit elements values can be changed as well as the flow and pressure plot shown. To save a plot image, pick an option from the three-line botton on the top right of each plot.
 
