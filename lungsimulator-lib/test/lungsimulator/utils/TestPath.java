@@ -1,3 +1,4 @@
+package lungsimulator.utils;
 import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
@@ -7,7 +8,6 @@ import org.junit.Test;
 
 import lungsimulator.components.Patient;
 import lungsimulator.utils.YamlReader;
-import resourcereader.ResourceReader;
 
 public class TestPath {
 

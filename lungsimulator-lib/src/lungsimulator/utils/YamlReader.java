@@ -12,7 +12,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import lungsimulator.components.Archetype;
 import lungsimulator.components.Patient;
 import lungsimulator.components.SimulatorParams;
-import resourcereader.ResourceReader;
+
 
 /**
  * Read, translate and validate lung model and archetype files

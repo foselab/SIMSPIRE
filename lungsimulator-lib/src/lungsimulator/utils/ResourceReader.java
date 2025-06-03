@@ -1,4 +1,4 @@
-package resourcereader;
+package lungsimulator.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +12,7 @@ import lungsimulator.components.SimulatorParams;
 
 public class ResourceReader {
 	public static Patient readPatientModel(String modelName) throws IOException {
-		InputStream input = ResourceReader.class.getResourceAsStream("lung-model-" + modelName + ".yaml");
+		InputStream input = ResourceReader.class.getResourceAsStream("/lung-model-" + modelName + ".yaml");
 		
 		// Instantiating a new ObjectMapper as a YAMLFactory
 		final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
@@ -26,7 +26,7 @@ public class ResourceReader {
 	}
 	
 	public static Archetype readArchetypeModel(String modelName) throws IOException {
-		InputStream input = ResourceReader.class.getResourceAsStream("archetype-" + modelName + ".yaml");
+		InputStream input = ResourceReader.class.getResourceAsStream("/archetype-" + modelName + ".yaml");
 		
 		// Instantiating a new ObjectMapper as a YAMLFactory
 		final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
@@ -40,7 +40,7 @@ public class ResourceReader {
 	}
 	
 	public static SimulatorParams readDemographicModel() throws IOException {
-		InputStream input = ResourceReader.class.getResourceAsStream("patient-demographic-data.yaml");
+		InputStream input = ResourceReader.class.getResourceAsStream("/patient-demographic-data.yaml");
 		
 		// Instantiating a new ObjectMapper as a YAMLFactory
 		final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
