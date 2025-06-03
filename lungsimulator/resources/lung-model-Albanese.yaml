@@ -1,0 +1,107 @@
+---
+schema: 3
+elementsList:
+- elementName: Mouth to Larynx Resistance
+  associatedFormula:
+    isTimeDependent: false
+    isExternal: false
+    formula: resistanceMl
+    variables:
+    - resistanceMl
+  type: ResistorElm
+# position: {x1: 0, y1: 2, x2: 1, y2: 2}
+  position: 
+    x1: 0
+    y1: 2
+    x2: 1
+    y2: 2
+  showLeft: true
+  idLeft: Airway Opening
+  showRight: true
+  idRight: Larynx
+- elementName: Larynx to Trachea Resistance
+  associatedFormula: 
+    isTimeDependent: false
+    isExternal: false
+    formula: resistanceLt
+    variables:
+    - resistanceLt
+  type: ResistorElm
+  position: {x1: 1, y1: 2, x2: 2, y2: 2}
+  showRight: true
+  idRight: Trachea
+- elementName: Trachea to Bronchea Resistance
+  associatedFormula:
+    isTimeDependent: false
+    isExternal: false
+    formula: resistanceTb
+    variables:
+    - resistanceTb
+  type: ResistorElm
+  position: {x1: 2, y1: 2, x2: 3, y2: 2}
+  showRight: true
+  idRight: Bronchea
+- elementName: Bronchea to Alveoli Resistance
+  associatedFormula:
+    isTimeDependent: false
+    isExternal: false
+    formula: resistanceBa
+    variables:
+    - resistanceBa
+  type: ResistorElm
+  position: {x1: 3, y1: 2, x2: 4, y2: 2}
+  showRight: true
+  idRight: Alveoli
+- elementName: Larinx Capacitance
+  associatedFormula:
+    isTimeDependent: false
+    isExternal: false
+    formula: capacitorL
+    variables:
+    - capacitorL
+  type: CapacitorElm
+  position: {x1: 1, y1: 2, x2: 1, y2: 0}
+- elementName: Trachea Capacitance
+  associatedFormula:
+    isTimeDependent: false
+    isExternal: false
+    formula: capacitorTr
+    variables:
+    - capacitorTr
+  type: CapacitorElm
+  position: {x1: 2, y1: 2, x2: 3, y2: 1}
+- elementName: Bronchea Capacitance
+  associatedFormula:
+    isTimeDependent: false
+    isExternal: false
+    formula: capacitorB
+    variables:
+    - capacitorB
+  type: CapacitorElm
+  position: {x1: 3, y1: 2, x2: 3, y2: 1}
+  showRight: true
+  idRight: Pleural Space
+- elementName: Alveoli Capacitance
+  associatedFormula:
+    isTimeDependent: false
+    isExternal: false
+    formula: capacitorA
+    variables:
+    - capacitorA
+  type: CapacitorElm
+  position: {x1: 4, y1: 2, x2: 3, y2: 1}
+- elementName: Chest wall Capacitance
+  associatedFormula:
+    isTimeDependent: false
+    isExternal: false
+    formula: capacitorCw
+    variables:
+    - capacitorCw
+  type: CapacitorElm
+  position: {x1: 3, y1: 1, x2: 1, y2: 0}
+- elementName: Ventilator
+  associatedFormula:
+    isTimeDependent: false
+    isExternal: true
+  type: ExternalVoltageElm
+  position: {x1: 1, y1: 0, x2: 0, y2: 2}
