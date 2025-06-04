@@ -9,12 +9,7 @@ elementsList:
     variables:
     - resistanceMl
   type: ResistorElm
-# position: {x1: 0, y1: 2, x2: 1, y2: 2}
-  position: 
-    x1: 0
-    y1: 2
-    x2: 1
-    y2: 2
+  position: {x1: 0, y1: 2, x2: 1, y2: 2}
   showLeft: true
   idLeft: Airway Opening
   showRight: true

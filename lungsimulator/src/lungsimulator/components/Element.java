@@ -2,6 +2,8 @@ package lungsimulator.components;
 
 import java.util.HashMap;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Describes an element of the circuit
  */
@@ -24,6 +26,7 @@ public class Element {
 	/**
 	 * The position of the element in the circuit
 	 */
+	@JsonProperty("position")
 	private HashMap<String, Integer> position;
 	
 	/**
