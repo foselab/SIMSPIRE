@@ -17,6 +17,10 @@ public class TestPath {
 		YamlReader yaml = new YamlReader("Albanese");
 		Patient patient = yaml.readPatientModel();
 		assertNotNull(patient);
+		assertEquals(patient.getElementsList().get(0).getX(),0);
+		assertEquals(patient.getElementsList().get(0).getY(),2);
+		assertEquals(patient.getElementsList().get(0).getY1(),2);
+		assertEquals(patient.getElementsList().get(0).getX1(),1);
 	}
 	
 	@Test
